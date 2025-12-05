@@ -1,3 +1,4 @@
+
 export const translations = {
   en: {
     nav: {
@@ -16,7 +17,7 @@ export const translations = {
     },
     philosophy: {
       title: 'Core Philosophy',
-      subtitle: 'Mapping Stanford\'s "Modern Software Developer" concepts to our curriculum.',
+      subtitle: 'This course is founded on the cognitive cornerstone of "AI First", fundamentally overturning the traditional "Knowledge Injection -> Memorization -> Practice" learning model. We believe that on the eve of AGI, the core competitiveness of humans is no longer the proficiency of single skills, but the ability to build systems, ask questions, and orchestrate Agents.',
       practice_label: 'Practice:',
     },
     galaxy: {
@@ -64,7 +65,7 @@ export const translations = {
     },
     philosophy: {
       title: '核心哲学',
-      subtitle: '将斯坦福“现代软件开发”理念映射到我们的课程体系。',
+      subtitle: '本课程建立在“AI First” (AI为先)的认知基石之上，彻底颠覆传统的“知识灌输 -> 记忆 -> 练习”的学习模式。我们认为在 AGI 前夜，人类的核心竞争力不再是单一技能的熟练度，而是构建系统、提出问题和指挥智能体（Agents）的能力。',
       practice_label: '实践：',
     },
     galaxy: {
