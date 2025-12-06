@@ -21,12 +21,13 @@ const GalaxySection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Updated Grid: lg:grid-cols-3 handles 5 items nicely (3 in row 1, 2 in row 2) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
           {courses.map((course) => (
             <Link 
               key={course.id} 
               to={`/course/${course.id}`}
-              className="group relative bg-brand-surface border border-white/10 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10"
+              className="group relative bg-brand-surface border border-white/10 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-blue-500/10 flex flex-col h-full"
             >
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${course.color} opacity-50 group-hover:opacity-100 transition-opacity`} />
               
@@ -38,11 +39,11 @@ const GalaxySection: React.FC = () => {
               <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                 {course.shortTitle}
               </h3>
-              <p className="text-sm text-gray-400 line-clamp-3">
+              <p className="text-sm text-gray-400 line-clamp-3 mb-4 flex-grow">
                 {course.description}
               </p>
               
-              <div className="mt-4 flex items-center text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-auto flex items-center text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                 {t('galaxy.explore_planet')}
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
               </div>

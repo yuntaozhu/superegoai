@@ -1,3 +1,4 @@
+
 import { Course, PhilosophyPillar } from './types';
 
 interface ContentData {
@@ -8,24 +9,24 @@ interface ContentData {
 const CONTENT_EN: ContentData = {
   philosophyPillars: [
     {
-      title: "From Writing to Orchestrating",
-      concept: "We don't teach how to hand-write every for-loop. We teach how to design Agentic Workflows.",
-      practice: "Learn to configure 'Researcher', 'Coder', and 'Reviewer' Agents to collaborate."
+      title: "Cognitive Cornerstone: From Skill-Based to System-Based",
+      concept: "Old View: You must learn every skill yourself. New View: Core competitiveness is 'System Building' and 'Asking Questions'. AI does the specific skills better.",
+      practice: "Human defines the 'Why', AI solves the 'How'. Your task is to think 'What system do I want to build' and 'Why', not typing speed."
     },
     {
-      title: "Verification > Generation",
-      concept: "AI generating code is cheap; ensuring it is correct and safe is expensive.",
-      practice: "Focus on AI Testing & Security. How to design test cases to prevent AI hallucinations."
+      title: "Asset Construction: Bio-Brain & ExtBrain",
+      concept: "Solution: Acknowledge human limitations and build an 'External Brain'. Bio-brain for intuition/aesthetics; AI Second Brain for memory/execution.",
+      practice: "Build a Personal Knowledge Base. Your AI assistant digests your ideas and code to become your unique digital twin."
     },
     {
-      title: "System 2 Thinking",
-      concept: "Don't let AI just do 'Fast Thinking' (autocomplete), force 'Slow Thinking' (reasoning/planning).",
-      practice: "Visualize Chain-of-Thought (CoT) and Reasoning processes."
+      title: "Identity Transformation: From Crafter to Orchestrator",
+      concept: "Re-role: Stop being a 'Code Worker'. New Duty: Commander & Director. Define Goals (Prompt), Set Constraints, Review Results.",
+      practice: "Learn how to command AI to select optimal algorithms and deploy them, rather than hand-writing them."
     },
     {
-      title: "Human-in-the-Loop",
-      concept: "The 'SuperEgo' must hold the ultimate 'Kill Switch'.",
-      practice: "Design human intervention interfaces for critical decisions (trading, posture correction)."
+      title: "Workflow Revolution: One Person Company (Agent Squad)",
+      concept: "Methodology: Solve complex problems via 'Division of Labor'. Assemble your AI Team: PM Agent, Coder Agent, Tester Agent.",
+      practice: "You are the CEO of this digital army, orchestrating information flow between AI employees."
     }
   ],
   courses: [
@@ -298,24 +299,24 @@ const CONTENT_EN: ContentData = {
 const CONTENT_ZH: ContentData = {
   philosophyPillars: [
     {
-      title: "从“编写”到“编排”",
-      concept: "理念：我们不教如何手写每一个 for 循环。我们教如何设计智能体工作流 (Agentic Workflows)。",
-      practice: "实践：学习如何配置“Researcher”、“Coder”和“Reviewer”智能体进行分工与协作。"
+      title: "认知基石：从“技能本位”到“系统本位”",
+      concept: "旧观念：必须自己学会所有技能。新理念：在 AGI 前夜，核心竞争力是“构建系统”和“提出问题”。我们默认“写代码、画UI”这些具体技能，AI 已经做得比你快。",
+      practice: "口号：Human defines the 'Why', AI solves the 'How'。你的任务是思考“我要做一个什么系统”以及“为什么要做它”。"
     },
     {
-      title: "验证 > 生成",
-      concept: "理念：AI 生成代码是廉价的，保证代码正确且安全是昂贵的。",
-      practice: "实践：关注 AI 测试与安全。如何设计测试用例来防止 AI “胡说八道”。"
+      title: "资产构建：生物脑与第二大脑的分工",
+      concept: "解决方案：承认人类大脑的局限性，构建“外挂大脑”。生物脑负责直觉审判，AI 第二大脑负责记忆执行。",
+      practice: "沉淀私人知识库。你的创意、代码都会被 AI 助手“吃透”，最终成为你独一无二的数字分身。"
     },
     {
-      title: "系统级思考 (System 2 Thinking)",
-      concept: "理念：不要让 AI 只做“快思考”（代码补全），要强制它做“慢思考”（推理/规划）。",
-      practice: "实践：可视化思维链 (Chain-of-Thought) 和推理过程。"
+      title: "身份转变：从“工匠”到“总导演”",
+      concept: "角色重塑：拒绝做重复造轮子的“代码工人”。新职责：指挥官 (Commander) 和总导演 (Director)。",
+      practice: "定义目标 (Prompt)，设定边界 (Constraints)，审查结果 (Review)。教你“如何指挥 AI 帮你选择最优算法并完成部署”。"
     },
     {
-      title: "人机回环 (Human-in-the-Loop)",
-      concept: "理念：“超我”必须握有最终的“熔断权”。",
-      practice: "实践：在关键决策（如实盘交易、姿态纠正）中，设计人类介入的接口。"
+      title: "工作流革命：一人即一家公司（智能体团队）",
+      concept: "方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。",
+      practice: "你不再是孤独的开发者，你是这支“数字军团”的 CEO，负责在 AI 员工之间传递信息。"
     }
   ],
   courses: [

@@ -16,9 +16,10 @@ export const translations = {
       cta_secondary: 'Read Manifesto',
     },
     philosophy: {
-      title: 'Core Philosophy',
-      subtitle: 'This course is founded on the cognitive cornerstone of "AI First", fundamentally overturning the traditional "Knowledge Injection -> Memorization -> Practice" learning model. We believe that on the eve of AGI, the core competitiveness of humans is no longer the proficiency of single skills, but the ability to build systems, ask questions, and orchestrate Agents.',
+      title: 'The Core Philosophy: Evolution of a "New Species"',
+      subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine. Based on the cognitive cornerstone of "AI First", we completely overturn the traditional "Rote Memorization -> Exam Tactics" education model.',
       practice_label: 'Practice:',
+      summary: 'In short: This course teaches you to use AI (Part 1), build your own external brain (Part 2), play the role of a director (Part 3), and orchestrate a virtual team of AIs (Part 4) to realize any idea in your mind.',
     },
     galaxy: {
       title: 'The Galaxy Model',
@@ -64,9 +65,10 @@ export const translations = {
       cta_secondary: '阅读宣言',
     },
     philosophy: {
-      title: '核心哲学',
-      subtitle: '本课程建立在“AI First” (AI为先)的认知基石之上，彻底颠覆传统的“知识灌输 -> 记忆 -> 练习”的学习模式。我们认为在 AGI 前夜，人类的核心竞争力不再是单一技能的熟练度，而是构建系统、提出问题和指挥智能体（Agents）的能力。',
+      title: '课程核心理念：AI 时代的“新物种”进化论',
+      subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。我们基于“AI First”（AI优先）的认知基石，彻底颠覆传统教育中“死记硬背 -> 题海战术”的模式。',
       practice_label: '实践：',
+      summary: '一句话总结：这门课教你利用 AI（Part 1），构建一个只属于你的外挂大脑（Part 2），通过扮演总导演的角色（Part 3），指挥一支由 AI 组成的虚拟团队（Part 4），去实现你脑海中的任何创意。',
     },
     galaxy: {
       title: '星系模型',

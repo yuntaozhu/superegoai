@@ -64,6 +64,13 @@ const Home: React.FC = () => {
               </div>
             ))}
           </div>
+
+           {/* Summary Section */}
+           <div className="mt-12 text-center max-w-4xl mx-auto bg-white/5 rounded-xl p-6 border border-white/10 backdrop-blur-sm">
+             <p className="text-lg text-blue-200 font-medium">
+                {t('philosophy.summary')}
+             </p>
+          </div>
         </div>
       </section>
 
