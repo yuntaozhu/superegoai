@@ -238,6 +238,59 @@ const CONTENT_EN: ContentData = {
           ]
         }
       ]
+    },
+    {
+      id: "solopreneur",
+      title: "The AI First Solopreneur",
+      shortTitle: "Planet E: Solopreneur",
+      tagline: "Build Your First SaaS from Scratch",
+      description: "Designed for non-technical creators. We don't train programmers; we train 'Product Builders'. Your coding team is right in your chat window.",
+      icon: "🚀",
+      color: "from-red-500 to-amber-500",
+      philosophyMap: {
+        title: "The Course Manifesto",
+        points: [
+          "New World: You only need to define the problem and have good taste. Launch a SaaS in 10 weeks.",
+          "Core Promise: Become a 'SuperEgo'—a CEO who understands tech boundaries and orchestrates an AI army.",
+          "No Syntax Policy: Hand-writing complex code is forbidden. You are graded on how clear your prompts are."
+        ]
+      },
+      syllabus: [
+        {
+          title: "Phase 1: Cognitive Awakening & Setup (Week 1-2)",
+          goal: "Break the fear of code. Treat AI as a senior engineer.",
+          content: [
+            { title: "Week 1: Hello, SuperEgo", description: "Why 'Natural Language Programming'? Install Cursor. Generate a personal site with one prompt." },
+            { title: "Week 2: The Product Manager Agent", description: "Writing PRDs. Using Deep Research Agents for competitor analysis. Generating DB schemas." }
+          ]
+        },
+        {
+          title: "Phase 2: Visuals First & Prototyping (Week 3-4)",
+          goal: "Aesthetics driven development. WYSIWYG.",
+          content: [
+            { title: "Week 3: Visual Engineering", description: "Using v0.dev. Component thinking: 'Make this button a reusable component'." },
+            { title: "Week 4: The Frontend Logic", description: "Making it move. Cursor practice: 'Pop up a confetti animation on click'." }
+          ]
+        },
+        {
+          title: "Phase 3: Soul & Data Connection (Week 5-7)",
+          goal: "Full stack integration. Connecting the pipes.",
+          content: [
+            { title: "Week 5: The Backend Agent", description: "Supabase intro. SQL is Natural Language. 'Allow users to read only their own data'." },
+            { title: "Week 6: Wiring it Together", description: "CRUD operations. The most important skill: AI Debugging & Self-Correction." },
+            { title: "Week 7: The Reviewer Mindset", description: "Testing & Security. Asking AI to play the hacker and fix vulnerabilities." }
+          ]
+        },
+        {
+          title: "Phase 4: Commercialization & Launch (Week 8-10)",
+          goal: "From software to product.",
+          content: [
+            { title: "Week 8: Monetization", description: "Stripe integration. Reading docs with AI. 'Show this page only to paid users'." },
+            { title: "Week 9: Launch & Growth Agents", description: "SEO Automation. Scripting Social Bots for Twitter/RedNote updates." },
+            { title: "Week 10: Demo Day", description: "Launch day. Building your 'ExtBrain Knowledge Base' for the next product." }
+          ]
+        }
+      ]
     }
   ]
 };
@@ -472,6 +525,59 @@ const CONTENT_ZH: ContentData = {
             { title: "AI 风控官", description: "独立监控系统，发现异常直接熔断。" },
             { title: "Human-in-the-loop", description: "Streamlit 仪表盘，关键决策需人类批准。" },
             { title: "终极项目: AlphaZero for Trading", description: "端到端系统：研报 -> 策略 -> 回测 -> 报告。" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "solopreneur",
+      title: "AI 时代的超级个体：从零构建你的第一个商业软件",
+      shortTitle: "行星 E: 超级个体",
+      tagline: "你的代码团队，就在你的对话框里",
+      description: "专门为非技术背景的普通人设计的实战课程。这份课程的目标非常功利且直接：不培养程序员，只培养“产品缔造者”。",
+      icon: "🚀",
+      color: "from-red-500 to-amber-500",
+      philosophyMap: {
+        title: "课程宣言 (Manifesto)",
+        points: [
+          "新世界：你只需要清晰地定义问题，拥有良好的审美，并掌握指挥 AI 的逻辑，就能在 10 周内上线 SaaS。",
+          "核心承诺：我们不教你背诵代码。我们教你如何成为一个“超我” (SuperEgo)——一个能指挥 AI 军团的 CEO。",
+          "零语法政策 (No Syntax Policy)：严禁手写复杂的循环。考核标准是“你向 AI 提的需求清不清晰”。"
+        ]
+      },
+      syllabus: [
+        {
+          title: "第一阶段：认知觉醒与环境搭建 (Week 1-2)",
+          goal: "打破对代码的恐惧，建立“AI 也是人”的协作感。",
+          content: [
+            { title: "Week 1: Hello, SuperEgo (你好，超我)", description: "颠覆认知：自然语言编程时代。环境配置：Cursor + API Key。作业：一句话生成个人网站。" },
+            { title: "Week 2: The Product Manager Agent", description: "学会写 PRD。Deep Research 调研竞品。完成功能说明书和数据库结构初稿。" }
+          ]
+        },
+        {
+          title: "第二阶段：视觉先行与原型构建 (Week 3-4)",
+          goal: "所见即所得。用“审美”驱动开发。",
+          content: [
+            { title: "Week 3: Visual Engineering (视觉工程)", description: "工具流：v0.dev。组件化思维：“统一全站配色”。作业：完成所有前端页面。" },
+            { title: "Week 4: The Frontend Logic (前端交互)", description: "让页面“动”起来。Cursor 实战：交互逻辑与手机端适配。" }
+          ]
+        },
+        {
+          title: "第三阶段：赋予灵魂与数据连接 (Week 5-7)",
+          goal: "接通血管和神经，让软件真正能用。",
+          content: [
+            { title: "Week 5: The Backend Agent (后端智能体)", description: "Supabase 入门。SQL 也是自然语言。作业：实现用户注册/登录。" },
+            { title: "Week 6: Wiring it Together (全栈贯通)", description: "CRUD 增删改查。AI Debugging：让 AI 自我修复报错。作业：核心功能跑通。" },
+            { title: "Week 7: The Reviewer Mindset (审查与测试)", description: "斯坦福理念落地：让 AI 写测试脚本，扮演黑客攻击并修复漏洞。" }
+          ]
+        },
+        {
+          title: "第四阶段：商业化与发布 (Week 8-10)",
+          goal: "从软件变成商品。",
+          content: [
+            { title: "Week 8: Monetization (收钱！)", description: "让 AI 读懂 Stripe 文档并接入支付。设置付费用户权限。" },
+            { title: "Week 9: Launch & Growth Agents", description: "SEO 自动化。写脚本自动推送更新到社交媒体。" },
+            { title: "Week 10: Demo Day (路演日)", description: "成果展示。复盘：构建“第二大脑知识库”，存下好用的 Prompt。" }
           ]
         }
       ]
