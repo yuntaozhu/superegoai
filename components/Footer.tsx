@@ -1,15 +1,34 @@
 import React from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, useLocation } from '../context/LanguageContext';
 import { getContent } from '../constants';
 
 const Footer: React.FC = () => {
   const { t, language } = useLanguage();
+  const location = useLocation();
   const content = getContent(language);
   const courses = content.courses;
 
+  const currentCourseId = location.pathname.startsWith('/course/') 
+    ? location.pathname.split('/')[2] 
+    : null;
+  const currentCourse = courses.find(c => c.id === currentCourseId);
+
   return (
-    <footer className="bg-brand-dark border-t border-white/10 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="relative bg-brand-dark py-12 overflow-hidden">
+       {/* Dynamic Top Border */}
+       {currentCourse && (
+         <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r ${currentCourse.color} opacity-80`} />
+      )}
+      {!currentCourse && (
+         <div className="absolute top-0 left-0 w-full h-[1px] bg-white/10" />
+      )}
+
+      {/* Dynamic Background Glow */}
+      {currentCourse && (
+        <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full max-w-4xl bg-gradient-to-t ${currentCourse.color} opacity-5 pointer-events-none blur-3xl`} />
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-xl font-bold text-white mb-4">AI First Course</h3>

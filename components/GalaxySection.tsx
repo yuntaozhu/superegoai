@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '../context/LanguageContext';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
 

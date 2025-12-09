@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { useParams, Navigate, Link } from 'react-router-dom';
 import { getContent } from '../constants';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, useParams, Navigate, Link } from '../context/LanguageContext';
 
 const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { getContent } from '../constants';
 import GalaxySection from '../components/GalaxySection';
-import { Link } from 'react-router-dom';
+import { Link } from '../context/LanguageContext';
 import { useLanguage } from '../context/LanguageContext';
 
 const Home: React.FC = () => {

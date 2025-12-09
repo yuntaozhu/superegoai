@@ -1,18 +1,19 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import CourseDetail from './pages/CourseDetail';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, HashRouter as Router, Routes, Route } from './context/LanguageContext';
+import P5Background from './components/P5Background';
 
 const App: React.FC = () => {
   return (
     <LanguageProvider>
       <Router>
-        <div className="flex flex-col min-h-screen bg-brand-dark text-white">
+        <div className="flex flex-col min-h-screen bg-brand-dark text-white relative">
+          <P5Background />
           <Navbar />
-          <main className="flex-grow">
+          <main className="flex-grow z-10">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/course/:id" element={<CourseDetail />} />
