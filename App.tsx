@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import CourseDetail from './pages/CourseDetail';
+import BlogPage from './pages/BlogPage';
 import { LanguageProvider, HashRouter as Router, Routes, Route } from './context/LanguageContext';
 import P5Background from './components/P5Background';
 
@@ -16,6 +17,7 @@ const App: React.FC = () => {
           <main className="flex-grow z-10">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/blog" element={<BlogPage />} />
               <Route path="/course/:id" element={<CourseDetail />} />
             </Routes>
           </main>

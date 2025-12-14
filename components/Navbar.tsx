@@ -56,6 +56,15 @@ const Navbar: React.FC = () => {
               >
                 {t('nav.home')}
               </Link>
+
+              <Link
+                to="/blog"
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive('/blog') ? 'bg-brand-surface text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                {t('nav.blog')}
+              </Link>
               
               <div className="relative group">
                 <button className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1 focus:outline-none">
@@ -122,6 +131,13 @@ const Navbar: React.FC = () => {
               onClick={() => setIsOpen(false)}
             >
               {t('nav.home')}
+            </Link>
+            <Link
+              to="/blog"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
+              onClick={() => setIsOpen(false)}
+            >
+              {t('nav.blog')}
             </Link>
             {courses.map((course) => (
               <Link

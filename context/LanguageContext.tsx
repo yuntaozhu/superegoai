@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { translations } from '../translations';
+import { BlogPost } from '../types';
 
+export type { BlogPost };
 export type Language = 'en' | 'zh';
 
 interface LanguageContextType {

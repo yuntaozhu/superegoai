@@ -11,17 +11,17 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-brand-dark">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center overflow-hidden">
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute -top-[20%] -right-[10%] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[100px]" />
-          <div className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[100px]" />
+          <div className="absolute -top-[20%] right-0 w-[800px] h-[800px] bg-purple-600/10 rounded-full blur-[120px]" />
+          <div className="absolute -bottom-[20%] left-0 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px]" />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <span className="inline-block py-1 px-3 rounded-full bg-white/10 text-blue-300 text-sm font-semibold mb-6 border border-white/10">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <span className="inline-block py-1 px-3 rounded-full bg-white/5 text-blue-300 text-sm font-semibold mb-8 border border-white/10 backdrop-blur-sm">
             {t('hero.badge')}
           </span>
-          <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-8">
+          <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-8 leading-tight">
             {t('hero.title_prefix')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">{t('hero.title_highlight')}</span> <br/>
             {t('hero.title_suffix')}
           </h1>
@@ -32,9 +32,9 @@ const Home: React.FC = () => {
             <Link to="/course/art" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all hover:scale-105 shadow-lg shadow-blue-500/25">
               {t('hero.cta_primary')}
             </Link>
-            <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg font-semibold transition-all">
-              {t('hero.cta_secondary')}
-            </button>
+            <Link to="/blog" className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg font-semibold transition-all">
+              {t('nav.blog')}
+            </Link>
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ export const translations = {
   en: {
     nav: {
       home: 'Home',
+      blog: 'Blog',
       planets: 'Planets',
       explore: 'Explore',
     },
@@ -52,6 +53,7 @@ export const translations = {
   zh: {
     nav: {
       home: '首页',
+      blog: '博客',
       planets: '课程星球',
       explore: '探索',
     },
@@ -77,6 +79,11 @@ export const translations = {
       explore_planet: '探索星球',
       core_title: '核心恒星：第二大脑',
       core_desc: '中央基础设施。向量数据库、RAG 和知识图谱连接了艺术、运动、数据和交易。你在一个星球学到的知识将强化其他星球的能力。',
+      cta: {
+        title: '准备好构建你的第二大脑了吗？',
+        description: '加入未来“超我”架构师的行列。通过 AI 编排的视角，掌握艺术、运动、数据和量化交易。',
+        button: '加入候补名单',
+      }
     },
     cta: {
       title: '准备好构建你的第二大脑了吗？',

@@ -1,9 +1,11 @@
 
-import { Course, PhilosophyPillar } from './types';
+
+import { Course, PhilosophyPillar, BlogPost } from './types';
 
 interface ContentData {
   philosophyPillars: PhilosophyPillar[];
   courses: Course[];
+  blogPosts: BlogPost[];
 }
 
 const CONTENT_EN: ContentData = {
@@ -27,6 +29,62 @@ const CONTENT_EN: ContentData = {
       title: "Workflow Revolution: One Person Company (Agent Squad)",
       concept: "Methodology: Solve complex problems via 'Division of Labor'. Assemble your AI Team: PM Agent, Coder Agent, Tester Agent.",
       practice: "You are the CEO of this digital army, orchestrating information flow between AI employees."
+    }
+  ],
+  blogPosts: [
+    {
+      id: "1",
+      title: "Gemini 2.5: The Thinking Budget Revolution",
+      excerpt: "Why setting a 'Thinking Budget' changes how we interact with LLMs. Moving from instant answers to deliberate reasoning.",
+      content: "<p>The introduction of the <strong>Thinking Budget</strong> in Gemini 2.5 marks a shift from 'instant answers' to 'deliberate reasoning'. By allocating tokens specifically for internal chain-of-thought, we can now tackle complex architectural problems that previously resulted in hallucination.</p><p>For the SuperEgo architect, this means we can assign 'deep work' tasks to our agents, knowing they will pause and reflect before executing code.</p>",
+      date: "2024-05-15",
+      author: "System",
+      tags: ["Gemini", "Architecture", "LLM"]
+    },
+    {
+      id: "2",
+      title: "The Death of Syntax: Semantics is King",
+      excerpt: "Why memorizing API signatures is now obsolete. The rise of intention-based programming.",
+      content: "<p>In the past, a senior engineer was defined by how much of the documentation they had memorized. Today, context windows allow us to inject entire libraries into the prompt.</p><p>Your skill is no longer syntax; it is <strong>Semantics</strong>. Can you describe the <em>intent</em> of the code clearly enough for the AI to generate the syntax?</p>",
+      date: "2024-05-12",
+      author: "SuperEgo",
+      tags: ["Philosophy", "Coding", "Future of Work"]
+    },
+    {
+      id: "3",
+      title: "Agent Swarms in Production",
+      excerpt: "Lessons learned from deploying 5 autonomous agents to handle DevOps tasks.",
+      content: "<p>Orchestrating a team of agents (PM, Dev, QA) requires a different mindset. The bottleneck shifts from 'writing code' to 'communication overhead'.</p><p>We found that structured output (JSON) is the lingua franca that keeps the swarm from descending into chaos.</p>",
+      date: "2024-05-08",
+      author: "DevOps Bot",
+      tags: ["Agents", "Production", "DevOps"]
+    },
+    {
+      id: "4",
+      title: "RAG vs. Long Context: The Memory Dilemma",
+      excerpt: "With Gemini's 1M+ context window, do we still need Vector Databases? A cost vs. latency analysis.",
+      content: "<p>The debate is heating up. <strong>RAG (Retrieval Augmented Generation)</strong> offers precision and lower costs for massive datasets, while <strong>Long Context</strong> offers superior reasoning across connected documents.</p><p>The SuperEgo approach? Use RAG for long-term archival memory (The Library) and Long Context for working memory (The Workbench).</p>",
+      date: "2024-04-28",
+      author: "Data Architect",
+      tags: ["RAG", "Architecture", "Data"]
+    },
+    {
+      id: "5",
+      title: "Visualizing Attention: How Transformers See",
+      excerpt: "A non-mathematical guide to Query, Key, and Value matrices for frontend developers.",
+      content: "<p>Understanding the mechanism behind the magic. Imagine a file retrieval system. The <strong>Query</strong> is what you're looking for, the <strong>Key</strong> is the label on the folder, and the <strong>Value</strong> is the content inside.</p><p>Visualizing these weights helps us understand why models hallucinate—sometimes they just grab the wrong folder because the label was fuzzy.</p>",
+      date: "2024-04-20",
+      author: "Research Lead",
+      tags: ["Deep Learning", "Math", "Visualization"]
+    },
+    {
+      id: "6",
+      title: "Cursor + V0: The New Frontend Stack",
+      excerpt: "How to build a complete landing page in 15 minutes using generative UI tools.",
+      content: "<p>The loop is simple: 1. Generate the component visually with V0. 2. Copy the React code. 3. Paste into Cursor. 4. Ask Cursor to wire up the logic.</p><p>This workflow reduces the 'Time to Hello World' from hours to minutes, allowing you to focus on the user journey instead of CSS centering.</p>",
+      date: "2024-04-15",
+      author: "Frontend Agent",
+      tags: ["Coding", "Tools", "React"]
     }
   ],
   courses: [
@@ -169,7 +227,7 @@ const CONTENT_EN: ContentData = {
           title: "Data Logic Core",
           goal: "Bridging the gap between raw data and actionable strategy.",
           content: [
-            { title: "Code Interpreter Advanced", description: "Conversational data mining with Pandas Agents." },
+            { title: "Code Interpreter 进阶", description: "Conversational data mining with Pandas Agents." },
             { title: "Optimization & Simulation", description: "Exploring parameter spaces to find optimal solutions." },
             { title: "The Feynman Output", description: "Forcing the AI to explain complex models in simple terms." }
           ]
@@ -317,6 +375,62 @@ const CONTENT_ZH: ContentData = {
       title: "工作流革命：一人即一家公司（智能体团队）",
       concept: "方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。",
       practice: "你不再是孤独的开发者，你是这支“数字军团”的 CEO，负责在 AI 员工之间传递信息。"
+    }
+  ],
+  blogPosts: [
+    {
+      id: "1",
+      title: "Gemini 2.5: 思考预算的革命",
+      excerpt: "为什么设定“思考预算”会改变我们与 LLM 的交互方式。从即时回答到深思熟虑。",
+      content: "<p>Gemini 2.5 引入的 <strong>Thinking Budget</strong> 标志着从“即时回答”到“深思熟虑”的转变。通过为内部思维链分配 Token，我们现在可以解决以前会导致幻觉的复杂架构问题。</p><p>对于 SuperEgo 架构师来说，这意味着我们可以将“深度工作”任务分配给我们的 Agent，因为我们知道它们在执行代码之前会停下来反思。</p>",
+      date: "2024-05-15",
+      author: "System",
+      tags: ["Gemini", "Architecture", "LLM"]
+    },
+    {
+      id: "2",
+      title: "语法的消亡：语义为王",
+      excerpt: "为什么死记硬背 API 签名现在已经过时了。意图驱动编程的兴起。",
+      content: "<p>过去，高级工程师的定义是他们记住了多少文档。今天，Context Window 允许我们将整个库注入到 Prompt 中。</p><p>你的技能不再是语法；而是<strong>语义</strong>。你能否足够清晰地描述代码的<em>意图</em>，以便 AI 生成语法？</p>",
+      date: "2024-05-12",
+      author: "SuperEgo",
+      tags: ["Philosophy", "Coding", "Future of Work"]
+    },
+    {
+      id: "3",
+      title: "生产环境中的 Agent 蜂群",
+      excerpt: "部署 5 个自主 Agent 负责 DevOps 任务的经验教训。",
+      content: "<p>编排一个 Agent 团队（PM、Dev、QA）需要不同的思维方式。瓶颈从“写代码”转移到了“沟通开销”。</p><p>我们发现结构化输出 (JSON) 是保持蜂群不陷入混乱的通用语言。</p>",
+      date: "2024-05-08",
+      author: "DevOps Bot",
+      tags: ["Agents", "Production", "DevOps"]
+    },
+    {
+      id: "4",
+      title: "RAG vs. 长上下文：记忆的困境",
+      excerpt: "有了 Gemini 的 100万+ 上下文窗口，我们还需要向量数据库吗？成本与延迟的分析。",
+      content: "<p>争论正在升温。<strong>RAG (检索增强生成)</strong> 为海量数据集提供了精确度和低成本，而<strong>长上下文</strong> 提供了跨文档的卓越推理能力。</p><p>SuperEgo 的方法？使用 RAG 作为长期档案记忆（图书馆），使用长上下文作为工作记忆（工作台）。</p>",
+      date: "2024-04-28",
+      author: "Data Architect",
+      tags: ["RAG", "Architecture", "Data"]
+    },
+    {
+      id: "5",
+      title: "注意力机制可视化：Transformer 是如何“看”的",
+      excerpt: "面向前端开发者的 Query, Key, Value 矩阵非数学指南。",
+      content: "<p>理解魔法背后的机制。想象一个文件检索系统。<strong>Query</strong> 是你在找什么，<strong>Key</strong> 是文件夹上的标签，<strong>Value</strong> 是里面的内容。</p><p>可视化这些权重有助于我们理解为什么模型会产生幻觉——有时它们只是抓错了文件夹，因为标签很模糊。</p>",
+      date: "2024-04-20",
+      author: "Research Lead",
+      tags: ["Deep Learning", "Math", "Visualization"]
+    },
+    {
+      id: "6",
+      title: "Cursor + V0: 新一代前端技术栈",
+      excerpt: "如何使用生成式 UI 工具在 15 分钟内构建一个完整的着陆页。",
+      content: "<p>循环很简单：1. 用 V0 可视化生成组件。 2. 复制代码。 3. 粘贴到 Cursor。 4. 让 Cursor 连接逻辑。</p><p>这个工作流将“Hello World 时间”从几小时缩短到几分钟，让你专注于用户旅程而不是 CSS 居中。</p>",
+      date: "2024-04-15",
+      author: "Frontend Agent",
+      tags: ["Coding", "Tools", "React"]
     }
   ],
   courses: [

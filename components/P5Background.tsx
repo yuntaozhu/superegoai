@@ -5,10 +5,12 @@ const P5Background: React.FC = () => {
   const scriptLoaded = useRef(false);
 
   useEffect(() => {
+    // Only load the script once
     if (scriptLoaded.current) return;
 
     const loadP5 = () => {
       const script = document.createElement('script');
+      // Use stable 1.6.0 version to avoid ESM/gifenc issues
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js';
       script.async = true;
       script.onload = () => {
@@ -19,6 +21,7 @@ const P5Background: React.FC = () => {
     };
 
     const initSketch = () => {
+      // Check if p5 is loaded globally
       if (!containerRef.current || !(window as any).p5) return;
 
       const sketch = (p: any) => {
@@ -26,6 +29,7 @@ const P5Background: React.FC = () => {
         let targetObjs: any[] = [];
         const objsNum = 40;
         const targetNum = 5;
+        // Brand colors: Blue, Purple, Cyan, Indigo
         const palette = ["#3b82f6", "#8b5cf6", "#06b6d4", "#6366f1"];
 
         p.setup = () => {
@@ -43,6 +47,7 @@ const P5Background: React.FC = () => {
 
         p.draw = () => {
           p.clear();
+          // Use ADD blend mode for glowing effect
           p.blendMode(p.BLEND);
           p.blendMode(p.ADD);
 
@@ -62,6 +67,7 @@ const P5Background: React.FC = () => {
         };
       };
 
+      // Initialize p5 in instance mode attached to the container
       new (window as any).p5(sketch, containerRef.current);
     };
 
@@ -72,7 +78,7 @@ const P5Background: React.FC = () => {
     }
 
     return () => {
-      // Cleanup if needed, though usually fine for background
+      // Cleanup: remove canvas if component unmounts
       const canvas = containerRef.current?.querySelector('canvas');
       if (canvas) canvas.remove();
     };
@@ -81,13 +87,13 @@ const P5Background: React.FC = () => {
   return (
     <div 
       ref={containerRef} 
-      className="fixed top-0 left-0 w-full h-full -z-10 bg-brand-dark"
+      className="fixed top-0 left-0 w-full h-full -z-10 bg-brand-dark pointer-events-none"
       style={{ opacity: 0.8 }}
     />
   );
 };
 
-// --- Helper Classes (Defined inside/outside as needed, here simplified) ---
+// --- Helper Classes ---
 
 class MovingObj {
   p: any;
@@ -118,7 +124,10 @@ class MovingObj {
     this.maxspeed = p.random(2, 5);
     this.maxsteer = p.random(0.05, 0.2);
     this.desired = p.createVector(0, 0);
+    
+    // Find initial target
     this.targetObj = this.findNearestTarget();
+    
     this.shapeScale = p.random(1, 4);
     this.c = p.color(p.random(palette));
     this.targetColor = this.c;
@@ -136,6 +145,12 @@ class MovingObj {
     this.pos.add(this.vel);
     this.acc.mult(0);
     this.dt += 0.01;
+    
+    // Wrap around screen
+    if (this.pos.x < -50) this.pos.x = this.p.width + 50;
+    if (this.pos.x > this.p.width + 50) this.pos.x = -50;
+    if (this.pos.y < -50) this.pos.y = this.p.height + 50;
+    if (this.pos.y > this.p.height + 50) this.pos.y = -50;
   }
 
   seek() {
@@ -163,6 +178,9 @@ class MovingObj {
   findNearestTarget() {
     let minDist = 100000;
     let minIndex = 0;
+    // Check safety
+    if (!this.targetObjs || this.targetObjs.length === 0) return { pos: this.p.createVector(this.p.width/2, this.p.height/2), c: this.p.color('#fff') };
+
     for (let i = 0; i < this.targetObjs.length; i++) {
       let dist = this.targetObjs[i].pos.dist(this.pos);
       if (dist < minDist) {
@@ -193,6 +211,7 @@ class TargetObj {
 
   move() {
     const p = this.p;
+    // Use Perlin noise for smooth organic movement
     this.pos.set(
       p.map(p.noise(p.frameCount * 0.002 + this.nX), 0, 1, -p.width * 0.2, p.width * 1.2),
       p.map(p.noise(p.frameCount * 0.002 + this.nY), 0, 1, -p.height * 0.2, p.height * 1.2)
