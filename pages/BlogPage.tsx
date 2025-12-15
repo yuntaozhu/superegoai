@@ -106,7 +106,7 @@ const BlogPage: React.FC = () => {
             className="group mb-8 flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors font-medium"
           >
             <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to blog
+            {language === 'en' ? 'Back to blog' : '返回博客'}
           </button>
 
           {/* Header */}
@@ -173,6 +173,17 @@ const BlogPage: React.FC = () => {
                   <span className="font-bold text-xs">小</span>
                 </button>
              </div>
+          </div>
+
+          {/* Bottom Back Button */}
+          <div className="mt-16 text-center">
+             <button 
+               onClick={() => setSelectedPost(null)}
+               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all border border-white/10 group"
+             >
+                <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                {language === 'en' ? 'Back to all posts' : '返回所有文章'}
+             </button>
           </div>
         </article>
       </div>
