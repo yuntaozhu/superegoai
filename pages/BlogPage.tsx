@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, BlogPost } from '../context/LanguageContext';
+
+const POSTS_INCREMENT = 10;
 
 const BlogPage: React.FC = () => {
   const { language, t } = useLanguage();
@@ -9,6 +11,8 @@ const BlogPage: React.FC = () => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(POSTS_INCREMENT);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   // Extract all unique tags
   const allTags = Array.from(new Set(content.blogPosts.flatMap(post => post.tags))).sort();
@@ -21,9 +25,43 @@ const BlogPage: React.FC = () => {
     return matchesSearch && matchesTag;
   });
 
-  // Scroll to top when entering or changing view
+  // Calculate displayed posts (Infinite Scroll)
+  const displayedPosts = filteredPosts.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredPosts.length;
+
+  // Reset visible count when filters change
   useEffect(() => {
+    setVisibleCount(POSTS_INCREMENT);
     window.scrollTo(0, 0);
+  }, [searchValue, selectedTag]);
+
+  // Infinite Scroll Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setVisibleCount((prev) => prev + POSTS_INCREMENT);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [hasMore]);
+
+  // Scroll to top when entering detail view
+  useEffect(() => {
+    if (selectedPost) {
+        window.scrollTo(0, 0);
+    }
   }, [selectedPost]);
 
   // Handle Social Sharing
@@ -187,19 +225,19 @@ const BlogPage: React.FC = () => {
           {/* Left Column: Post List */}
           <div className="md:w-3/4">
             <ul className="divide-y divide-white/10">
-              {!filteredPosts.length && (
+              {displayedPosts.length === 0 && (
                 <li className="py-12 text-center text-gray-500 italic">
                     {language === 'en' ? 'No posts found matching your criteria.' : '没有找到匹配的文章。'}
                 </li>
               )}
-              {filteredPosts.map((post) => {
+              {displayedPosts.map((post) => {
                 const date = new Date(post.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 });
                 return (
-                  <li key={post.id} className="py-12 group">
+                  <li key={post.id} className="py-12 group animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0 gap-6">
                       
                       {/* Date Column - Sticky for visual structure */}
@@ -253,6 +291,24 @@ const BlogPage: React.FC = () => {
                 );
               })}
             </ul>
+
+            {/* Infinite Scroll Sentinel */}
+            {hasMore && (
+              <div ref={observerTarget} className="py-12 flex justify-center">
+                 <div className="animate-pulse flex space-x-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animation-delay-200"></div>
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animation-delay-400"></div>
+                 </div>
+              </div>
+            )}
+            
+            {/* End of Content Message */}
+            {!hasMore && displayedPosts.length > 0 && (
+                <div className="py-12 text-center text-gray-600 text-sm font-mono border-t border-white/5 mt-8">
+                    {language === 'en' ? 'END OF SIGNAL' : '信号终止'}
+                </div>
+            )}
           </div>
 
           {/* Right Column: Tags Sidebar (Sticky) */}
