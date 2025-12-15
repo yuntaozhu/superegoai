@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI First Course | Building the SuperEgo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add typography plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -20,7 +21,27 @@
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
-            }
+            },
+            typography: (theme) => ({
+              DEFAULT: {
+                css: {
+                  color: theme('colors.gray.300'),
+                  a: {
+                    color: theme('colors.blue.400'),
+                    '&:hover': {
+                      color: theme('colors.blue.300'),
+                    },
+                  },
+                  h1: { color: theme('colors.white') },
+                  h2: { color: theme('colors.white') },
+                  h3: { color: theme('colors.white') },
+                  h4: { color: theme('colors.white') },
+                  code: { color: theme('colors.pink.400') },
+                  strong: { color: theme('colors.white') },
+                  blockquote: { color: theme('colors.gray.400'), borderLeftColor: theme('colors.blue.500') },
+                },
+              },
+            }),
           }
         }
       }

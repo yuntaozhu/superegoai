@@ -33,58 +33,128 @@ const CONTENT_EN: ContentData = {
   ],
   blogPosts: [
     {
-      id: "1",
+      id: "simple-azp-agent-dind",
+      title: "Simple AZP Agent (DinD)",
+      excerpt: "A simple Azure DevOps Agent with Docker-in-Docker support. How to build a self-contained agent for CI/CD pipelines.",
+      content: `
+        <p>This is a quick guide on how to create a Docker-based Azure DevOps agent that supports Docker-in-Docker (DinD). This allows your agent to build Docker images itself.</p>
+        
+        <h3>Dockerfile</h3>
+        <p>The base image uses Ubuntu 20.04 and installs necessary dependencies including Docker CLI and the Azure DevOps agent software.</p>
+        
+        <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-sm text-pink-400">
+FROM ubuntu:20.04
+
+# To make it easier for build and release pipelines to run apt-get,
+# configure apt to not require confirmation (assume the -y argument by default)
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    jq \
+    git \
+    iputils-ping \
+    libcurl4 \
+    libicu66 \
+    libunwind8 \
+    netcat \
+    libssl1.0 \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get update && apt-get install -y docker-ce-cli
+
+WORKDIR /azp
+
+COPY ./start.sh .
+RUN chmod +x start.sh
+
+ENTRYPOINT [ "./start.sh" ]
+        </code></pre>
+
+        <h3>Start Script</h3>
+        <p>The <code>start.sh</code> script handles the registration of the agent with Azure DevOps when the container starts.</p>
+
+        <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-sm text-green-400">
+#!/bin/bash
+set -e
+
+if [ -z "$AZP_URL" ]; then
+  echo 1>&2 "error: missing AZP_URL environment variable"
+  exit 1
+fi
+
+if [ -z "$AZP_TOKEN_FILE" ]; then
+  if [ -z "$AZP_TOKEN" ]; then
+    echo 1>&2 "error: missing AZP_TOKEN environment variable"
+    exit 1
+  fi
+  AZP_TOKEN_FILE=/azp/.token
+  echo -n $AZP_TOKEN > "$AZP_TOKEN_FILE"
+fi
+
+unset AZP_TOKEN
+
+# ... (Agent configuration logic)
+        </code></pre>
+
+        <h3>Conclusion</h3>
+        <p>By using this setup, you can deploy ephemeral build agents on any container orchestrator (Kubernetes, ACI) that provides full isolation and scalable build capacity.</p>
+      `,
+      date: "2023-09-08",
+      author: "DevOps Engineer",
+      tags: ["azure-devops", "docker", "agent", "dind"]
+    },
+    {
+      id: "gemini-thinking-budget",
       title: "Gemini 2.5: The Thinking Budget Revolution",
       excerpt: "Why setting a 'Thinking Budget' changes how we interact with LLMs. Moving from instant answers to deliberate reasoning.",
-      content: "<p>The introduction of the <strong>Thinking Budget</strong> in Gemini 2.5 marks a shift from 'instant answers' to 'deliberate reasoning'. By allocating tokens specifically for internal chain-of-thought, we can now tackle complex architectural problems that previously resulted in hallucination.</p><p>For the SuperEgo architect, this means we can assign 'deep work' tasks to our agents, knowing they will pause and reflect before executing code.</p>",
+      content: `
+        <p>The introduction of the <strong>Thinking Budget</strong> in Gemini 2.5 marks a shift from 'instant answers' to 'deliberate reasoning'. By allocating tokens specifically for internal chain-of-thought, we can now tackle complex architectural problems that previously resulted in hallucination.</p>
+        
+        <h3>What is a Thinking Budget?</h3>
+        <p>Traditionally, LLMs generate tokens sequentially to form the final answer. With a thinking budget, the model generates hidden 'thought tokens' that explore the solution space before committing to an output.</p>
+        
+        <blockquote>
+        "It's like giving the model a scratchpad to do the math before writing the answer on the test paper."
+        </blockquote>
+
+        <h3>Implications for SuperEgo Architects</h3>
+        <ul>
+          <li><strong>Agent Reliability:</strong> We can assign 'deep work' tasks to our agents.</li>
+          <li><strong>Less Prompt Engineering:</strong> We don't need to force "Chain of Thought" in the prompt; the model does it natively.</li>
+        </ul>
+      `,
       date: "2024-05-15",
       author: "System",
-      tags: ["Gemini", "Architecture", "LLM"]
+      tags: ["gemini", "architecture", "llm"]
     },
     {
-      id: "2",
-      title: "The Death of Syntax: Semantics is King",
-      excerpt: "Why memorizing API signatures is now obsolete. The rise of intention-based programming.",
-      content: "<p>In the past, a senior engineer was defined by how much of the documentation they had memorized. Today, context windows allow us to inject entire libraries into the prompt.</p><p>Your skill is no longer syntax; it is <strong>Semantics</strong>. Can you describe the <em>intent</em> of the code clearly enough for the AI to generate the syntax?</p>",
-      date: "2024-05-12",
-      author: "SuperEgo",
-      tags: ["Philosophy", "Coding", "Future of Work"]
-    },
-    {
-      id: "3",
-      title: "Agent Swarms in Production",
-      excerpt: "Lessons learned from deploying 5 autonomous agents to handle DevOps tasks.",
-      content: "<p>Orchestrating a team of agents (PM, Dev, QA) requires a different mindset. The bottleneck shifts from 'writing code' to 'communication overhead'.</p><p>We found that structured output (JSON) is the lingua franca that keeps the swarm from descending into chaos.</p>",
-      date: "2024-05-08",
-      author: "DevOps Bot",
-      tags: ["Agents", "Production", "DevOps"]
-    },
-    {
-      id: "4",
-      title: "RAG vs. Long Context: The Memory Dilemma",
-      excerpt: "With Gemini's 1M+ context window, do we still need Vector Databases? A cost vs. latency analysis.",
-      content: "<p>The debate is heating up. <strong>RAG (Retrieval Augmented Generation)</strong> offers precision and lower costs for massive datasets, while <strong>Long Context</strong> offers superior reasoning across connected documents.</p><p>The SuperEgo approach? Use RAG for long-term archival memory (The Library) and Long Context for working memory (The Workbench).</p>",
-      date: "2024-04-28",
-      author: "Data Architect",
-      tags: ["RAG", "Architecture", "Data"]
-    },
-    {
-      id: "5",
-      title: "Visualizing Attention: How Transformers See",
-      excerpt: "A non-mathematical guide to Query, Key, and Value matrices for frontend developers.",
-      content: "<p>Understanding the mechanism behind the magic. Imagine a file retrieval system. The <strong>Query</strong> is what you're looking for, the <strong>Key</strong> is the label on the folder, and the <strong>Value</strong> is the content inside.</p><p>Visualizing these weights helps us understand why models hallucinate—sometimes they just grab the wrong folder because the label was fuzzy.</p>",
-      date: "2024-04-20",
-      author: "Research Lead",
-      tags: ["Deep Learning", "Math", "Visualization"]
-    },
-    {
-      id: "6",
+      id: "cursor-v0-stack",
       title: "Cursor + V0: The New Frontend Stack",
       excerpt: "How to build a complete landing page in 15 minutes using generative UI tools.",
-      content: "<p>The loop is simple: 1. Generate the component visually with V0. 2. Copy the React code. 3. Paste into Cursor. 4. Ask Cursor to wire up the logic.</p><p>This workflow reduces the 'Time to Hello World' from hours to minutes, allowing you to focus on the user journey instead of CSS centering.</p>",
+      content: `
+        <p>The loop is simple but powerful. It removes the friction of CSS and boilerplate.</p>
+        
+        <h3>The Workflow</h3>
+        <ol>
+            <li><strong>Visualize:</strong> Generate the component visually with V0.dev.</li>
+            <li><strong>Extract:</strong> Copy the React/Tailwind code.</li>
+            <li><strong>Refine:</strong> Paste into Cursor.</li>
+            <li><strong>Logic:</strong> Ask Cursor to wire up the logic and state management.</li>
+        </ol>
+        
+        <p>This workflow reduces the 'Time to Hello World' from hours to minutes, allowing you to focus on the user journey instead of CSS centering.</p>
+      `,
       date: "2024-04-15",
       author: "Frontend Agent",
-      tags: ["Coding", "Tools", "React"]
+      tags: ["coding", "tools", "react"]
     }
   ],
   courses: [
@@ -236,14 +306,14 @@ const CONTENT_EN: ContentData = {
     },
     {
       id: "quant",
-      title: "AI Native Quantitative Trading",
-      shortTitle: "Planet D: Quant",
-      tagline: "Decision & Evolution",
+      title: "Gemini 3 驱动的 AI 原生量化交易",
+      shortTitle: "行星 D: 量化",
+      tagline: "决策与进化",
       description: "Train the SuperEgo's decision making and anti-fragility. We don't write algos; we build Agents that breed algos.",
       icon: "📈",
       color: "from-blue-500 to-indigo-600",
       philosophyMap: {
-        title: "The Philosophy Mapping",
+        title: "课程哲学映射",
         points: [
           "Phase I: Knowledge to Code (Alpha Discovery) - Like a Researcher reading papers.",
           "Phase II: The Arena (Backtest & Tune) - Coder vs. Reviewer Agents.",
@@ -261,7 +331,7 @@ const CONTENT_EN: ContentData = {
           ]
         },
         {
-          title: "Module 2: Knowledge to Code (The Researcher)",
+          title: "Module 2: Phase I - Knowledge to Code (The Researcher)",
           goal: "Unstructured Data to Structured Code.",
           content: [
             { title: "Visual Reading", description: "Extracting math formulas (Black-Scholes) from PDFs using Vision." },
@@ -270,7 +340,7 @@ const CONTENT_EN: ContentData = {
           ]
         },
         {
-          title: "Module 3: The Arena (Reasoning over Optimization)",
+          title: "Module 3: Phase II - The Arena (Reasoning over Optimization)",
           goal: "Logic-based optimization, not Grid Search.",
           content: [
             { title: "Coder & Critic", description: "Dual Agent Game. Coder builds, Critic reviews equity curves (Visual)." },
@@ -279,8 +349,8 @@ const CONTENT_EN: ContentData = {
           ]
         },
         {
-          title: "Module 4: Evolution (Self-Learning)",
-          goal: "Long-term memory and evolutionary mechanisms.",
+          title: "Module 4: Phase III - Evolution (Self-Learning)",
+          goal: "引入长期记忆与进化机制。",
           content: [
             { title: "Strategy Gene Pool", description: "Vectorizing successful snippets into ChromaDB." },
             { title: "Evolutionary Algorithms", description: "Using LLM as the Mutation Operator to rewrite logic." },
@@ -288,8 +358,8 @@ const CONTENT_EN: ContentData = {
           ]
         },
         {
-          title: "Module 5: Deployment & Risk",
-          goal: "The Safety Net.",
+          title: "Module 5: Deployment & Risk (The Safety Net)",
+          goal: "实盘部署中的 AI 风控。",
           content: [
             { title: "The Risk Officer Agent", description: "Independent monitoring system to cut power on anomalies." },
             { title: "Human-in-the-Loop", description: "Streamlit dashboard for human approval of key signals." },
@@ -300,53 +370,53 @@ const CONTENT_EN: ContentData = {
     },
     {
       id: "solopreneur",
-      title: "The AI First Solopreneur",
-      shortTitle: "Planet E: Solopreneur",
-      tagline: "Build Your First SaaS from Scratch",
-      description: "Designed for non-technical creators. We don't train programmers; we train 'Product Builders'. Your coding team is right in your chat window.",
+      title: "AI 时代的超级个体：从零构建你的第一个商业软件",
+      shortTitle: "行星 E: 超级个体",
+      tagline: "你的代码团队，就在你的对话框里",
+      description: "专门为非技术背景的普通人设计的实战课程。这份课程的目标非常功利且直接：不培养程序员，只培养“产品缔造者”。",
       icon: "🚀",
       color: "from-red-500 to-amber-500",
       philosophyMap: {
-        title: "The Course Manifesto",
+        title: "课程宣言 (Manifesto)",
         points: [
-          "New World: You only need to define the problem and have good taste. Launch a SaaS in 10 weeks.",
-          "Core Promise: Become a 'SuperEgo'—a CEO who understands tech boundaries and orchestrates an AI army.",
-          "No Syntax Policy: Hand-writing complex code is forbidden. You are graded on how clear your prompts are."
+          "新世界：你只需要清晰地定义问题，拥有良好的审美，并掌握指挥 AI 的逻辑，就能在 10 周内上线 SaaS。",
+          "核心承诺：我们不教你背诵代码。我们教你如何成为一个“超我” (SuperEgo)——一个能指挥 AI 军团的 CEO。",
+          "零语法政策 (No Syntax Policy)：严禁手写复杂的循环。考核标准是“你向 AI 提的需求清不清晰”。"
         ]
       },
       syllabus: [
         {
-          title: "Phase 1: Cognitive Awakening & Setup (Week 1-2)",
-          goal: "Break the fear of code. Treat AI as a senior engineer.",
+          title: "第一阶段：认知觉醒与环境搭建 (Week 1-2)",
+          goal: "打破对代码的恐惧，建立“AI 也是人”的协作感。",
           content: [
-            { title: "Week 1: Hello, SuperEgo", description: "Why 'Natural Language Programming'? Install Cursor. Generate a personal site with one prompt." },
-            { title: "Week 2: The Product Manager Agent", description: "Writing PRDs. Using Deep Research Agents for competitor analysis. Generating DB schemas." }
+            { title: "Week 1: Hello, SuperEgo (你好，超我)", description: "颠覆认知：自然语言编程时代。环境配置：Cursor + API Key。作业：一句话生成个人网站。" },
+            { title: "Week 2: The Product Manager Agent", description: "学会写 PRD。Deep Research 调研竞品。完成功能说明书和数据库结构初稿。" }
           ]
         },
         {
-          title: "Phase 2: Visuals First & Prototyping (Week 3-4)",
-          goal: "Aesthetics driven development. WYSIWYG.",
+          title: "第二阶段：视觉先行与原型构建 (Week 3-4)",
+          goal: "所见即所得。用“审美”驱动开发。",
           content: [
-            { title: "Week 3: Visual Engineering", description: "Using v0.dev. Component thinking: 'Make this button a reusable component'." },
-            { title: "Week 4: The Frontend Logic", description: "Making it move. Cursor practice: 'Pop up a confetti animation on click'." }
+            { title: "Week 3: Visual Engineering (视觉工程)", description: "工具流：v0.dev。组件化思维：“统一全站配色”。作业：完成所有前端页面。" },
+            { title: "Week 4: The Frontend Logic (前端交互)", description: "让页面“动”起来。Cursor 实战：交互逻辑与手机端适配。" }
           ]
         },
         {
-          title: "Phase 3: Soul & Data Connection (Week 5-7)",
-          goal: "Full stack integration. Connecting the pipes.",
+          title: "第三阶段：赋予灵魂与数据连接 (Week 5-7)",
+          goal: "接通血管和神经，让软件真正能用。",
           content: [
-            { title: "Week 5: The Backend Agent", description: "Supabase intro. SQL is Natural Language. 'Allow users to read only their own data'." },
-            { title: "Week 6: Wiring it Together", description: "CRUD operations. The most important skill: AI Debugging & Self-Correction." },
-            { title: "Week 7: The Reviewer Mindset", description: "Testing & Security. Asking AI to play the hacker and fix vulnerabilities." }
+            { title: "Week 5: The Backend Agent (后端智能体)", description: "Supabase 入门。SQL 也是自然语言。作业：实现用户注册/登录。" },
+            { title: "Week 6: Wiring it Together (全栈贯通)", description: "CRUD 增删改查。AI Debugging：让 AI 自我修复报错。作业：核心功能跑通。" },
+            { title: "Week 7: The Reviewer Mindset (审查与测试)", description: "斯坦福理念落地：让 AI 写测试脚本，扮演黑客攻击并修复漏洞。" }
           ]
         },
         {
-          title: "Phase 4: Commercialization & Launch (Week 8-10)",
-          goal: "From software to product.",
+          title: "第四阶段：商业化与发布 (Week 8-10)",
+          goal: "从软件变成商品。",
           content: [
-            { title: "Week 8: Monetization", description: "Stripe integration. Reading docs with AI. 'Show this page only to paid users'." },
-            { title: "Week 9: Launch & Growth Agents", description: "SEO Automation. Scripting Social Bots for Twitter/RedNote updates." },
-            { title: "Week 10: Demo Day", description: "Launch day. Building your 'ExtBrain Knowledge Base' for the next product." }
+            { title: "Week 8: Monetization (收钱！)", description: "让 AI 读懂 Stripe 文档并接入支付。设置付费用户权限。" },
+            { title: "Week 9: Launch & Growth Agents", description: "SEO 自动化。写脚本自动推送更新到社交媒体。" },
+            { title: "Week 10: Demo Day (路演日)", description: "成果展示。复盘：构建“第二大脑知识库”，存下好用的 Prompt。" }
           ]
         }
       ]
@@ -379,52 +449,53 @@ const CONTENT_ZH: ContentData = {
   ],
   blogPosts: [
     {
-      id: "1",
+      id: "simple-azp-agent-dind",
+      title: "Simple AZP Agent (DinD)",
+      excerpt: "一个支持 Docker-in-Docker 的简单 Azure DevOps Agent。",
+      content: `
+        <p>这是一个关于如何创建一个支持 Docker-in-Docker (DinD) 的 Docker-based Azure DevOps agent 的快速指南。这允许你的 agent 自己构建 Docker 镜像。</p>
+        
+        <h3>Dockerfile</h3>
+        <p>基础镜像使用 Ubuntu 20.04 并安装必要的依赖项，包括 Docker CLI 和 Azure DevOps agent 软件。</p>
+        
+        <pre class="bg-gray-800 p-4 rounded-lg overflow-x-auto"><code class="text-sm text-pink-400">
+FROM ubuntu:20.04
+# ... (省略具体代码，见英文版)
+RUN apt-get update && apt-get install -y docker-ce-cli
+# ...
+ENTRYPOINT [ "./start.sh" ]
+        </code></pre>
+
+        <h3>Start Script</h3>
+        <p><code>start.sh</code> 脚本处理 agent 在容器启动时向 Azure DevOps 的注册。</p>
+
+        <h3>结论</h3>
+        <p>通过这种设置，你可以在任何提供完全隔离和可扩展构建能力的容器编排器（Kubernetes, ACI）上部署临时构建 agent。</p>
+      `,
+      date: "2023-09-08",
+      author: "DevOps Engineer",
+      tags: ["azure-devops", "docker", "agent", "dind"]
+    },
+    {
+      id: "gemini-thinking-budget",
       title: "Gemini 2.5: 思考预算的革命",
       excerpt: "为什么设定“思考预算”会改变我们与 LLM 的交互方式。从即时回答到深思熟虑。",
-      content: "<p>Gemini 2.5 引入的 <strong>Thinking Budget</strong> 标志着从“即时回答”到“深思熟虑”的转变。通过为内部思维链分配 Token，我们现在可以解决以前会导致幻觉的复杂架构问题。</p><p>对于 SuperEgo 架构师来说，这意味着我们可以将“深度工作”任务分配给我们的 Agent，因为我们知道它们在执行代码之前会停下来反思。</p>",
+      content: `
+        <p>Gemini 2.5 引入的 <strong>Thinking Budget</strong> 标志着从“即时回答”到“深思熟虑”的转变。通过为内部思维链分配 Token，我们现在可以解决以前会导致幻觉的复杂架构问题。</p>
+        
+        <h3>什么是思考预算？</h3>
+        <p>传统上，LLM 顺序生成 Token 以形成最终答案。有了思考预算，模型在提交输出之前会生成隐藏的“思考 Token”来探索解决方案空间。</p>
+        
+        <blockquote>
+        “这就像在试卷上写答案之前给模型一张草稿纸做数学题。”
+        </blockquote>
+      `,
       date: "2024-05-15",
       author: "System",
       tags: ["Gemini", "Architecture", "LLM"]
     },
     {
-      id: "2",
-      title: "语法的消亡：语义为王",
-      excerpt: "为什么死记硬背 API 签名现在已经过时了。意图驱动编程的兴起。",
-      content: "<p>过去，高级工程师的定义是他们记住了多少文档。今天，Context Window 允许我们将整个库注入到 Prompt 中。</p><p>你的技能不再是语法；而是<strong>语义</strong>。你能否足够清晰地描述代码的<em>意图</em>，以便 AI 生成语法？</p>",
-      date: "2024-05-12",
-      author: "SuperEgo",
-      tags: ["Philosophy", "Coding", "Future of Work"]
-    },
-    {
-      id: "3",
-      title: "生产环境中的 Agent 蜂群",
-      excerpt: "部署 5 个自主 Agent 负责 DevOps 任务的经验教训。",
-      content: "<p>编排一个 Agent 团队（PM、Dev、QA）需要不同的思维方式。瓶颈从“写代码”转移到了“沟通开销”。</p><p>我们发现结构化输出 (JSON) 是保持蜂群不陷入混乱的通用语言。</p>",
-      date: "2024-05-08",
-      author: "DevOps Bot",
-      tags: ["Agents", "Production", "DevOps"]
-    },
-    {
-      id: "4",
-      title: "RAG vs. 长上下文：记忆的困境",
-      excerpt: "有了 Gemini 的 100万+ 上下文窗口，我们还需要向量数据库吗？成本与延迟的分析。",
-      content: "<p>争论正在升温。<strong>RAG (检索增强生成)</strong> 为海量数据集提供了精确度和低成本，而<strong>长上下文</strong> 提供了跨文档的卓越推理能力。</p><p>SuperEgo 的方法？使用 RAG 作为长期档案记忆（图书馆），使用长上下文作为工作记忆（工作台）。</p>",
-      date: "2024-04-28",
-      author: "Data Architect",
-      tags: ["RAG", "Architecture", "Data"]
-    },
-    {
-      id: "5",
-      title: "注意力机制可视化：Transformer 是如何“看”的",
-      excerpt: "面向前端开发者的 Query, Key, Value 矩阵非数学指南。",
-      content: "<p>理解魔法背后的机制。想象一个文件检索系统。<strong>Query</strong> 是你在找什么，<strong>Key</strong> 是文件夹上的标签，<strong>Value</strong> 是里面的内容。</p><p>可视化这些权重有助于我们理解为什么模型会产生幻觉——有时它们只是抓错了文件夹，因为标签很模糊。</p>",
-      date: "2024-04-20",
-      author: "Research Lead",
-      tags: ["Deep Learning", "Math", "Visualization"]
-    },
-    {
-      id: "6",
+      id: "cursor-v0-stack",
       title: "Cursor + V0: 新一代前端技术栈",
       excerpt: "如何使用生成式 UI 工具在 15 分钟内构建一个完整的着陆页。",
       content: "<p>循环很简单：1. 用 V0 可视化生成组件。 2. 复制代码。 3. 粘贴到 Cursor。 4. 让 Cursor 连接逻辑。</p><p>这个工作流将“Hello World 时间”从几小时缩短到几分钟，让你专注于用户旅程而不是 CSS 居中。</p>",

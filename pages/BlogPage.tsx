@@ -29,14 +29,14 @@ const BlogPage: React.FC = () => {
   if (selectedPost) {
     return (
       <div className="min-h-screen bg-brand-dark pt-24 pb-20 px-4 sm:px-6 lg:px-8">
-        <article className="max-w-4xl mx-auto">
+        <article className="max-w-3xl mx-auto">
           {/* Back Button */}
           <button 
             onClick={() => setSelectedPost(null)}
-            className="group mb-8 flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors"
+            className="group mb-8 flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors font-medium"
           >
             <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Back to Blog
+            Back to blog
           </button>
 
           {/* Header */}
@@ -51,16 +51,16 @@ const BlogPage: React.FC = () => {
              </h1>
              <div className="flex justify-center gap-3 flex-wrap">
                 {selectedPost.tags.map(tag => (
-                  <span key={tag} className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20">
-                    {tag.toUpperCase()}
+                  <span key={tag} className="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wide">
+                    {tag}
                   </span>
                 ))}
              </div>
           </header>
           
-          {/* Prose Content */}
+          {/* Prose Content - Using Tailwind Typography */}
           <div 
-            className="prose prose-invert prose-lg max-w-none text-gray-300 leading-8"
+            className="prose prose-invert prose-lg max-w-none text-gray-300 leading-8 prose-headings:text-gray-100 prose-a:text-blue-400 prose-strong:text-white prose-code:text-pink-400 prose-pre:bg-gray-800 prose-pre:border prose-pre:border-white/10"
             dangerouslySetInnerHTML={{ __html: selectedPost.content }}
           />
 
@@ -68,7 +68,7 @@ const BlogPage: React.FC = () => {
           <div className="mt-16 pt-8 border-t border-white/10 flex items-center justify-between text-sm text-gray-500">
              <div>Author: <span className="text-gray-200 font-medium">{selectedPost.author}</span></div>
              <div className="flex gap-4">
-                <button className="hover:text-white transition-colors">Share</button>
+                <button className="hover:text-white transition-colors">Share on Twitter</button>
              </div>
           </div>
         </article>
@@ -90,17 +90,17 @@ const BlogPage: React.FC = () => {
             {language === 'en' ? 'Insights on AI, Architecture, and the SuperEgo.' : '关于 AI、架构与超我的深度洞察。'}
           </p>
           
-          {/* Search Bar - Full Width on Mobile, styled cleaner */}
+          {/* Search Bar - Styled to match reference */}
           <div className="relative max-w-lg mt-6">
             <input
               aria-label="Search articles"
               type="text"
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder={language === 'en' ? 'Search articles' : '搜索文章'}
-              className="block w-full rounded-md border border-white/10 bg-white/5 px-4 py-3 pl-10 text-gray-100 focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring-1 sm:text-sm placeholder-gray-500 transition-all backdrop-blur-sm shadow-inner"
+              className="block w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 pl-10 text-gray-100 focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring-1 sm:text-sm placeholder-gray-500 transition-all backdrop-blur-sm shadow-inner"
             />
             <svg
-              className="absolute left-3 top-3.5 h-5 w-5 text-gray-400"
+              className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -134,38 +134,40 @@ const BlogPage: React.FC = () => {
                   day: 'numeric',
                 });
                 return (
-                  <li key={post.id} className="py-8 group">
-                    <article className="space-y-4 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0 gap-6">
+                  <li key={post.id} className="py-12 group">
+                    <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0 gap-6">
                       
-                      {/* Date Column */}
+                      {/* Date Column - Sticky for visual structure */}
                       <dl className="xl:col-span-1">
                         <dt className="sr-only">Published on</dt>
-                        <dd className="text-sm font-medium leading-6 text-gray-500 font-mono">
+                        <dd className="text-base font-medium leading-6 text-gray-500 font-mono">
                           <time dateTime={post.date}>{date}</time>
                         </dd>
                       </dl>
                       
                       {/* Content Column */}
-                      <div className="space-y-4 xl:col-span-3">
-                        <div className="space-y-3">
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                            <button
-                              onClick={() => setSelectedPost(post)}
-                              className="text-gray-100 hover:text-blue-400 transition-colors duration-200 text-left"
-                            >
-                              {post.title}
-                            </button>
-                          </h2>
-                          <div className="flex flex-wrap gap-2">
-                            {post.tags.map((tag) => (
-                              <button 
-                                key={tag} 
-                                onClick={(e) => { e.stopPropagation(); setSelectedTag(tag); }}
-                                className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-colors"
+                      <div className="space-y-5 xl:col-span-3">
+                        <div className="space-y-6">
+                          <div>
+                            <h2 className="text-2xl font-bold leading-8 tracking-tight mb-2">
+                              <button
+                                onClick={() => setSelectedPost(post)}
+                                className="text-gray-100 hover:text-blue-400 transition-colors duration-200 text-left"
                               >
-                                {tag}
+                                {post.title}
                               </button>
-                            ))}
+                            </h2>
+                            <div className="flex flex-wrap gap-2">
+                              {post.tags.map((tag) => (
+                                <button 
+                                  key={tag} 
+                                  onClick={(e) => { e.stopPropagation(); setSelectedTag(tag); }}
+                                  className="text-xs font-medium px-2 py-0.5 rounded uppercase text-blue-400 hover:text-blue-300 transition-colors"
+                                >
+                                  {tag.toUpperCase()}
+                                </button>
+                              ))}
+                            </div>
                           </div>
                           <div className="prose prose-invert max-w-none text-gray-400 line-clamp-3">
                             {post.excerpt}
@@ -174,7 +176,7 @@ const BlogPage: React.FC = () => {
                         <div className="text-base font-medium leading-6">
                           <button
                             onClick={() => setSelectedPost(post)}
-                            className="text-blue-500 hover:text-blue-300 transition-colors flex items-center gap-1 group-hover:gap-2 duration-300"
+                            className="text-blue-500 hover:text-blue-400 transition-colors flex items-center gap-1 group-hover:gap-2 duration-300"
                             aria-label={`Read "${post.title}"`}
                           >
                             {language === 'en' ? 'Read more' : '阅读更多'} &rarr;
@@ -190,19 +192,19 @@ const BlogPage: React.FC = () => {
 
           {/* Right Column: Tags Sidebar (Sticky) */}
           <aside className="md:w-1/4">
-             <div className="sticky top-24 space-y-8 bg-white/5 p-6 rounded-xl border border-white/10 backdrop-blur-md">
+             <div className="sticky top-24 space-y-8 bg-white/5 p-6 rounded-xl border border-white/10 backdrop-blur-md shadow-lg">
                 <div>
                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
-                      {language === 'en' ? 'Filter by Tag' : '标签筛选'}
+                      {language === 'en' ? 'Tags' : '标签'}
                    </h3>
-                   <div className="flex flex-wrap gap-2">
+                   <div className="flex flex-wrap gap-3">
                       {/* 'All' Tag */}
                       <button
                         onClick={() => setSelectedTag(null)}
-                        className={`text-xs px-3 py-1.5 rounded-md transition-all ${
+                        className={`text-xs px-2 py-1 rounded transition-all font-mono ${
                             !selectedTag 
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' 
-                            : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                            ? 'text-blue-400 underline underline-offset-4 decoration-blue-500/50' 
+                            : 'text-gray-400 hover:text-blue-400'
                         }`}
                       >
                          ALL
@@ -212,13 +214,13 @@ const BlogPage: React.FC = () => {
                         <button
                           key={tag}
                           onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                          className={`text-xs px-3 py-1.5 rounded-md transition-all ${
+                          className={`text-xs px-2 py-1 rounded transition-all font-mono uppercase ${
                               selectedTag === tag
-                              ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
-                              : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                              ? 'text-blue-400 underline underline-offset-4 decoration-blue-500/50'
+                              : 'text-gray-400 hover:text-blue-400'
                           }`}
                         >
-                          {tag.toUpperCase()}
+                          {tag}
                         </button>
                       ))}
                    </div>
@@ -231,8 +233,8 @@ const BlogPage: React.FC = () => {
                    </h3>
                    <p className="text-sm text-gray-500 leading-relaxed">
                       {language === 'en' 
-                        ? 'Explorations into the intersection of AI, cognitive architecture, and the future of software development.' 
-                        : '探索 AI、认知架构与软件开发未来的交汇点。'}
+                        ? 'Technical deep dives into AI agents, architecture, and the future of coding.' 
+                        : '关于 AI 智能体、架构与编程未来的技术深度探索。'}
                    </p>
                 </div>
              </div>
