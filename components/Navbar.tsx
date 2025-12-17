@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
+import logoImg from '../images/logo.png';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
             <Link to="/" className="flex items-center gap-3 group">
               {/* Logo Image with 3D hover effect */}
               <div className="relative transition-transform duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                 <img src="/logo.png" alt="SuperEgoAI" className="w-10 h-10 object-contain" />
+                 <img src={logoImg} alt="SuperEgoAI" className="w-10 h-10 object-contain" />
               </div>
               <span className="text-white font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 group-hover:to-white transition-all duration-300 drop-shadow-sm">
                 SuperEgoAI
