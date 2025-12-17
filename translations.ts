@@ -78,16 +78,59 @@ export const translations = {
         superego_title: 'The Super Ego: Governance & Evolution',
         superego_desc: 'The perfect rational entity. Omniscience via RAG/Ground Truth. Ethical Governance compliant with EU AI Act. Self-Evolution to monitor processes and refactor code.',
       },
+      value_dimensions: {
+        title: 'Dual Value Dimensions',
+        leadership: {
+          title: 'For Leadership: Omniscience & Risk Control',
+          metaphor: 'The Control Tower',
+          point1_title: 'Piercing the Fog',
+          point1_desc: 'Breaking down departmental silos. AI aggregates ERP, CRM, and unstructured data into a real-time "Single Source of Truth".',
+          point2_title: 'Rational Decision',
+          point2_desc: 'Super Ego filters out emotional bias, offering strategic deductions based on probability. Moving from "Gut Feeling" to "Data Dashboard".',
+          point3_title: 'Safety & Compliance',
+          point3_desc: 'As per HBR, risk is the main anxiety. We build algorithmic guardrails ensuring data privacy and ethical compliance, so you can sleep soundly.'
+        },
+        workforce: {
+          title: 'For Workforce: Liberation & Empowerment',
+          metaphor: 'The Iron Man Suit',
+          point1_title: 'Farewell to Mediocrity',
+          point1_desc: 'AI takes over repetitive, low-value "drudgery" (data entry, migration), freeing up 40%+ of employee time.',
+          point2_title: 'Capability Leap',
+          point2_desc: 'Junior employees can deliver Senior-level quality with AI assistance. Your 24/7 personalized mentor.',
+          point3_title: 'Human-Machine Co-creation',
+          point3_desc: 'Employees evolve from passive executors to "Commanders" and "Trainers" of their own AI Agent squads.'
+        }
+      },
       methodology: {
         title: 'Four-Stage Implementation Framework',
         stage1_title: 'Diagnosis & Blueprint',
         stage1_desc: 'Strategic Alignment. Designing AI strategy based on business pain points (KPIs), not just for the sake of AI. Risk assessment and privacy compliance review.',
+        stage1_details: [
+            "Stakeholder interviews to identify high-impact bottlenecks.",
+            "Data readiness assessment (Volume, Velocity, Variety, Veracity).",
+            "Technical architecture roadmap design & cloud infrastructure planning."
+        ],
         stage2_title: 'Pilot & Validation',
         stage2_desc: 'Agile Co-creation. Building MVA (Minimum Viable Agent). Verifying business value (ROI) rather than just technical feasibility.',
+        stage2_details: [
+            "Rapid prototyping of 'Minimum Viable Agent' (MVA).",
+            "A/B testing against traditional workflows to prove ROI.",
+            "User acceptance testing (UAT) with internal early adopters."
+        ],
         stage3_title: 'Integration & Scaling',
         stage3_desc: 'Seamless Embedding. Planting Agents into ERP/CRM/IM workflows. Employee Upskilling to become AI Commanders.',
+        stage3_details: [
+            "API integration with legacy ERP/CRM/HRIS systems.",
+            "Containerized deployment (Docker/Kubernetes) for enterprise scalability.",
+            "Change management workshops to reduce employee resistance."
+        ],
         stage4_title: 'Governance & Evolution',
         stage4_desc: 'Human-in-the-loop. Establishing AI Center of Excellence (CoE) to monitor model drift and ensure ethical output.',
+        stage4_details: [
+            "Setting up model monitoring dashboards (Drift detection).",
+            "Quarterly ethical audits, bias checks, and compliance reviews.",
+            "Continuous model retraining pipelines based on feedback loops."
+        ],
       },
       agents: {
         title: 'The Agent Army',
@@ -207,16 +250,59 @@ export const translations = {
         superego_title: '超我 (The Super Ego)：增强与治理',
         superego_desc: '“完美理性实体”。全知洞察：基于 Ground Truth 的 RAG 技术消除幻觉。伦理护航：符合 EU AI Act 标准。自我进化：不知疲倦地监控流程与重构代码。',
       },
+      value_dimensions: {
+        title: '双重价值维度',
+        leadership: {
+          title: '致决策者 —— 全知视界与风控',
+          metaphor: '核心隐喻：指挥塔 (The Control Tower)',
+          point1_title: '穿透迷雾',
+          point1_desc: '打破部门墙，AI将ERP、CRM及非结构化数据实时聚合成“单一真理源”(Single Source of Truth)。',
+          point2_title: '理性决策',
+          point2_desc: 'Super Ego 过滤掉人类情绪干扰，基于概率论和历史数据提供战略推演，让决策从“拍脑袋”变成“看仪表盘”。',
+          point3_title: '安全合规',
+          point3_desc: '如 HBR 所述，企业最大的焦虑是风险。我们建立算法护栏，确保数据隐私与伦理合规，让您睡得安稳。'
+        },
+        workforce: {
+          title: '致员工 —— 解放与赋能',
+          metaphor: '核心隐喻：钢铁侠战甲 (The Iron Man Suit)',
+          point1_title: '告别平庸',
+          point1_desc: 'AI 接管重复、低价值的“填表与搬运”工作（The Drudgery），释放员工 40%+ 的时间。',
+          point2_title: '能力跃迁',
+          point2_desc: '初级员工在 AI 辅助下可产出资深专家的交付质量。AI 是 7x24 小时的导师。',
+          point3_title: '人机共创',
+          point3_desc: '员工不再是被动的执行者，而是 AI Agent 的“指挥官”和“训练师”。'
+        }
+      },
       methodology: {
         title: '四阶段实施框架',
         stage1_title: '诊断与蓝图',
         stage1_desc: '战略对齐。基于业务痛点 (KPIs) 设计 AI 战略。进行 AI 风险评估与数据隐私合规性审查 (HBR/Salesforce 标准)。',
+        stage1_details: [
+            "通过关键利益相关者访谈，识别高影响力的业务瓶颈。",
+            "数据就绪度评估（数据量、速度、多样性、真实性）。",
+            "设计符合企业现状的技术架构路线图与云基础设施规划。"
+        ],
         stage2_title: '试点与验证',
         stage2_desc: '敏捷共创。构建 MVA (最小可行智能体)。验证商业价值 (ROI)，拒绝“技术演示品”，只做“业务实战品”。',
+        stage2_details: [
+            "快速原型开发，构建“最小可行智能体”(MVA)。",
+            "针对传统工作流进行 A/B 测试对比，以验证投资回报率 (ROI)。",
+            "与内部早期采用者进行用户验收测试 (UAT)。"
+        ],
         stage3_title: '集成与规模化',
         stage3_desc: '无缝嵌入。将 Agent 植入 ERP/CRM/IM 等现有工作流。员工赋能 (Upskilling)，培养员工成为 AI 的“指挥官”。',
+        stage3_details: [
+            "与传统 ERP/CRM/HRIS 系统进行 API 级集成。",
+            "基于容器化 (Docker/K8s) 的弹性部署，适应企业级扩展。",
+            "开展变革管理研讨会，降低员工抵触情绪并提升技能。"
+        ],
         stage4_title: '治理与进化',
         stage4_desc: '人在环路 (Human-in-the-loop)。建立 AI 卓越中心 (CoE)，持续监控模型漂移，确保 AI 输出符合人类价值观与企业道德标准。',
+        stage4_details: [
+            "建立模型监控仪表盘（检测数据漂移与性能衰退）。",
+            "进行季度性伦理审计、偏见检查与合规性审查。",
+            "搭建基于反馈循环的持续模型重训练 (Retraining) 流水线。"
+        ],
       },
       agents: {
         title: 'AI 员工军团',

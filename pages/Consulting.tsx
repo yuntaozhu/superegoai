@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import ConsultingHeroBackground from '../components/ConsultingHeroBackground';
+import { translations } from '../translations';
 
 const Consulting: React.FC = () => {
   const { t, language } = useLanguage();
@@ -11,7 +13,10 @@ const Consulting: React.FC = () => {
   return (
     <div className="min-h-screen bg-brand-dark">
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[600px] flex items-center justify-center">
+        {/* Dynamic Background */}
+        <ConsultingHeroBackground />
+        
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
              <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[100px]" />
         </div>
@@ -84,8 +89,70 @@ const Consulting: React.FC = () => {
         </div>
       </section>
 
+      {/* Dual Value Dimensions Section */}
+      <section className="py-24 px-4 bg-brand-dark relative overflow-hidden">
+        {/* Background Accent */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block" />
+        
+        <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16 relative z-10">
+                <h2 className="text-3xl font-bold text-white mb-4">{t('consulting.value_dimensions.title')}</h2>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 relative z-10">
+                {/* Left: Leadership / Control Tower */}
+                <div className="space-y-8 text-right lg:pr-8">
+                    <div className="flex flex-col items-end">
+                        <div className="inline-block p-3 rounded-xl bg-blue-900/20 border border-blue-500/30 text-blue-400 text-3xl mb-4">
+                           📡
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-2">{t('consulting.value_dimensions.leadership.title')}</h3>
+                        <p className="text-blue-400 text-sm font-mono uppercase tracking-wider mb-6">
+                            {t('consulting.value_dimensions.leadership.metaphor')}
+                        </p>
+                    </div>
+
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="group hover:bg-white/5 p-6 rounded-2xl transition-colors border border-transparent hover:border-white/5">
+                            <h4 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                                {t(`consulting.value_dimensions.leadership.point${i}_title`)}
+                            </h4>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                {t(`consulting.value_dimensions.leadership.point${i}_desc`)}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Right: Workforce / Iron Man Suit */}
+                <div className="space-y-8 text-left lg:pl-8">
+                    <div className="flex flex-col items-start">
+                        <div className="inline-block p-3 rounded-xl bg-yellow-900/20 border border-yellow-500/30 text-yellow-400 text-3xl mb-4">
+                           🦾
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-2">{t('consulting.value_dimensions.workforce.title')}</h3>
+                        <p className="text-yellow-400 text-sm font-mono uppercase tracking-wider mb-6">
+                            {t('consulting.value_dimensions.workforce.metaphor')}
+                        </p>
+                    </div>
+
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="group hover:bg-white/5 p-6 rounded-2xl transition-colors border border-transparent hover:border-white/5">
+                            <h4 className="text-lg font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                                {t(`consulting.value_dimensions.workforce.point${i}_title`)}
+                            </h4>
+                            <p className="text-gray-400 text-sm leading-relaxed">
+                                {t(`consulting.value_dimensions.workforce.point${i}_desc`)}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+      </section>
+
       {/* Methodology Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-brand-surface/30">
         <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
                 <h2 className="text-3xl font-bold text-white mb-4">{t('consulting.methodology.title')}</h2>
@@ -95,17 +162,7 @@ const Consulting: React.FC = () => {
                 <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/10 hidden md:block -z-10 transform -translate-y-1/2"></div>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {[1, 2, 3, 4].map((step) => (
-                        <div key={step} className="bg-brand-surface border border-white/10 rounded-xl p-6 relative">
-                            <div className="w-10 h-10 bg-brand-dark border border-indigo-500 text-indigo-400 rounded-full flex items-center justify-center font-bold mb-4 mx-auto md:mx-0 z-10 relative">
-                                {step}
-                            </div>
-                            <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">
-                                {t(`consulting.methodology.stage${step}_title`)}
-                            </h3>
-                            <p className="text-sm text-gray-400 text-center md:text-left">
-                                {t(`consulting.methodology.stage${step}_desc`)}
-                            </p>
-                        </div>
+                        <MethodologyCard key={step} step={step} t={t} language={language} />
                     ))}
                 </div>
             </div>
@@ -236,6 +293,61 @@ const Consulting: React.FC = () => {
       </section>
     </div>
   );
+};
+
+// Helper Component for Methodology Stages
+const MethodologyCard = ({ step, t, language }: { step: number, t: any, language: 'en' | 'zh' }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    
+    // Access detailed steps from translations directly to handle arrays
+    const methodData = (translations[language] as any).consulting.methodology;
+    const details = methodData[`stage${step}_details`] as string[];
+
+    return (
+        <div 
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={`bg-brand-surface border border-white/10 rounded-xl p-6 relative cursor-pointer transition-all duration-300 hover:border-indigo-500/50 hover:bg-white/5 ${isExpanded ? 'ring-1 ring-indigo-500/50' : ''}`}
+        >
+            <div className="w-10 h-10 bg-brand-dark border border-indigo-500 text-indigo-400 rounded-full flex items-center justify-center font-bold mb-4 mx-auto md:mx-0 z-10 relative shadow-lg">
+                {step}
+            </div>
+            
+            <div className="flex justify-between items-start">
+                <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">
+                    {t(`consulting.methodology.stage${step}_title`)}
+                </h3>
+                {/* Chevron Icon */}
+                <svg 
+                    className={`w-5 h-5 text-gray-500 transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+            
+            <p className="text-sm text-gray-400 text-center md:text-left">
+                {t(`consulting.methodology.stage${step}_desc`)}
+            </p>
+
+            {/* Expandable Content */}
+            <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-64 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}
+            >
+                <div className="pt-4 border-t border-white/10">
+                    <ul className="space-y-2">
+                        {details && details.map((detail, index) => (
+                            <li key={index} className="text-xs text-gray-300 flex items-start gap-2">
+                                <span className="text-indigo-500 mt-0.5">•</span>
+                                <span>{detail}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 // Helper Component for Agents
