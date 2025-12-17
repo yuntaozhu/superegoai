@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, BlogPost } from '../context/LanguageContext';
 
@@ -63,6 +63,103 @@ const BlogPage: React.FC = () => {
         window.scrollTo(0, 0);
     }
   }, [selectedPost]);
+
+  // SEO: Dynamic Meta Tags
+  useEffect(() => {
+    const baseTitle = language === 'en' ? 'Blog | AI First Course' : '博客 | AI First Course';
+    const baseDesc = language === 'en' 
+        ? 'Insights on AI, Architecture, and the SuperEgo. Technical deep dives into AI agents, architecture, and the future of coding.' 
+        : '关于 AI、架构与超我的深度洞察。关于 AI 智能体、架构与编程未来的技术深度探索。';
+    const baseKeywords = language === 'en'
+        ? 'AI, Technology, Artificial Intelligence, SuperEgo, Agents, Architecture, Coding, Future, Gemini, LLM'
+        : 'AI, 科技, 人工智能, 超我, 智能体, 架构, 编程, 未来, Gemini, 大语言模型';
+
+    let title = baseTitle;
+    let description = baseDesc;
+    let keywords = baseKeywords;
+
+    if (selectedPost) {
+        title = `${selectedPost.title} | AI First Course`;
+        description = selectedPost.excerpt;
+        // Add post specific tags to keywords
+        keywords = `${baseKeywords}, ${selectedPost.tags.join(', ')}`;
+    }
+
+    // Update Title
+    document.title = title;
+
+    // Helper to update or create meta tags
+    const setMetaTag = (name: string, content: string) => {
+        let element = document.querySelector(`meta[name="${name}"]`);
+        if (!element) {
+            element = document.createElement('meta');
+            element.setAttribute('name', name);
+            document.head.appendChild(element);
+        }
+        element.setAttribute('content', content);
+    };
+
+    // Helper for Open Graph tags (using property attribute)
+    const setOgTag = (property: string, content: string) => {
+        let element = document.querySelector(`meta[property="${property}"]`);
+        if (!element) {
+            element = document.createElement('meta');
+            element.setAttribute('property', property);
+            document.head.appendChild(element);
+        }
+        element.setAttribute('content', content);
+    };
+
+    setMetaTag('description', description);
+    setMetaTag('keywords', keywords);
+    
+    // Open Graph
+    setOgTag('og:title', title);
+    setOgTag('og:description', description);
+    setOgTag('og:type', selectedPost ? 'article' : 'website');
+    setOgTag('og:site_name', 'AI First Course');
+
+  }, [selectedPost, language]);
+
+  // Generate RSS Feed URL
+  const rssFeedUrl = useMemo(() => {
+    const baseUrl = window.location.origin + window.location.pathname + '#/blog';
+    const feedTitle = language === 'en' ? 'AI First Course Blog' : 'AI First Course 博客';
+    const feedDesc = language === 'en' 
+        ? 'Insights on AI, Architecture, and the SuperEgo.' 
+        : '关于 AI、架构与超我的深度洞察。';
+    const buildDate = new Date().toUTCString();
+
+    let rss = `<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+ <title>${feedTitle}</title>
+ <description>${feedDesc}</description>
+ <link>${baseUrl}</link>
+ <language>${language}</language>
+ <lastBuildDate>${buildDate}</lastBuildDate>
+ <pubDate>${buildDate}</pubDate>
+ <ttl>60</ttl>
+`;
+
+    content.blogPosts.forEach(post => {
+      rss += ` <item>
+  <title><![CDATA[${post.title}]]></title>
+  <description><![CDATA[${post.excerpt}]]></description>
+  <link>${baseUrl}?id=${post.id}</link>
+  <guid isPermaLink="false">${post.id}</guid>
+  <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+  <author><![CDATA[${post.author}]]></author>
+  ${post.tags.map(tag => `<category>${tag}</category>`).join('')}
+ </item>
+`;
+    });
+
+    rss += `</channel>\n</rss>`;
+    
+    const blob = new Blob([rss], { type: 'application/xml' });
+    return URL.createObjectURL(blob);
+  }, [content.blogPosts, language]);
 
   // Handle Social Sharing
   const handleShare = (platform: 'twitter' | 'wechat' | 'rednote') => {
@@ -363,11 +460,20 @@ const BlogPage: React.FC = () => {
                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
                       About
                    </h3>
-                   <p className="text-sm text-gray-500 leading-relaxed">
+                   <p className="text-sm text-gray-500 leading-relaxed mb-4">
                       {language === 'en' 
                         ? 'Technical deep dives into AI agents, architecture, and the future of coding.' 
                         : '关于 AI 智能体、架构与编程未来的技术深度探索。'}
                    </p>
+                   {/* RSS Feed Link */}
+                   <a 
+                     href={rssFeedUrl}
+                     download="feed.xml"
+                     className="inline-flex items-center gap-2 text-xs font-bold text-orange-400 hover:text-orange-300 transition-colors uppercase tracking-wider"
+                   >
+                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                     RSS Feed
+                   </a>
                 </div>
              </div>
           </aside>
