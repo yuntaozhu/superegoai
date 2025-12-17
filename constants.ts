@@ -563,7 +563,7 @@ ENTRYPOINT [ "./start.sh" ]
     {
       id: "art",
       title: "艺术行星：AI赋能艺术史",
-      shortTitle: "行星 A: 艺术",
+      shortTitle: "艺术行星：AI赋能艺术史",
       tagline: "成为思想的总导演",
       description: "训练“超我”的审美与抽象能力。AI 不只是画图工具，而是将“历史文脉”转化为“数学逻辑”的翻译官。实现从“历史理解 -> AI 美学对话 -> 数学抽象 -> 人机协同编程”的闭环。",
       icon: "🎨",
@@ -622,7 +622,7 @@ ENTRYPOINT [ "./start.sh" ]
     {
       id: "sports",
       title: "运动行星：AI体能觉醒",
-      shortTitle: "行星 B: 运动",
+      shortTitle: "运动行星：AI体能觉醒",
       tagline: "智能运动分析与个人成长计划",
       description: "训练“超我”的物理感知与安全边界。构建一个“AI 私人教练”，在现实世界中“看”、分析并纠正动作。从虚拟走向实体。",
       icon: "🏃",
@@ -709,7 +709,7 @@ ENTRYPOINT [ "./start.sh" ]
     {
       id: "quant",
       title: "量化行星： AI驱动的原生量化交易",
-      shortTitle: "行星 D: 量化",
+      shortTitle: "量化行星： AI驱动的原生量化交易",
       tagline: "决策与进化",
       description: "训练“超我”的博弈决策与反脆弱能力。我们不写算法，我们构建能够自我进化的 Agent 系统。",
       icon: "📈",
@@ -773,7 +773,7 @@ ENTRYPOINT [ "./start.sh" ]
     {
       id: "solopreneur",
       title: "代码行星：AI孵化软件构建超级个体",
-      shortTitle: "行星 E: 代码",
+      shortTitle: "代码行星：AI孵化软件构建超级个体",
       tagline: "你的代码团队，就在你的对话框里",
       description: "专门为非技术背景的普通人设计的实战课程。这份课程的目标非常功利且直接：不培养程序员，只培养“产品缔造者”。",
       icon: "🚀",
@@ -826,7 +826,7 @@ ENTRYPOINT [ "./start.sh" ]
     {
       id: "digital-twin",
       title: "科研行星：AI 驱动的首席科学家",
-      shortTitle: "行星 F: 科研",
+      shortTitle: "科研行星：AI 驱动的首席科学家",
       tagline: "打造会思考、会模拟、会进化的个人科研系统",
       description: "从“做题家”到“系统架构师”。不仅仅是编程课，而是构建“私人科研中台”的实战课。掌握《Think Python》与《ModSimPy》，打造支持 HiMCM 及未来科研的数字资产。",
       icon: "🧬",
