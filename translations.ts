@@ -13,18 +13,29 @@ export const translations = {
       title_prefix: 'Building the',
       title_highlight: 'SuperEgo\'s',
       title_suffix: 'Second Brain',
-      description: 'In the AI First era, Agents are the Ego that execute. You must become the SuperEgo that directs. We don\'t teach you to write algos; we teach you to build Agents that breed algos.',
-      cta_primary: 'Start Exploring',
-      cta_secondary: 'Read Manifesto',
+      description: 'In the AI First era, success belongs to those who build a "Second Brain". Whether through our **Courses** for individuals or **Consulting** for enterprises, we help you evolve from executing to orchestrating.',
+      cta_primary: 'Start Learning',
+      cta_secondary: 'Enterprise Services',
+    },
+    home: {
+      consulting_preview: {
+        badge: 'For Enterprise',
+        title: 'Super Ego Agent Consulting',
+        description: 'The Second Brain is not just for individuals. We build the "Ethical & Efficient" digital cortex for your organization. From strategy diagnosis to deploying your own "Agent Army", we transform businesses from Artificial Intelligence to Augmented Intelligence.',
+        feature_1: 'Strategic Alignment & Governance',
+        feature_2: 'Custom Agent Army Development',
+        feature_3: 'Staff Empowerment & Evolution',
+        cta: 'Enter Enterprise Portal'
+      }
     },
     philosophy: {
       title: 'The Core Philosophy: Evolution of a "New Species"',
       subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine. Based on the cognitive cornerstone of "AI First", we completely overturn the traditional "Rote Memorization -> Exam Tactics" education model.',
       practice_label: 'Practice:',
-      summary: 'In short: This course teaches you to use AI (Part 1), build your own external brain (Part 2), play the role of a director (Part 3), and orchestrate a virtual team of AIs (Part 4) to realize any idea in your mind.',
+      summary: 'In short: We teach you to use AI (Part 1), build your own external brain (Part 2), play the role of a director (Part 3), and orchestrate a virtual team of AIs (Part 4) to realize any idea in your mind.',
     },
     galaxy: {
-      title: 'The Galaxy Model',
+      title: 'The Galaxy Model (For Individuals)',
       description: 'Not a linear ladder, but a system. A central "SuperEgo" core orbited by four specialized planets.',
       module: 'Module',
       explore_planet: 'Explore Planet',
@@ -126,18 +137,29 @@ export const translations = {
       title_prefix: '构建你的',
       title_highlight: '“超我”',
       title_suffix: '第二大脑',
-      description: '在 AI First 时代，Agent 是负责执行的“自我”(Ego)。你必须进化为指挥全局的“超我”(SuperEgo)。我们不教你手写算法，我们教你构建能“繁殖”算法的 Agent。',
-      cta_primary: '开始探索',
-      cta_secondary: '阅读宣言',
+      description: '在 AI First 时代，成功属于那些构建了“第二大脑”的人。无论是通过我们的**个人课程**还是**企业咨询**，我们都致力于帮助你从“执行者”进化为“指挥官”。',
+      cta_primary: '开始学习',
+      cta_secondary: '企业服务',
+    },
+    home: {
+      consulting_preview: {
+        badge: '企业版',
+        title: 'Super Ego Agent 咨询服务',
+        description: '第二大脑不仅属于个人。我们为企业构建“伦理与效能并重”的数字皮层。从战略诊断到部署您专属的“Agent 军团”，我们助力企业实现从人工智能到增强智能的跃迁。',
+        feature_1: '战略对齐与伦理治理',
+        feature_2: '定制化智能体军团开发',
+        feature_3: '组织进化与员工赋能',
+        cta: '进入企业服务门户'
+      }
     },
     philosophy: {
       title: '课程核心理念：AI 时代的“新物种”进化论',
       subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。我们基于“AI First”（AI优先）的认知基石，彻底颠覆传统教育中“死记硬背 -> 题海战术”的模式。',
       practice_label: '实践：',
-      summary: '一句话总结：这门课教你利用 AI（Part 1），构建一个只属于你的外挂大脑（Part 2），通过扮演总导演的角色（Part 3），指挥一支由 AI 组成的虚拟团队（Part 4），去实现你脑海中的任何创意。',
+      summary: '一句话总结：我们教你利用 AI（Part 1），构建一个只属于你的外挂大脑（Part 2），通过扮演总导演的角色（Part 3），指挥一支由 AI 组成的虚拟团队（Part 4），去实现你脑海中的任何创意。',
     },
     galaxy: {
-      title: '星系模型',
+      title: '星系模型 (个人版)',
       description: '这不再是线性的阶梯，而是一个系统。一个核心“超我”恒星，被四颗专业行星环绕。',
       module: '模块',
       explore_planet: '探索星球',
