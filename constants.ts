@@ -307,7 +307,7 @@ unset AZP_TOKEN
     {
       id: "quant",
       title: "Gemini 3 驱动的 AI 原生量化交易",
-      shortTitle: "行星 D: 量化",
+      shortTitle: "Planet D: Quant",
       tagline: "决策与进化",
       description: "Train the SuperEgo's decision making and anti-fragility. We don't write algos; we build Agents that breed algos.",
       icon: "📈",
@@ -371,7 +371,7 @@ unset AZP_TOKEN
     {
       id: "solopreneur",
       title: "AI 时代的超级个体：从零构建你的第一个商业软件",
-      shortTitle: "行星 E: 超级个体",
+      shortTitle: "Planet E: Solopreneur",
       tagline: "你的代码团队，就在你的对话框里",
       description: "专门为非技术背景的普通人设计的实战课程。这份课程的目标非常功利且直接：不培养程序员，只培养“产品缔造者”。",
       icon: "🚀",
@@ -417,6 +417,61 @@ unset AZP_TOKEN
             { title: "Week 8: Monetization (收钱！)", description: "让 AI 读懂 Stripe 文档并接入支付。设置付费用户权限。" },
             { title: "Week 9: Launch & Growth Agents", description: "SEO 自动化。写脚本自动推送更新到社交媒体。" },
             { title: "Week 10: Demo Day (路演日)", description: "成果展示。复盘：构建“第二大脑知识库”，存下好用的 Prompt。" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "digital-twin",
+      title: "Building Your \"Digital Twin\": AI Agent-Driven Second Brain & Scientific Modeling",
+      shortTitle: "Planet F: Digital Twin",
+      tagline: "Build a personal research system that thinks, simulates, and evolves.",
+      description: "Transition from \"Test Taker\" to \"System Architect\". This is not just a coding class, but a bootcamp for building a \"Private Research Platform\". Master Think Python and ModSimPy to build digital assets for HiMCM and future research.",
+      icon: "🧬",
+      color: "from-teal-500 to-emerald-600",
+      philosophyMap: {
+        title: "The Learning Loop in the Gemini 3 Era",
+        points: [
+          "Feynman Loop (Output drives Input): AI Capture -> Feynman Internalization -> Simulation Output.",
+          "Think Like a Scientist: Based on 'Think Python'. Debug your thinking process like you debug code.",
+          "Iterative Modeling: Based on 'ModSimPy'. Approach reality through parameter sweeping and optimization."
+        ]
+      },
+      syllabus: [
+        {
+          title: "Module 1 (L1): Cognitive Cornerstone - Digital Neurons",
+          goal: "Master Python Core & Build Feynman Logger.",
+          content: [
+            { title: "Think Python Base", description: "Variables, Functions, and Dictionaries (The Memory Block)." },
+            { title: "Auto-Capture", description: "Scripting OpenAI API to summarize learning notes into JSON." },
+            { title: "Feynman Logger", description: "A CLI tool that rejects your input if you can't explain it simply." }
+          ]
+        },
+        {
+          title: "Module 2 (L2): Knowledge Engine - RAG & Graph",
+          goal: "Distill knowledge into code and build a Scientific Librarian.",
+          content: [
+            { title: "Distill via Code", description: "Using Pandas and Embeddings to turn notes into vectors." },
+            { title: "Modeling Basics", description: "Replicating 'Bike Share' and 'World Population' models from ModSimPy." },
+            { title: "Scientific Librarian", description: "An Agent that retrieves book chapters and runs the code within them." }
+          ]
+        },
+        {
+          title: "Module 3 (L3): Thinking Sandbox - Executable Second Brain",
+          goal: "Dynamic Simulation & The Devil's Advocate.",
+          content: [
+            { title: "Executable Knowledge", description: "Turning static formulas into API endpoints for prediction." },
+            { title: "Parameter Sweeping", description: "Analyzing non-linear effects of variables (SweepSeries)." },
+            { title: "The Devil's Advocate", description: "An Agent that uses math models to challenge your hypotheses." }
+          ]
+        },
+        {
+          title: "Module 4 (L4): Expert Level - Autonomous Digital Twin",
+          goal: "Agent Swarm & HiMCM Simulation.",
+          content: [
+            { title: "Agent Swarm", description: "Memory Agent + Coder Agent + Feynman Critic working together." },
+            { title: "Autonomous Loop", description: "Self-driven research: breaking down tasks and running comparisons." },
+            { title: "HiMCM Sim", description: "Full flow: Data Cleaning -> Modeling -> Solving -> Paper Generation." }
           ]
         }
       ]
@@ -764,6 +819,61 @@ ENTRYPOINT [ "./start.sh" ]
             { title: "Week 8: Monetization (收钱！)", description: "让 AI 读懂 Stripe 文档并接入支付。设置付费用户权限。" },
             { title: "Week 9: Launch & Growth Agents", description: "SEO 自动化。写脚本自动推送更新到社交媒体。" },
             { title: "Week 10: Demo Day (路演日)", description: "成果展示。复盘：构建“第二大脑知识库”，存下好用的 Prompt。" }
+          ]
+        }
+      ]
+    },
+    {
+      id: "digital-twin",
+      title: "构建你的“数字孪生”：AI Agent 驱动的第二大脑与科学建模",
+      shortTitle: "行星 F: 数字孪生",
+      tagline: "打造会思考、会模拟、会进化的个人科研系统",
+      description: "从“做题家”到“系统架构师”。不仅仅是编程课，而是构建“私人科研中台”的实战课。掌握《Think Python》与《ModSimPy》，打造支持 HiMCM 及未来科研的数字资产。",
+      icon: "🧬",
+      color: "from-teal-500 to-emerald-600",
+      philosophyMap: {
+        title: "Gemini 3 时代的学习闭环",
+        points: [
+          "费曼学习闭环 (输出倒逼输入): AI 捕获 -> 费曼内化 -> 仿真输出。",
+          "计算机科学思维: 基于《Think Python》。像调试代码一样调试思维。",
+          "迭代式建模: 基于《ModSimPy》。通过参数扫描与优化，逐步逼近真实世界。"
+        ]
+      },
+      syllabus: [
+        {
+          title: "模块 1 (L1)：认知基石 —— 搭建“数字神经元”",
+          goal: "掌握 Python 核心逻辑与构建费曼日志助手。",
+          content: [
+            { title: "Think Python 核心", description: "变量、函数、逻辑控制与数据结构 (The Memory Block)。" },
+            { title: "自动化捕获", description: "编写脚本调用 OpenAI API，自动总结学习心得并结构化入库。" },
+            { title: "费曼日志助手", description: "智能 CLI 工具，强制你用通俗语言解释概念，否则拒绝入库。" }
+          ]
+        },
+        {
+          title: "模块 2 (L2)：知识引擎 —— 增强检索与图谱构建",
+          goal: "知识萃取代码化与科研图书管理员。",
+          content: [
+            { title: "知识萃取代码化", description: "利用 Pandas 和 Embedding 将笔记转化为向量。" },
+            { title: "基础建模实战", description: "复现《ModSimPy》中的“共享单车”与“人口增长”模型。" },
+            { title: "科研图书管理员", description: "一个能检索教材并运行其中代码的智能 Agent。" }
+          ]
+        },
+        {
+          title: "模块 3 (L3)：思维沙盒 —— “可执行”的第二大脑",
+          goal: "动态仿真与魔鬼代言人 Agent。",
+          content: [
+            { title: "知识动态化", description: "将静态公式封装为 API，进行未来预测。" },
+            { title: "参数扫描", description: "利用 SweepSeries 分析变量的非线性影响。" },
+            { title: "魔鬼代言人 Agent", description: "利用数学模型寻找反例，批判你的假设。" }
+          ]
+        },
+        {
+          title: "模块 4 (L4)：专家级 —— 自主进化的数字孪生",
+          goal: "Agent Swarm 与 HiMCM 全真模拟。",
+          content: [
+            { title: "Agent 蜂群", description: "Memory Agent + Coder Agent + Feynman Critic 协同工作。" },
+            { title: "自主闭环", description: "根据模糊目标自动拆解任务、搜集数据并运行模型。" },
+            { title: "HiMCM 全真模拟", description: "全流程辅助：数据清洗 -> 模型建立 -> 求解 -> 论文生成。" }
           ]
         }
       ]
