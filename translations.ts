@@ -5,7 +5,6 @@ export const translations = {
       home: 'Home',
       consulting: 'AI Consulting',
       blog: 'Blog',
-      studio: 'Studio',
       planets: 'Planets',
       explore: 'Explore',
     },
@@ -50,15 +49,6 @@ export const translations = {
       syllabus: 'Syllabus & Trajectory',
       return_galaxy: 'Return to Galaxy Map',
       goal: 'GOAL',
-    },
-    studio: {
-      title: 'AI Creative Studio',
-      subtitle: 'Generate visual assets for your Second Brain using Gemini 2.5.',
-      placeholder: 'Describe the image you want to generate (e.g., "A futuristic city on Mars with neon lights")...',
-      generate: 'Generate Visual',
-      generating: 'Dreaming...',
-      download: 'Download Asset',
-      error: 'Generation failed. Please try again.',
     },
     consulting: {
       hero: {
@@ -128,7 +118,6 @@ export const translations = {
       home: '首页',
       consulting: 'AI 咨询',
       blog: '博客',
-      studio: '工作室',
       planets: '课程星球',
       explore: '探索',
     },
@@ -178,15 +167,6 @@ export const translations = {
       syllabus: '课程大纲与轨迹',
       return_galaxy: '返回星系图',
       goal: '目标',
-    },
-    studio: {
-      title: 'AI 创意工作室',
-      subtitle: '使用 Gemini 2.5 为你的第二大脑生成视觉资产。',
-      placeholder: '描述你想要生成的图像（例如：“火星上带有霓虹灯的未来城市”）...',
-      generate: '生成视觉',
-      generating: '正在构梦...',
-      download: '下载资产',
-      error: '生成失败，请重试。',
     },
     consulting: {
       hero: {

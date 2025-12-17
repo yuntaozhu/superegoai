@@ -67,15 +67,6 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
-                to="/studio"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive('/studio') ? 'bg-brand-surface text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {t('nav.studio')}
-              </Link>
-
-              <Link
                 to="/blog"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive('/blog') ? 'bg-brand-surface text-white' : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -156,13 +147,6 @@ const Navbar: React.FC = () => {
               onClick={() => setIsOpen(false)}
             >
               {t('nav.consulting')}
-            </Link>
-            <Link
-              to="/studio"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-              onClick={() => setIsOpen(false)}
-            >
-              {t('nav.studio')}
             </Link>
             <Link
               to="/blog"
