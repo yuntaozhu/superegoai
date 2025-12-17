@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLanguage, useLocation } from '../context/LanguageContext';
 import { getContent } from '../constants';
@@ -31,7 +32,7 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-bold text-white mb-4">AI First Course</h3>
+            <h3 className="text-xl font-bold text-white mb-4">SuperEgoAI</h3>
             <p className="text-gray-400 text-sm">
               {t('footer.tagline')}
             </p>

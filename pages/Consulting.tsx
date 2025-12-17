@@ -6,6 +6,7 @@ import { translations } from '../translations';
 const Consulting: React.FC = () => {
   const { t, language } = useLanguage();
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<any | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,6 +26,57 @@ const Consulting: React.FC = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const agents = [
+      {
+          id: 'marketing',
+          icon: "📢",
+          color: "text-pink-400",
+          bg: "bg-pink-500/10",
+          border: "border-pink-500/20",
+          hoverBorder: "hover:border-pink-500/80",
+          titleKey: 'consulting.agents.marketing_title',
+          descKey: 'consulting.agents.marketing_desc',
+          featuresKey: 'consulting.agents.marketing_features',
+          stackKey: 'consulting.agents.marketing_stack',
+      },
+      {
+          id: 'sales',
+          icon: "💰",
+          color: "text-yellow-400",
+          bg: "bg-yellow-500/10",
+          border: "border-yellow-500/20",
+          hoverBorder: "hover:border-yellow-500/80",
+          titleKey: 'consulting.agents.sales_title',
+          descKey: 'consulting.agents.sales_desc',
+          featuresKey: 'consulting.agents.sales_features',
+          stackKey: 'consulting.agents.sales_stack',
+      },
+      {
+          id: 'hr',
+          icon: "🤝",
+          color: "text-green-400",
+          bg: "bg-green-500/10",
+          border: "border-green-500/20",
+          hoverBorder: "hover:border-green-500/80",
+          titleKey: 'consulting.agents.hr_title',
+          descKey: 'consulting.agents.hr_desc',
+          featuresKey: 'consulting.agents.hr_features',
+          stackKey: 'consulting.agents.hr_stack',
+      },
+      {
+          id: 'ops',
+          icon: "⚙️",
+          color: "text-blue-400",
+          bg: "bg-blue-500/10",
+          border: "border-blue-500/20",
+          hoverBorder: "hover:border-blue-500/80",
+          titleKey: 'consulting.agents.ops_title',
+          descKey: 'consulting.agents.ops_desc',
+          featuresKey: 'consulting.agents.ops_features',
+          stackKey: 'consulting.agents.ops_stack',
+      }
+  ];
 
   return (
     <div className="min-h-screen bg-brand-dark">
@@ -54,9 +106,17 @@ const Consulting: React.FC = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-all hover:scale-105 shadow-lg shadow-indigo-500/25">
-              {t('consulting.hero.cta_diagnose')}
-            </button>
+            <div className="relative group">
+              <button className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-all hover:scale-105 shadow-lg shadow-indigo-500/25">
+                {t('consulting.hero.cta_diagnose')}
+              </button>
+              {/* Tooltip */}
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-4 w-64 p-3 bg-gray-900/90 backdrop-blur-md border border-white/10 text-white text-xs leading-relaxed rounded-xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none text-center z-50 translate-y-2 group-hover:translate-y-0">
+                {t('consulting.hero.cta_diagnose_tooltip')}
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-8 border-transparent border-t-gray-900/90"></div>
+              </div>
+            </div>
+            
             <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg font-semibold transition-all">
               {t('consulting.hero.cta_army')}
             </button>
@@ -190,44 +250,102 @@ const Consulting: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4">
              <div className="text-center mb-16">
                 <h2 className="text-3xl font-bold text-white mb-4">{t('consulting.agents.title')}</h2>
+                <p className="text-gray-400 max-w-2xl mx-auto text-center mb-8">
+                   Click on any agent to view detailed capabilities and tech stack.
+                </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <AgentCard 
-                    icon="📢" 
-                    title={t('consulting.agents.marketing_title')} 
-                    desc={t('consulting.agents.marketing_desc')} 
-                    color="text-pink-400"
-                    bg="bg-pink-500/10"
-                    border="border-pink-500/20"
-                />
-                <AgentCard 
-                    icon="💰" 
-                    title={t('consulting.agents.sales_title')} 
-                    desc={t('consulting.agents.sales_desc')} 
-                    color="text-yellow-400"
-                    bg="bg-yellow-500/10"
-                    border="border-yellow-500/20"
-                />
-                <AgentCard 
-                    icon="🤝" 
-                    title={t('consulting.agents.hr_title')} 
-                    desc={t('consulting.agents.hr_desc')} 
-                    color="text-green-400"
-                    bg="bg-green-500/10"
-                    border="border-green-500/20"
-                />
-                <AgentCard 
-                    icon="⚙️" 
-                    title={t('consulting.agents.ops_title')} 
-                    desc={t('consulting.agents.ops_desc')} 
-                    color="text-blue-400"
-                    bg="bg-blue-500/10"
-                    border="border-blue-500/20"
-                />
+                {agents.map((agent) => (
+                    <AgentCard 
+                        key={agent.id}
+                        {...agent}
+                        title={t(agent.titleKey)}
+                        desc={t(agent.descKey)}
+                        onClick={() => setSelectedAgent(agent)}
+                    />
+                ))}
             </div>
         </div>
       </section>
+
+      {/* Agent Modal */}
+      {selectedAgent && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <div 
+                  className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+                  onClick={() => setSelectedAgent(null)}
+              ></div>
+              <div className="relative bg-brand-surface border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+                  <div className={`h-2 w-full bg-gradient-to-r ${selectedAgent.color.replace('text', 'from').replace('400', '500')} to-transparent`}></div>
+                  
+                  <div className="p-8">
+                      <div className="flex justify-between items-start mb-6">
+                          <div className="flex items-center gap-4">
+                              <div className="text-5xl bg-white/5 p-4 rounded-2xl">{selectedAgent.icon}</div>
+                              <div>
+                                  <h3 className={`text-2xl font-bold ${selectedAgent.color}`}>
+                                      {t(selectedAgent.titleKey)}
+                                  </h3>
+                                  <p className="text-gray-400 text-sm mt-1 uppercase tracking-wider font-mono">
+                                      AI Agent Profile
+                                  </p>
+                              </div>
+                          </div>
+                          <button 
+                              onClick={() => setSelectedAgent(null)}
+                              className="text-gray-400 hover:text-white transition-colors"
+                          >
+                              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                          </button>
+                      </div>
+
+                      <div className="mb-8">
+                          <p className="text-gray-300 text-lg leading-relaxed">
+                              {t(selectedAgent.descKey)}
+                          </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                          <div>
+                              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
+                                  Capabilities
+                              </h4>
+                              <ul className="space-y-3">
+                                  {(translations[language] as any).consulting.agents[`${selectedAgent.id}_features`]?.map((feature: string, idx: number) => (
+                                      <li key={idx} className="flex items-start gap-2 text-gray-300 text-sm">
+                                          <span className={`mt-1 w-1.5 h-1.5 rounded-full ${selectedAgent.color.replace('text', 'bg')}`}></span>
+                                          {feature}
+                                      </li>
+                                  ))}
+                              </ul>
+                          </div>
+                          <div>
+                              <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-b border-white/10 pb-2">
+                                  Tech Stack
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                  {(translations[language] as any).consulting.agents[`${selectedAgent.id}_stack`]?.map((stack: string, idx: number) => (
+                                      <span key={idx} className="px-3 py-1 rounded bg-white/5 border border-white/10 text-xs text-gray-400 font-mono">
+                                          {stack}
+                                      </span>
+                                  ))}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div className="bg-black/20 p-4 text-center border-t border-white/5">
+                      <button 
+                          onClick={() => setSelectedAgent(null)}
+                          className="text-sm text-gray-500 hover:text-white transition-colors"
+                      >
+                          Close Details
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
 
       {/* Special Service & Case Study Grid */}
       <section className="py-20 px-4">
@@ -335,19 +453,27 @@ const MethodologyCard = ({ step, t, language }: { step: number, t: any, language
     return (
         <div 
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`bg-brand-surface border border-white/10 rounded-xl p-6 relative cursor-pointer transition-all duration-300 hover:border-indigo-500/50 hover:bg-white/5 ${isExpanded ? 'ring-1 ring-indigo-500/50' : ''}`}
+            className={`
+                relative cursor-pointer transition-all duration-300 rounded-xl p-6 border
+                ${isExpanded 
+                    ? 'bg-white/10 border-indigo-500/50 shadow-[0_0_30px_rgba(99,102,241,0.15)]' 
+                    : 'bg-brand-surface border-white/10 hover:border-indigo-500/30 hover:bg-white/5'}
+            `}
         >
-            <div className="w-10 h-10 bg-brand-dark border border-indigo-500 text-indigo-400 rounded-full flex items-center justify-center font-bold mb-4 mx-auto md:mx-0 z-10 relative shadow-lg">
+            <div className={`
+                w-10 h-10 rounded-full flex items-center justify-center font-bold mb-4 mx-auto md:mx-0 z-10 relative shadow-lg transition-colors duration-300
+                ${isExpanded ? 'bg-indigo-600 text-white' : 'bg-brand-dark border border-indigo-500 text-indigo-400'}
+            `}>
                 {step}
             </div>
             
             <div className="flex justify-between items-start">
-                <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">
+                <h3 className={`text-lg font-bold mb-2 text-center md:text-left transition-colors ${isExpanded ? 'text-indigo-300' : 'text-white'}`}>
                     {t(`consulting.methodology.stage${step}_title`)}
                 </h3>
                 {/* Chevron Icon */}
                 <svg 
-                    className={`w-5 h-5 text-gray-500 transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} 
+                    className={`w-5 h-5 text-gray-500 transform transition-transform duration-300 ${isExpanded ? 'rotate-180 text-indigo-400' : ''}`} 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -356,20 +482,29 @@ const MethodologyCard = ({ step, t, language }: { step: number, t: any, language
                 </svg>
             </div>
             
-            <p className="text-sm text-gray-400 text-center md:text-left">
+            <p className="text-sm text-gray-400 text-center md:text-left mb-2">
                 {t(`consulting.methodology.stage${step}_desc`)}
             </p>
 
+             {/* Hint when collapsed */}
+            <div className={`overflow-hidden transition-all duration-300 ${!isExpanded ? 'max-h-8 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <p className="text-xs text-indigo-500/70 font-mono mt-2 text-center md:text-left flex items-center justify-center md:justify-start gap-1">
+                   <span>+ View Details</span>
+                </p>
+            </div>
+
             {/* Expandable Content */}
             <div 
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-64 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
             >
-                <div className="pt-4 border-t border-white/10">
-                    <ul className="space-y-2">
+                <div className="pt-4 border-t border-white/10 mt-2">
+                    <ul className="space-y-3">
                         {details && details.map((detail, index) => (
-                            <li key={index} className="text-xs text-gray-300 flex items-start gap-2">
-                                <span className="text-indigo-500 mt-0.5">•</span>
-                                <span>{detail}</span>
+                            <li key={index} className="text-sm text-gray-200 flex items-start gap-3 animate-in fade-in slide-in-from-left-2" style={{ animationDelay: `${index * 100}ms` }}>
+                                <span className="text-indigo-500 mt-1 min-w-[12px]">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                                </span>
+                                <span className="leading-relaxed">{detail}</span>
                             </li>
                         ))}
                     </ul>
@@ -380,11 +515,24 @@ const MethodologyCard = ({ step, t, language }: { step: number, t: any, language
 };
 
 // Helper Component for Agents
-const AgentCard = ({ icon, title, desc, color, bg, border }: any) => (
-    <div className={`p-6 rounded-xl ${bg} ${border} border hover:-translate-y-1 transition-transform duration-300`}>
-        <div className="text-3xl mb-4">{icon}</div>
-        <h4 className={`text-lg font-bold ${color} mb-3 min-h-[56px] flex items-center`}>{title}</h4>
-        <p className="text-gray-300 text-sm leading-relaxed">{desc}</p>
+const AgentCard = ({ icon, title, desc, color, bg, border, hoverBorder, onClick }: any) => (
+    <div 
+        onClick={onClick}
+        className={`p-6 rounded-xl ${bg} ${border} border hover:-translate-y-2 cursor-pointer transition-all duration-300 hover:shadow-2xl ${hoverBorder} group relative overflow-hidden`}
+    >
+        {/* Glow effect */}
+        <div className={`absolute -right-10 -top-10 w-32 h-32 ${color.replace('text', 'bg').replace('400', '500')}/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500`}></div>
+        
+        <div className="relative z-10">
+            <div className="text-3xl mb-4 transform group-hover:scale-110 transition-transform duration-300 origin-left">{icon}</div>
+            <h4 className={`text-lg font-bold ${color} mb-3 min-h-[56px] flex items-center`}>{title}</h4>
+            <p className="text-gray-300 text-sm leading-relaxed">{desc}</p>
+        </div>
+        
+        <div className={`mt-4 text-xs font-bold uppercase tracking-wider ${color} opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1`}>
+             View Capabilities 
+             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
     </div>
 );
 

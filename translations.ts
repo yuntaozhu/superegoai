@@ -1,4 +1,5 @@
 
+
 export const translations = {
   en: {
     nav: {
@@ -67,6 +68,7 @@ export const translations = {
         subtitle: 'From Artificial Intelligence to Augmented Intelligence.',
         description: 'In the era of AI transformation defined by HBR and ICMCI, raw computing power is no longer scarce. What is scarce is Trust, Governance, and Human-Machine Co-creation wisdom. Super Ego Agent is dedicated to building a digital external brain for you that balances "Ethics and Efficiency". We deliver not just code, but strategic alignment, risk control, and organizational evolution.',
         cta_diagnose: 'Book AI Maturity Diagnosis',
+        cta_diagnose_tooltip: 'Schedule a personalized consultation to assess your organization\'s AI readiness and define a strategic roadmap.',
         cta_army: 'Review AI Workforce',
       },
       philosophy: {
@@ -136,12 +138,20 @@ export const translations = {
         title: 'The Agent Army',
         marketing_title: 'Marketing: Content & Strategy',
         marketing_desc: 'Multimodal content generation, sentiment monitoring. Upgrading marketers to "Creative Directors". Efficiency +75%.',
+        marketing_features: ['Multimodal Content', 'SEO Automation', 'Trend Analysis'],
+        marketing_stack: ['GPT-4', 'Midjourney', 'Google Analytics API'],
         sales_title: 'Sales: Client & Opportunity',
         sales_desc: 'Lead cleaning, personalized Pitch Deck generation. Focusing on "Human Connection". Prep time -90%, Conversion +25%.',
+        sales_features: ['Lead Scoring', 'Personalized Outreach', 'CRM Sync'],
+        sales_stack: ['Salesforce', 'LangChain', 'HubSpot'],
         hr_title: 'HR: Recruitment & Experience',
         hr_desc: '7x24 policy Q&A, intelligent resume screening. Bias Mitigation for a fairer workplace. Screening efficiency +50%.',
+        hr_features: ['Resume Parsing', 'Candidate Matching', 'Policy FAQ'],
+        hr_stack: ['Vector DB', 'Python', 'Workday API'],
         ops_title: 'Operations: Predict & Optimize',
         ops_desc: 'IoT data analysis, predictive maintenance. From "Repair after fail" to "Predictive care". Downtime -30%.',
+        ops_features: ['Predictive Maintenance', 'Supply Chain Optimization', 'IoT Analysis'],
+        ops_stack: ['TensorFlow', 'IoT Sensors', 'AWS'],
       },
       special: {
         title: 'Legacy Code Refactoring',
@@ -239,6 +249,7 @@ export const translations = {
         subtitle: 'From Artificial Intelligence to Augmented Intelligence.',
         description: '在 HBR 与 ICMCI 定义的 AI 变革时代，单纯的算力已不再稀缺。稀缺的是信任 (Trust)、治理 (Governance) 与人机共创 (Co-creation) 的智慧。Super Ego Agent 致力于为您构建一个“伦理与效能并重”的数字外脑。我们不只是交付代码，我们交付的是战略对齐、风险管控与组织进化。',
         cta_diagnose: '预约 AI 成熟度诊断',
+        cta_diagnose_tooltip: '预约个性化咨询，评估您企业的 AI 就绪度并制定战略路线图。',
         cta_army: '检阅 AI 员工军团',
       },
       philosophy: {
@@ -308,12 +319,20 @@ export const translations = {
         title: 'AI 员工军团',
         marketing_title: '市场部：内容与策略 Agent',
         marketing_desc: '多模态内容生成、舆情监控。让市场人员升级为“创意总监”。确保品牌调性一致。内容创作效率提升 75%。',
+        marketing_features: ['多模态内容', 'SEO 自动化', '趋势分析'],
+        marketing_stack: ['GPT-4', 'Midjourney', 'Google Analytics API'],
         sales_title: '销售部：客户与商机 Agent',
         sales_desc: '线索清洗、个性化 Pitch Deck 生成。释放高价值时间，聚焦“人与人的连接”。方案准备时间缩短 90%，线索转化率提升 25%。',
+        sales_features: ['线索评分', '个性化触达', 'CRM 同步'],
+        sales_stack: ['Salesforce', 'LangChain', 'HubSpot'],
         hr_title: '人力资源部：招聘与员工体验 Agent',
         hr_desc: '7x24 政策问答、简历智能筛选。消除隐性偏见 (Bias Mitigation)，构建更公平职场。招聘筛选提效 50%。',
+        hr_features: ['简历解析', '候选人匹配', '政策问答'],
+        hr_stack: ['Vector DB', 'Python', 'Workday API'],
         ops_title: '运营/生产部：预测与优化 Agent',
         ops_desc: 'IoT 数据分析、预测性维护。从“故障后维修”转变为“预测性保养”。非计划停机减少 30%，库存周转优化 15%。',
+        ops_features: ['预测性维护', '供应链优化', 'IoT 分析'],
+        ops_stack: ['TensorFlow', 'IoT Sensors', 'AWS'],
       },
       special: {
         title: '特色服务：唤醒沉睡的代码资产',
