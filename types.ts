@@ -17,6 +17,10 @@ export interface Course {
   description: string;
   icon: string;
   color: string;
+  target: string;     // 面向群体
+  format: string;     // 授课方式
+  duration: string;   // 学习周期
+  outcome: string;    // 学习效果/交付物
   philosophyMap: {
     title: string;
     points: string[];

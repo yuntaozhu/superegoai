@@ -1,18 +1,16 @@
-
-
 export const translations = {
   en: {
     nav: {
       home: 'Home',
-      consulting: 'AI Consulting',
-      blog: 'Blog',
-      planets: 'Planets',
-      explore: 'Explore',
+      consulting: 'Consulting',
+      blog: 'Insights',
+      planets: 'Galaxy',
+      studio: 'AI Studio',
     },
     hero: {
       badge: 'The Modern Software Developer OS',
       title_prefix: 'Building the',
-      title_highlight: 'SuperEgo\'s',
+      title_highlight: "SuperEgo's",
       title_suffix: 'Second Brain',
       description: 'In the AI First era, success belongs to those who build a "Second Brain". Whether through our **Courses** for individuals or **Consulting** for enterprises, we help you evolve from executing to orchestrating.',
       cta_primary: 'Start Learning',
@@ -22,34 +20,129 @@ export const translations = {
       consulting_preview: {
         badge: 'For Enterprise',
         title: 'Super Ego Agent Consulting',
-        description: 'The Second Brain is not just for individuals. We build the "Ethical & Efficient" digital cortex for your organization. From strategy diagnosis to deploying your own "Agent Army", we transform businesses from Artificial Intelligence to Augmented Intelligence.',
-        feature_1: 'Strategic Alignment & Governance',
-        feature_2: 'Custom Agent Army Development',
-        feature_3: 'Staff Empowerment & Evolution',
-        cta: 'Enter Enterprise Portal'
+        description: 'The Second Brain is not just for individuals. We build the "Ethical & Efficient" digital cortex for your organization.',
+        feature_1: 'Strategic Alignment',
+        feature_2: 'Agent Army Development',
+        feature_3: 'Staff Evolution',
+        cta: 'Enterprise Portal'
+      }
+    },
+    consulting: {
+      hero: {
+        title: 'Super Ego Agent Consulting',
+        subtitle: 'The Ethical & Efficient Digital Cortex',
+        description: 'We help organizations transition from traditional workflows to an AI-first operating model. Build your "Super Ego" — a governing intelligence that orchestrates specialized agents.',
+        cta_diagnose: 'Digital Audit',
+        cta_diagnose_tooltip: 'Assess your organization\'s AI readiness and ethical alignment.',
+        cta_army: 'Agent Deployment',
+      },
+      philosophy: {
+        title: 'The AI-First Organizational Model',
+        id_title: 'The Id (Execution)',
+        id_desc: 'Raw specialized agents performing tasks at lightning speed without context.',
+        ego_title: 'The Ego (Coordination)',
+        ego_desc: 'Management layer ensuring agents work together and resolve conflicts.',
+        superego_title: 'The Super Ego (Governance)',
+        superego_desc: 'The moral and strategic compass ensuring AI alignment with company values.',
+      },
+      value_dimensions: {
+        title: 'Strategic Impact',
+        leadership: {
+          title: 'Control Tower',
+          metaphor: 'The Orchestrator',
+          point1_title: 'Insight Generation',
+          point1_desc: 'Transform raw data into strategic foresight.',
+          point2_title: 'Risk Mitigation',
+          point2_desc: 'Ethical safeguards for generative AI outputs.',
+          point3_title: 'Decision Support',
+          point3_desc: 'Real-time modeling for C-suite decision making.',
+        },
+        workforce: {
+          title: 'Agent Army',
+          metaphor: 'The Iron Man Suit',
+          point1_title: 'Extreme Efficiency',
+          point1_desc: 'Automate high-volume cognitive tasks.',
+          point2_title: '24/7 Operations',
+          point2_desc: 'Global service without human fatigue.',
+          point3_title: 'Scale on Demand',
+          point3_desc: 'Deploy thousands of agents for spike events.',
+        }
+      },
+      methodology: {
+        title: 'Our Deployment Framework',
+        stage1_title: 'Diagnostics',
+        stage1_desc: 'Identifying high-impact AI opportunities.',
+        stage1_details: ['Infrastructure Audit', 'Workflow Mapping', 'Ethical Gap Analysis'],
+        stage2_title: 'Orchestration',
+        stage2_desc: 'Building the core SuperEgo controller.',
+        stage2_details: ['RAG Pipeline Setup', 'Security Governance', 'API Integration'],
+        stage3_title: 'Agentification',
+        stage3_desc: 'Deploying specialized task agents.',
+        stage3_details: ['Prompt Engineering', 'Role Training', 'Cross-Agent Comms'],
+        stage4_title: 'Evolution',
+        stage4_desc: 'Continuous learning and refinement.',
+        stage4_details: ['KPI Tracking', 'RLHF Loops', 'Model Upgrades'],
+      },
+      agents: {
+        title: 'The Elite Agent Squad',
+        marketing_title: 'Growth Catalyst',
+        marketing_desc: 'Multimodal content generation and hyper-personalized campaigns.',
+        marketing_features: ['Brand Voice Cloning', 'Trend Detection', 'Auto-Campaign Ops'],
+        marketing_stack: ['Gemini 2.5', 'SDXL', 'Vector DB'],
+        sales_title: 'Revenue Engine',
+        sales_desc: 'Autonomous lead qualification and intelligent outreach orchestration.',
+        sales_features: ['Intent Analysis', 'Dynamic Pricing', 'CRM Automation'],
+        sales_stack: ['LangGraph', 'Python', 'Stripe'],
+        hr_title: 'Culture Guardian',
+        hr_desc: 'Talent matching and institutional knowledge preservation.',
+        hr_features: ['Skill Mapping', 'Policy RAG', 'Onboarding Bots'],
+        hr_stack: ['Private LLM', 'PostgreSQL'],
+        ops_title: 'Efficiency Hub',
+        ops_desc: 'Supply chain optimization and internal process automation.',
+        ops_features: ['Logistics Modeling', 'Bug Auto-fix', 'Reporting'],
+        ops_stack: ['Go', 'TensorFlow', 'Kubernetes'],
+      },
+      special: {
+        title: 'Custom Engineering',
+        desc: 'Need a specialized planet for your enterprise? We build custom agents and sovereign data structures tailored to your vertical.',
+      },
+      case: {
+        title: 'Case Study: Project Alpha',
+        desc: 'Reduced operational overhead by 60% for a Fortune 500 logistics firm using our multi-agent orchestration framework.',
+      },
+      team: {
+        title: 'The Architects',
+        zhu_title: 'Zhu - Chief Visionary',
+        zhu_desc: 'Expert in Human-AI collaboration and systemic orchestration.',
+        du_title: 'Du - Head of Engineering',
+        du_desc: 'Specialist in secure enterprise-grade Agentic systems.',
+      },
+      footer: {
+        quote: 'The future of enterprise is not AI-assisted, it is AI-orchestrated.',
+        promise: 'We build the conductor, not just the instrument.',
       }
     },
     philosophy: {
       title: 'The Core Philosophy: Evolution of a "New Species"',
-      subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine. Based on the cognitive cornerstone of "AI First", we completely overturn the traditional "Rote Memorization -> Exam Tactics" education model.',
+      subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine.',
       practice_label: 'Practice:',
-      summary: 'In short: We teach you to use AI (Part 1), build your own external brain (Part 2), play the role of a director (Part 3), and orchestrate a virtual team of AIs (Part 4) to realize any idea in your mind.',
+      summary: 'In short: We teach you to use AI, build your own external brain, and orchestrate a virtual team of AIs.',
     },
     galaxy: {
-      title: 'The Galaxy Model (For Individuals)',
-      description: 'Not a linear ladder, but a system. A central "SuperEgo" core orbited by four specialized planets.',
+      title: 'The Galaxy Model',
+      description: 'Not a linear ladder, but a system. A central "SuperEgo" core orbited by six specialized planets.',
       module: 'Module',
       explore_planet: 'Explore Planet',
       core_title: 'The Core: The Second Brain',
-      core_desc: 'The central infrastructure. Vector Databases, RAG, and Knowledge Graphs that connect Art, Sports, Data, and Trading. What you learn in one planet reinforces the others.',
+      core_desc: 'Central infrastructure connecting Art, Sports, Data, and Trading.',
     },
     cta: {
       title: 'Ready to Architect Your Second Brain?',
-      description: 'Join the cohort of future SuperEgo architects. Master Art, Sports, Data, and Quantitative Trading through the lens of AI orchestration.',
+      description: 'Join the cohort of future SuperEgo architects.',
       button: 'Join Waitlist',
     },
     footer: {
-      tagline: 'Building the SuperEgo\'s Second Brain. The modern operating system for the AI age.',
+      tagline: "Building the SuperEgo's Second Brain. The modern operating system for the AI age.",
       columns: {
         planets: 'Planets',
         philosophy: 'Philosophy',
@@ -59,131 +152,18 @@ export const translations = {
     course: {
       enroll: 'Enroll Now',
       syllabus: 'Syllabus & Trajectory',
+      syllabus_anchor: 'Syllabus',
       return_galaxy: 'Return to Galaxy Map',
       goal: 'GOAL',
-    },
-    consulting: {
-      hero: {
-        title: 'Constructing the Trusted "Second Brain" for Enterprise',
-        subtitle: 'From Artificial Intelligence to Augmented Intelligence.',
-        description: 'In the era of AI transformation defined by HBR and ICMCI, raw computing power is no longer scarce. What is scarce is Trust, Governance, and Human-Machine Co-creation wisdom. Super Ego Agent is dedicated to building a digital external brain for you that balances "Ethics and Efficiency". We deliver not just code, but strategic alignment, risk control, and organizational evolution.',
-        cta_diagnose: 'Book AI Maturity Diagnosis',
-        cta_diagnose_tooltip: 'Schedule a personalized consultation to assess your organization\'s AI readiness and define a strategic roadmap.',
-        cta_army: 'Review AI Workforce',
-      },
-      philosophy: {
-        title: 'Evolution of Wisdom: The Road to Super Ego',
-        id_title: 'The Id: Intuition & Chaos',
-        id_desc: 'Relying on founder intuition, data scattered in docs and IMs forming "data silos", legacy code leading to high technical debt. Energetic but directionless.',
-        ego_title: 'The Ego: Process & Compromise',
-        ego_desc: 'Introducing ERP/CRM/KPIs to establish order but struggling to balance resources. Information Overload drowns managers, delaying decisions.',
-        superego_title: 'The Super Ego: Governance & Evolution',
-        superego_desc: 'The perfect rational entity. Omniscience via RAG/Ground Truth. Ethical Governance compliant with EU AI Act. Self-Evolution to monitor processes and refactor code.',
-      },
-      value_dimensions: {
-        title: 'Dual Value Dimensions',
-        leadership: {
-          title: 'For Leadership: Omniscience & Risk Control',
-          metaphor: 'The Control Tower',
-          point1_title: 'Piercing the Fog',
-          point1_desc: 'Breaking down departmental silos. AI aggregates ERP, CRM, and unstructured data into a real-time "Single Source of Truth".',
-          point2_title: 'Rational Decision',
-          point2_desc: 'Super Ego filters out emotional bias, offering strategic deductions based on probability. Moving from "Gut Feeling" to "Data Dashboard".',
-          point3_title: 'Safety & Compliance',
-          point3_desc: 'As per HBR, risk is the main anxiety. We build algorithmic guardrails ensuring data privacy and ethical compliance, so you can sleep soundly.'
-        },
-        workforce: {
-          title: 'For Workforce: Liberation & Empowerment',
-          metaphor: 'The Iron Man Suit',
-          point1_title: 'Farewell to Mediocrity',
-          point1_desc: 'AI takes over repetitive, low-value "drudgery" (data entry, migration), freeing up 40%+ of employee time.',
-          point2_title: 'Capability Leap',
-          point2_desc: 'Junior employees can deliver Senior-level quality with AI assistance. Your 24/7 personalized mentor.',
-          point3_title: 'Human-Machine Co-creation',
-          point3_desc: 'Employees evolve from passive executors to "Commanders" and "Trainers" of their own AI Agent squads.'
-        }
-      },
-      methodology: {
-        title: 'Four-Stage Implementation Framework',
-        stage1_title: 'Diagnosis & Blueprint',
-        stage1_desc: 'Strategic Alignment. Designing AI strategy based on business pain points (KPIs), not just for the sake of AI. Risk assessment and privacy compliance review.',
-        stage1_details: [
-            "Stakeholder interviews to identify high-impact bottlenecks.",
-            "Data readiness assessment (Volume, Velocity, Variety, Veracity).",
-            "Technical architecture roadmap design & cloud infrastructure planning."
-        ],
-        stage2_title: 'Pilot & Validation',
-        stage2_desc: 'Agile Co-creation. Building MVA (Minimum Viable Agent). Verifying business value (ROI) rather than just technical feasibility.',
-        stage2_details: [
-            "Rapid prototyping of 'Minimum Viable Agent' (MVA).",
-            "A/B testing against traditional workflows to prove ROI.",
-            "User acceptance testing (UAT) with internal early adopters."
-        ],
-        stage3_title: 'Integration & Scaling',
-        stage3_desc: 'Seamless Embedding. Planting Agents into ERP/CRM/IM workflows. Employee Upskilling to become AI Commanders.',
-        stage3_details: [
-            "API integration with legacy ERP/CRM/HRIS systems.",
-            "Containerized deployment (Docker/Kubernetes) for enterprise scalability.",
-            "Change management workshops to reduce employee resistance."
-        ],
-        stage4_title: 'Governance & Evolution',
-        stage4_desc: 'Human-in-the-loop. Establishing AI Center of Excellence (CoE) to monitor model drift and ensure ethical output.',
-        stage4_details: [
-            "Setting up model monitoring dashboards (Drift detection).",
-            "Quarterly ethical audits, bias checks, and compliance reviews.",
-            "Continuous model retraining pipelines based on feedback loops."
-        ],
-      },
-      agents: {
-        title: 'The Agent Army',
-        marketing_title: 'Marketing: Content & Strategy',
-        marketing_desc: 'Multimodal content generation, sentiment monitoring. Upgrading marketers to "Creative Directors". Efficiency +75%.',
-        marketing_features: ['Multimodal Content', 'SEO Automation', 'Trend Analysis'],
-        marketing_stack: ['GPT-4', 'Midjourney', 'Google Analytics API'],
-        sales_title: 'Sales: Client & Opportunity',
-        sales_desc: 'Lead cleaning, personalized Pitch Deck generation. Focusing on "Human Connection". Prep time -90%, Conversion +25%.',
-        sales_features: ['Lead Scoring', 'Personalized Outreach', 'CRM Sync'],
-        sales_stack: ['Salesforce', 'LangChain', 'HubSpot'],
-        hr_title: 'HR: Recruitment & Experience',
-        hr_desc: '7x24 policy Q&A, intelligent resume screening. Bias Mitigation for a fairer workplace. Screening efficiency +50%.',
-        hr_features: ['Resume Parsing', 'Candidate Matching', 'Policy FAQ'],
-        hr_stack: ['Vector DB', 'Python', 'Workday API'],
-        ops_title: 'Operations: Predict & Optimize',
-        ops_desc: 'IoT data analysis, predictive maintenance. From "Repair after fail" to "Predictive care". Downtime -30%.',
-        ops_features: ['Predictive Maintenance', 'Supply Chain Optimization', 'IoT Analysis'],
-        ops_stack: ['TensorFlow', 'IoT Sensors', 'AWS'],
-      },
-      special: {
-        title: 'Legacy Code Refactoring',
-        desc: 'Your "Spaghetti Code" is not a burden, but a digital gold mine waiting to be excavated. We use LLMs to deeply understand millions of lines of legacy code, automatically generating documentation, optimizing architecture, and fixing bugs.',
-      },
-      case: {
-        title: 'Case Study: Ecommerce Reinvention',
-        desc: 'Reshaping cross-border home furnishing ecommerce. Design Agent generates 3D renders from floor plans. Translation Agent breaks language barriers with vertical corpus. Data Agent monitors global trends.',
-        stat1: '5X Design Efficiency',
-        stat2: 'Inventory Turnover: 55d → 22d',
-        stat3: 'Proposal Conversion: 82%',
-      },
-      team: {
-        title: 'Core Team',
-        zhu_title: 'Zhu Yuntao | Senior Data & AI Advisor',
-        zhu_desc: 'HKU FinTech, SJTU MBA. Former AI Architect at TCL/MTK. Expert in AI algorithm logic and financial tech application.',
-        du_title: 'Du Zhanyuan | Senior Tech Expert',
-        du_desc: 'Former Tech Director at Alibaba subsidiary. 10+ years in ML, Security, and OS R&D. Expert in AIGC implementation.',
-      },
-      footer: {
-        quote: 'AI will not pass the Turing test because it does not need to. But companies that do not embrace AI will not pass the market\'s survival test.',
-        promise: 'We provide a complete "Consulting + Implementation + Empowerment" solution. From the first "AI Soldier" to a full "AI Army".',
-      }
     }
   },
   zh: {
     nav: {
       home: '首页',
       consulting: 'AI 咨询',
-      blog: '博客',
-      planets: '课程星球',
-      explore: '探索',
+      blog: '见解',
+      planets: '探索星系',
+      studio: '灵感工坊',
     },
     hero: {
       badge: '现代软件开发者操作系统',
@@ -198,35 +178,125 @@ export const translations = {
       consulting_preview: {
         badge: '企业版',
         title: 'Super Ego Agent 咨询服务',
-        description: '第二大脑不仅属于个人。我们为企业构建“伦理与效能并重”的数字皮层。从战略诊断到部署您专属的“Agent 军团”，我们助力企业实现从人工智能到增强智能的跃迁。',
+        description: '第二大脑不仅属于个人。我们为企业构建“伦理与效能并重”的数字皮层。',
         feature_1: '战略对齐与伦理治理',
         feature_2: '定制化智能体军团开发',
         feature_3: '组织进化与员工赋能',
-        cta: '进入企业服务门户'
+        cta: '进入企业门户'
+      }
+    },
+    consulting: {
+      hero: {
+        title: 'Super Ego Agent 企业咨询',
+        subtitle: '伦理与效能并重的数字皮层',
+        description: '我们帮助组织从传统工作流转型为 AI First 运营模式。构建你的“超我”——一个指挥专业智能体的治理中心。',
+        cta_diagnose: '数字化审计',
+        cta_diagnose_tooltip: '评估组织的 AI 就绪程度与伦理对齐。',
+        cta_army: '智能体部署',
+      },
+      philosophy: {
+        title: 'AI First 组织模型',
+        id_title: '本我 (执行层)',
+        id_desc: '纯粹的专业智能体，在没有上下文的情况下以闪电般的速度执行任务。',
+        ego_title: '自我 (协调层)',
+        ego_desc: '管理层确保智能体协同工作并解决冲突。',
+        superego_title: '超我 (治理层)',
+        superego_desc: '道德与战略指南针，确保 AI 与公司价值观一致。',
+      },
+      value_dimensions: {
+        title: '战略影响',
+        leadership: {
+          title: '控制塔',
+          metaphor: '指挥官',
+          point1_title: '洞察生成',
+          point1_desc: '将原始数据转化为战略远见。',
+          point2_title: '风险缓解',
+          point2_desc: '为生成式 AI 输出提供伦理保障。',
+          point3_title: '决策支持',
+          point3_desc: '为高管决策提供实时建模。',
+        },
+        workforce: {
+          title: '智能体军团',
+          metaphor: '钢铁侠战衣',
+          point1_title: '极效办公',
+          point1_desc: '自动化高容量认知任务。',
+          point2_title: '24/7 运营',
+          point2_desc: '无需人类疲劳的全球化服务。',
+          point3_title: '按需缩放',
+          point3_desc: '为突发事件部署数千个智能体。',
+        }
+      },
+      methodology: {
+        title: '我们的部署框架',
+        stage1_title: '诊断',
+        stage1_desc: '识别高价值 AI 机会。',
+        stage1_details: ['基础设施审计', '工作流映射', '伦理差距分析'],
+        stage2_title: '编排',
+        stage2_desc: '构建核心超我控制器。',
+        stage2_details: ['RAG 管道搭建', '安全治理', 'API 集成'],
+        stage3_title: '智能体化',
+        stage3_desc: '部署专业任务智能体。',
+        stage3_details: ['提示词工程', '角色训练', '跨智能体通信'],
+        stage4_title: '进化',
+        stage4_desc: '持续学习与优化。',
+        stage4_details: ['KPI 追踪', 'RLHF 闭环', '模型升级'],
+      },
+      agents: {
+        title: '精英智能体小队',
+        marketing_title: '增长催化剂',
+        marketing_desc: '多模态内容生成与超个性化活动。',
+        marketing_features: ['品牌调性克隆', '趋势探测', '自动营销运营'],
+        marketing_stack: ['Gemini 2.5', 'SDXL', 'Vector DB'],
+        sales_title: '营收引擎',
+        sales_desc: '自主线索识别与智能外联编排。',
+        sales_features: ['意图分析', '动态定价', 'CRM 自动化'],
+        sales_stack: ['LangGraph', 'Python', 'Stripe'],
+        hr_title: '文化守护者',
+        hr_desc: '人才匹配与组织知识沉淀。',
+        hr_features: ['技能映射', '政策 RAG', '入职机器人'],
+        hr_stack: ['Private LLM', 'PostgreSQL'],
+        ops_title: '效率中心',
+        ops_desc: '供应链优化与内部流程自动化。',
+        ops_features: ['物流建模', 'Bug 自动修复', '报告生成'],
+        ops_stack: ['Go', 'TensorFlow', 'Kubernetes'],
+      },
+      special: {
+        title: '定制化工程',
+        desc: '需要为企业定制专属星球？我们构建符合垂直行业的定制智能体与主权数据结构。',
+      },
+      case: {
+        title: '案例研究：阿尔法计划',
+        desc: '通过我们的多智能体编排框架，为某财富 500 强物流公司降低了 60% 的运营成本。',
+      },
+      team: {
+        title: '架构师团队',
+        zhu_title: 'Zhu - 首席愿景官',
+        zhu_desc: '人机协作与系统编排专家。',
+        du_title: 'Du - 工程负责人',
+        du_desc: '企业级安全智能体系统专家。',
+      },
+      footer: {
+        quote: '企业的未来不是 AI 辅助，而是 AI 编排。',
+        promise: '我们构建的是指挥棒，而不仅仅是乐器。',
       }
     },
     philosophy: {
       title: '课程核心理念：AI 时代的“新物种”进化论',
-      subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。我们基于“AI First”（AI优先）的认知基石，彻底颠覆传统教育中“死记硬背 -> 题海战术”的模式。',
+      subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。',
       practice_label: '实践：',
-      summary: '一句话总结：我们教你利用 AI（Part 1），构建一个只属于你的外挂大脑（Part 2），通过扮演总导演的角色（Part 3），指挥一支由 AI 组成的虚拟团队（Part 4），去实现你脑海中的任何创意。',
+      summary: '一句话总结：我们教你利用 AI，构建一个只属于你的外挂大脑，指挥 AI 组成的虚拟团队。',
     },
     galaxy: {
-      title: '星系模型 (个人版)',
-      description: '这不再是线性的阶梯，而是一个系统。一个核心“超我”恒星，被四颗专业行星环绕。',
+      title: '星系模型',
+      description: '这不再是线性的阶梯，而是一个系统。一个核心“超我”恒星，被六颗专业行星环绕。',
       module: '模块',
       explore_planet: '探索星球',
       core_title: '核心恒星：第二大脑',
-      core_desc: '中央基础设施。向量数据库、RAG 和知识图谱连接了艺术、运动、数据和交易。你在一个星球学到的知识将强化其他星球的能力。',
-      cta: {
-        title: '准备好构建你的第二大脑了吗？',
-        description: '加入未来“超我”架构师的行列。通过 AI 编排的视角，掌握艺术、运动、数据和量化交易。',
-        button: '加入候补名单',
-      }
+      core_desc: '中央基础设施连接艺术、运动、数据和量化交易。',
     },
     cta: {
       title: '准备好构建你的第二大脑了吗？',
-      description: '加入未来“超我”架构师的行列。通过 AI 编排的视角，掌握艺术、运动、数据和量化交易。',
+      description: '加入未来“超我”架构师的行列。',
       button: '加入候补名单',
     },
     footer: {
@@ -240,122 +310,9 @@ export const translations = {
     course: {
       enroll: '立即报名',
       syllabus: '课程大纲与轨迹',
+      syllabus_anchor: '课程大纲',
       return_galaxy: '返回星系图',
       goal: '目标',
-    },
-    consulting: {
-      hero: {
-        title: '构建企业的可信赖“第二大脑”',
-        subtitle: 'From Artificial Intelligence to Augmented Intelligence.',
-        description: '在 HBR 与 ICMCI 定义的 AI 变革时代，单纯的算力已不再稀缺。稀缺的是信任 (Trust)、治理 (Governance) 与人机共创 (Co-creation) 的智慧。Super Ego Agent 致力于为您构建一个“伦理与效能并重”的数字外脑。我们不只是交付代码，我们交付的是战略对齐、风险管控与组织进化。',
-        cta_diagnose: '预约 AI 成熟度诊断',
-        cta_diagnose_tooltip: '预约个性化咨询，评估您企业的 AI 就绪度并制定战略路线图。',
-        cta_army: '检阅 AI 员工军团',
-      },
-      philosophy: {
-        title: '企业的智慧进化论：通往 Super Ego 之路',
-        id_title: '本我 (The Id)：直觉与混乱',
-        id_desc: '依赖创始人直觉，数据散落在文档与 IM 中形成“数据孤岛”，遗留的“屎山代码”导致高昂的技术负债。充满活力但缺乏秩序。',
-        ego_title: '自我 (The Ego)：流程与妥协',
-        ego_desc: '引入 ERP/CRM 与 KPI 试图建立秩序，但在现实资源与目标之间艰难权衡。信息过载 (Information Overload) 导致决策滞后，重复性劳动占据人才时间。',
-        superego_title: '超我 (The Super Ego)：增强与治理',
-        superego_desc: '“完美理性实体”。全知洞察：基于 Ground Truth 的 RAG 技术消除幻觉。伦理护航：符合 EU AI Act 标准。自我进化：不知疲倦地监控流程与重构代码。',
-      },
-      value_dimensions: {
-        title: '双重价值维度',
-        leadership: {
-          title: '致决策者 —— 全知视界与风控',
-          metaphor: '核心隐喻：指挥塔 (The Control Tower)',
-          point1_title: '穿透迷雾',
-          point1_desc: '打破部门墙，AI将ERP、CRM及非结构化数据实时聚合成“单一真理源”(Single Source of Truth)。',
-          point2_title: '理性决策',
-          point2_desc: 'Super Ego 过滤掉人类情绪干扰，基于概率论和历史数据提供战略推演，让决策从“拍脑袋”变成“看仪表盘”。',
-          point3_title: '安全合规',
-          point3_desc: '如 HBR 所述，企业最大的焦虑是风险。我们建立算法护栏，确保数据隐私与伦理合规，让您睡得安稳。'
-        },
-        workforce: {
-          title: '致员工 —— 解放与赋能',
-          metaphor: '核心隐喻：钢铁侠战甲 (The Iron Man Suit)',
-          point1_title: '告别平庸',
-          point1_desc: 'AI 接管重复、低价值的“填表与搬运”工作（The Drudgery），释放员工 40%+ 的时间。',
-          point2_title: '能力跃迁',
-          point2_desc: '初级员工在 AI 辅助下可产出资深专家的交付质量。AI 是 7x24 小时的导师。',
-          point3_title: '人机共创',
-          point3_desc: '员工不再是被动的执行者，而是 AI Agent 的“指挥官”和“训练师”。'
-        }
-      },
-      methodology: {
-        title: '四阶段实施框架',
-        stage1_title: '诊断与蓝图',
-        stage1_desc: '战略对齐。基于业务痛点 (KPIs) 设计 AI 战略。进行 AI 风险评估与数据隐私合规性审查 (HBR/Salesforce 标准)。',
-        stage1_details: [
-            "通过关键利益相关者访谈，识别高影响力的业务瓶颈。",
-            "数据就绪度评估（数据量、速度、多样性、真实性）。",
-            "设计符合企业现状的技术架构路线图与云基础设施规划。"
-        ],
-        stage2_title: '试点与验证',
-        stage2_desc: '敏捷共创。构建 MVA (最小可行智能体)。验证商业价值 (ROI)，拒绝“技术演示品”，只做“业务实战品”。',
-        stage2_details: [
-            "快速原型开发，构建“最小可行智能体”(MVA)。",
-            "针对传统工作流进行 A/B 测试对比，以验证投资回报率 (ROI)。",
-            "与内部早期采用者进行用户验收测试 (UAT)。"
-        ],
-        stage3_title: '集成与规模化',
-        stage3_desc: '无缝嵌入。将 Agent 植入 ERP/CRM/IM 等现有工作流。员工赋能 (Upskilling)，培养员工成为 AI 的“指挥官”。',
-        stage3_details: [
-            "与传统 ERP/CRM/HRIS 系统进行 API 级集成。",
-            "基于容器化 (Docker/K8s) 的弹性部署，适应企业级扩展。",
-            "开展变革管理研讨会，降低员工抵触情绪并提升技能。"
-        ],
-        stage4_title: '治理与进化',
-        stage4_desc: '人在环路 (Human-in-the-loop)。建立 AI 卓越中心 (CoE)，持续监控模型漂移，确保 AI 输出符合人类价值观与企业道德标准。',
-        stage4_details: [
-            "建立模型监控仪表盘（检测数据漂移与性能衰退）。",
-            "进行季度性伦理审计、偏见检查与合规性审查。",
-            "搭建基于反馈循环的持续模型重训练 (Retraining) 流水线。"
-        ],
-      },
-      agents: {
-        title: 'AI 员工军团',
-        marketing_title: '市场部：内容与策略 Agent',
-        marketing_desc: '多模态内容生成、舆情监控。让市场人员升级为“创意总监”。确保品牌调性一致。内容创作效率提升 75%。',
-        marketing_features: ['多模态内容', 'SEO 自动化', '趋势分析'],
-        marketing_stack: ['GPT-4', 'Midjourney', 'Google Analytics API'],
-        sales_title: '销售部：客户与商机 Agent',
-        sales_desc: '线索清洗、个性化 Pitch Deck 生成。释放高价值时间，聚焦“人与人的连接”。方案准备时间缩短 90%，线索转化率提升 25%。',
-        sales_features: ['线索评分', '个性化触达', 'CRM 同步'],
-        sales_stack: ['Salesforce', 'LangChain', 'HubSpot'],
-        hr_title: '人力资源部：招聘与员工体验 Agent',
-        hr_desc: '7x24 政策问答、简历智能筛选。消除隐性偏见 (Bias Mitigation)，构建更公平职场。招聘筛选提效 50%。',
-        hr_features: ['简历解析', '候选人匹配', '政策问答'],
-        hr_stack: ['Vector DB', 'Python', 'Workday API'],
-        ops_title: '运营/生产部：预测与优化 Agent',
-        ops_desc: 'IoT 数据分析、预测性维护。从“故障后维修”转变为“预测性保养”。非计划停机减少 30%，库存周转优化 15%。',
-        ops_features: ['预测性维护', '供应链优化', 'IoT 分析'],
-        ops_stack: ['TensorFlow', 'IoT Sensors', 'AWS'],
-      },
-      special: {
-        title: '特色服务：唤醒沉睡的代码资产',
-        desc: '您的“代码屎山”不是负担，而是待挖掘的数字金矿。我们利用 LLM 深度理解数百万行遗留代码，自动生成文档、优化架构、修复漏洞。让旧系统也能适应 AI 时代的新需求。',
-      },
-      case: {
-        title: '深度案例：家居电商重塑',
-        desc: '某跨境家居企业面临挑战。设计 Agent 自动生成 3D 渲染方案；翻译 Agent 打破语言壁垒；数据 Agent 指导选品。',
-        stat1: '设计效率提升 5倍',
-        stat2: '库存周转：55天 → 22天',
-        stat3: '方案确认率：82%',
-      },
-      team: {
-        title: '专家团队',
-        zhu_title: '朱云涛 | 资深数据专家 & AI 技术顾问',
-        zhu_desc: '香港大学金融工程研究生，上海交通大学 MBA。前 TCL 通讯、联发科 (MTK) AI 架构负责人。专长：深度理解 AI 算法底层逻辑、软件架构设计与金融科技应用。',
-        du_title: '杜占源 | 资深技术专家',
-        du_desc: '前阿里巴巴旗下公司技术总监。拥有 10+ 年机器学习、网络安全、操作系统核心研发经验。带领团队成功落地多行业的多模态大模型及 AIGC 解决方案。',
-      },
-      footer: {
-        quote: 'AI 不会通过图灵测试，因为它不需要。但企业如果不拥抱 AI，将无法通过市场的生存测试。',
-        promise: '我们提供的不仅仅是孤立的 AI 工具，而是一整套“咨询 + 实施 + 赋能”的组织进化方案。从定义一个最小的“AI 士兵”开始，逐步构建起覆盖全业务的“AI 军团”。',
-      }
     }
   }
 };

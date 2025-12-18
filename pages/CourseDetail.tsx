@@ -25,7 +25,7 @@ const CourseDetail: React.FC = () => {
           <div className="inline-block p-4 rounded-2xl bg-white/10 backdrop-blur-md text-6xl mb-6 shadow-xl">
             {course.icon}
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight uppercase">
             {course.title}
           </h1>
           <p className="text-xl md:text-2xl text-white/90 font-light mb-8 max-w-3xl mx-auto">
@@ -38,8 +38,8 @@ const CourseDetail: React.FC = () => {
           </div>
         </div>
         
-        {/* Background Particles/Noise simulation */}
-        <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,...")' }} />
+        {/* Background Noise simulation */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 pb-20">
