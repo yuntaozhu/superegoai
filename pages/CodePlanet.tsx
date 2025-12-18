@@ -22,9 +22,9 @@ const CodePlanet: React.FC = () => {
             
             <div className="space-y-4">
                <div className="text-green-500">$ cursor-agent build --target commercial-saas</div>
-               <div className="text-gray-400">>> Initializing Cursor Orchestration... <span className="text-green-600">[OK]</span></div>
-               <div className="text-gray-400">>> Connecting V0 Frontend Engine... <span className="text-green-600">[OK]</span></div>
-               <div className="text-gray-400">>> Deploying Supabase Infrastructure... <span className="text-green-600">[OK]</span></div>
+               <div className="text-gray-400">{" >> "} Initializing Cursor Orchestration... <span className="text-green-600">[OK]</span></div>
+               <div className="text-gray-400">{" >> "} Connecting V0 Frontend Engine... <span className="text-green-600">[OK]</span></div>
+               <div className="text-gray-400">{" >> "} Deploying Supabase Infrastructure... <span className="text-green-600">[OK]</span></div>
                <div className="text-blue-400 italic mt-6">// Starting code self-healing loop...</div>
                <div className="grid grid-cols-10 gap-1 mt-2">
                   {[...Array(40)].map((_, i) => (
