@@ -2,7 +2,8 @@ import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
-import { motion } from 'framer-motion';
+// Fix: Import Variants type from framer-motion to properly type the animation configuration
+import { motion, Variants } from 'framer-motion';
 
 const ArtPlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -64,6 +65,37 @@ const ArtPlanet: React.FC = () => {
     }
   ];
 
+  // Animation Variants
+  // Fix: Explicitly typed variants as Variants and used 'as any' for easing strings to avoid narrowing issues in strict TS environments
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" as any }
+    }
+  };
+
+  const tagVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.4, ease: "backOut" as any }
+    }
+  };
+
   return (
     <PlanetLayout course={course}>
       {/* Immersive Vision Section */}
@@ -114,67 +146,102 @@ const ArtPlanet: React.FC = () => {
       <section className="py-12 md:py-20 px-4 md:px-0">
         <div className="space-y-16 md:space-y-32">
           {acts.map((act, idx) => (
-            <motion.div 
+            <div 
               key={act.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
               className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 md:gap-16 items-center`}
             >
-              <div className="flex-1 space-y-6 md:space-y-8">
-                <div className="flex items-center gap-4">
+              {/* Textual Content Container */}
+              <motion.div 
+                className="flex-1 space-y-6 md:space-y-8"
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                <motion.div variants={itemVariants} className="flex items-center gap-4">
                   <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br ${act.gradient} flex items-center justify-center text-xl md:text-2xl shadow-lg`}>
                     {act.icon}
                   </div>
                   <div className="font-mono text-xs md:text-sm text-gray-500">ACT_{act.id}</div>
-                </div>
+                </motion.div>
                 
-                <h3 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-tight">{act.title}</h3>
-                <p className="text-purple-400 font-bold italic text-sm md:text-base">{act.subtitle}</p>
+                <motion.h3 variants={itemVariants} className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-tight">
+                  {act.title}
+                </motion.h3>
+                <motion.p variants={itemVariants} className="text-purple-400 font-bold italic text-sm md:text-base">
+                  {act.subtitle}
+                </motion.p>
                 
-                <div className="bg-white/5 border border-white/10 rounded-3xl md:rounded-[40px] p-6 md:p-10 space-y-4 md:space-y-6">
-                  <div>
+                <motion.div 
+                  variants={itemVariants}
+                  className="bg-white/5 border border-white/10 rounded-3xl md:rounded-[40px] p-6 md:p-10 space-y-4 md:space-y-6"
+                >
+                  <motion.div variants={itemVariants}>
                     <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2 md:mb-4">导演指令 // Director Prompt</div>
                     <p className="text-gray-300 text-sm md:text-lg leading-relaxed italic">"{act.dialogue}"</p>
-                  </div>
+                  </motion.div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-white/5">
+                  <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-white/5">
                     <div>
                       <div className="text-[9px] font-mono text-purple-500 uppercase mb-2">数学模块</div>
                       <div className="flex flex-wrap gap-2">
                         {act.math.map(m => (
-                          <span key={m} className="px-2 py-0.5 md:py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[9px] md:text-[10px] text-purple-300">{m}</span>
+                          <motion.span 
+                            key={m} 
+                            variants={tagVariants}
+                            whileHover={{ scale: 1.05, backgroundColor: "rgba(168, 85, 247, 0.2)" }}
+                            className="px-2 py-0.5 md:py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[9px] md:text-[10px] text-purple-300 cursor-default"
+                          >
+                            {m}
+                          </motion.span>
                         ))}
                       </div>
                     </div>
                     <div>
                       <div className="text-[9px] font-mono text-purple-500 uppercase mb-2">艺术家</div>
-                      <div className="text-white font-bold text-xs md:text-sm">{act.artists}</div>
+                      <motion.div variants={tagVariants} className="text-white font-bold text-xs md:text-sm">
+                        {act.artists}
+                      </motion.div>
                     </div>
-                  </div>
-                </div>
-              </div>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
 
-              <div className="flex-1 w-full">
-                <div className="relative aspect-video rounded-3xl md:rounded-[48px] overflow-hidden group border border-white/5">
+              {/* Visuals & Mission Block */}
+              <motion.div 
+                className="flex-1 w-full"
+                initial={{ opacity: 0, x: idx % 2 === 0 ? 40 : -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" as any }}
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                <div className="relative aspect-video rounded-3xl md:rounded-[48px] overflow-hidden group border border-white/5 shadow-2xl">
                   <div className={`absolute inset-0 bg-gradient-to-br ${act.gradient} opacity-10 md:opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <motion.div 
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                      transition={{ duration: 25, repeat: Infinity, ease: 'linear' as any }}
                       className="w-48 h-48 md:w-64 md:h-64 border-2 border-white/5 rounded-full border-dashed"
                     />
-                    <div className="absolute text-6xl md:text-8xl grayscale opacity-50 md:opacity-100 group-hover:grayscale-0 transition-all duration-700">
+                    <div className="absolute text-6xl md:text-8xl grayscale opacity-50 md:opacity-100 group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
                       {act.icon}
                     </div>
                   </div>
-                  <div className="absolute bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10 p-4 md:p-8 bg-black/60 backdrop-blur-xl rounded-2xl md:rounded-3xl border border-white/10 transform translate-y-2 md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-500">
-                    <div className="text-[9px] font-mono text-purple-400 uppercase mb-1 md:mb-2">实战任务</div>
+                  <motion.div 
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                    className="absolute bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10 p-4 md:p-8 bg-black/60 backdrop-blur-xl rounded-2xl md:rounded-3xl border border-white/10 transform transition-all duration-500 group-hover:bg-black/80"
+                  >
+                    <div className="text-[9px] font-mono text-purple-400 uppercase mb-1 md:mb-2 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse"></span>
+                      实战任务 // Mission
+                    </div>
                     <p className="text-white font-bold leading-relaxed text-xs md:text-base">{act.mission}</p>
-                  </div>
+                  </motion.div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           ))}
         </div>
       </section>
@@ -184,6 +251,7 @@ const ArtPlanet: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
           className="max-w-4xl mx-auto p-8 md:p-20 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-[40px] md:rounded-[64px] backdrop-blur-xl relative overflow-hidden"
         >
           <div className="relative z-10">
@@ -192,14 +260,20 @@ const ArtPlanet: React.FC = () => {
               "我们不仅仅是在模拟艺术，我们是在解构审美。通过将流派的核心抽象为代码，你真正理解了什么是‘风格’。"
             </p>
             <div className="flex justify-center gap-8 md:gap-12">
-              <div className="text-center">
+              <motion.div 
+                whileHover={{ y: -5 }}
+                className="text-center"
+              >
                 <div className="text-purple-400 font-black text-xl md:text-2xl mb-1">100+</div>
                 <div className="text-[10px] text-gray-500 uppercase font-mono">Masterpieces Analyzed</div>
-              </div>
-              <div className="text-center">
+              </motion.div>
+              <motion.div 
+                whileHover={{ y: -5 }}
+                className="text-center"
+              >
                 <div className="text-purple-400 font-black text-xl md:text-2xl mb-1">20+</div>
                 <div className="text-[10px] text-gray-500 uppercase font-mono">Algorithms Created</div>
-              </div>
+              </motion.div>
             </div>
           </div>
           {/* Decorative Pattern */}
