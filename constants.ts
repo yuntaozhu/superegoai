@@ -7,13 +7,7 @@ interface ContentData {
 }
 
 const CONTENT_ZH: ContentData = {
-  philosophyPillars: [
-    {
-      title: "认知基石：从“技能本位”到“系统本位”",
-      concept: "旧观念：必须自己学会所有技能。新理念：在 AGI 前夜，核心竞争力是“构建系统”和“提出问题”。",
-      practice: "Human defines the 'Why', AI solves the 'How'。"
-    }
-  ],
+  philosophyPillars: [], // Using specific translations now
   blogPosts: [],
   courses: [
     {
@@ -25,9 +19,9 @@ const CONTENT_ZH: ContentData = {
       icon: "🎨",
       color: "from-purple-500 to-pink-500",
       target: "小学高年级、初中阶段",
-      format: "录播 + 导师实战课",
-      duration: "8 周 (每周 2 课时)",
-      outcome: "重现人类艺术流派，构建属于你的“生成式艺术画廊”，培养跨学科审美与数学直觉。",
+      format: "项目制学习",
+      duration: "8 周",
+      outcome: "掌握AI辅助审美，重现历史流派，完成个人数字艺术画廊。",
       philosophyMap: {
         title: "费曼学习法实现",
         points: [
@@ -49,9 +43,9 @@ const CONTENT_ZH: ContentData = {
       icon: "🏃",
       color: "from-orange-500 to-red-500",
       target: "初中、高中阶段 (热爱运动者)",
-      format: "软硬件结合实战项目",
-      duration: "12 周 (包含算法部署与实地测试)",
-      outcome: "开发“AI 动作纠正教练”，通过 CV 分析姿态，在提高运动表现的同时增强对 AI 的物理认知。",
+      format: "软硬件结合 + 户外实践",
+      duration: "8 周",
+      outcome: "能够利用CV视觉分析运动姿态，开发专属的AI动作纠正教练。",
       philosophyMap: {
         title: "安全与物理 AI",
         points: [
@@ -71,11 +65,11 @@ const CONTENT_ZH: ContentData = {
       tagline: "打造你的数字军团",
       description: "本课程参考顶级 MLOps 架构，将企业级的 RAG 技术翻译为个人知识系统的构建法则。",
       icon: "🧠",
-      color: "from-cyan-400 to-blue-500",
+      color: "from-yellow-400 to-amber-500",
       target: "终身学习者、知识工作者",
-      format: "沉浸式工作坊 (Workshop)",
-      duration: "4 周 (高强度实战)",
-      outcome: "打造私有向量知识库，构建能主动决策、具备“超我”意识的数字分身。",
+      format: "核心架构课",
+      duration: "4 周",
+      outcome: "建立私有向量数据库，打造具备RAG能力的AI参谋长，实现知识自动化。",
       philosophyMap: {
         title: "主权定义",
         points: [
@@ -95,11 +89,11 @@ const CONTENT_ZH: ContentData = {
       tagline: "进化的决策核心",
       description: "我们不写算法，我们构建能够自我进化的多智能体。利用 Gemini 3 的长窗口能力深度阅读金融研报。",
       icon: "📈",
-      color: "from-yellow-400 to-amber-600",
-      target: "高中生、成年金融从业者",
-      format: "高阶项目制学习 (PBL)",
-      duration: "16 周 (包含回测与实盘部署)",
-      outcome: "构建自我进化的多智能体交易系统，独立完成从 Alpha 发现到自动化回测的完整闭环。",
+      color: "from-emerald-400 to-cyan-600",
+      target: "高中生、成年人",
+      format: "实战模拟 + Python进阶",
+      duration: "12 周",
+      outcome: "构建自我进化的AI交易Agent，完成策略回测与实盘模拟。",
       philosophyMap: {
         title: "进化机制",
         points: [
@@ -119,11 +113,11 @@ const CONTENT_ZH: ContentData = {
       tagline: "不仅是编程，更是编排",
       description: "不培养程序员，只培养“产品缔造者”。你向 AI 提的需求清不清晰，是本课程的唯一考核标准。",
       icon: "🚀",
-      color: "from-green-400 to-emerald-600",
+      color: "from-cyan-400 to-blue-600",
       target: "高中、大学、成人创业者",
-      format: "商业孵化营",
-      duration: "10 周 (从创意到上线)",
-      outcome: "0 代码基础也能开发商业级 SaaS 软件，实现从创意、开发到支付接入的全流程闭环。",
+      format: "商业落地实战",
+      duration: "10 周",
+      outcome: "从0到1构建SaaS产品，掌握全栈AI开发流，成为独立开发者 (Solopreneur)。",
       philosophyMap: {
         title: "CEO 指挥逻辑",
         points: [
@@ -143,11 +137,11 @@ const CONTENT_ZH: ContentData = {
       tagline: "打造会思考、会模拟的科研系统",
       description: "不仅仅是编程课，而是构建“私人科研中台”。通过建模 approach 真实世界，辅助高阶学术研究。",
       icon: "🧬",
-      color: "from-slate-300 to-indigo-500",
-      target: "高中生 (HiMCM 竞赛)、成年科研人员",
-      format: "竞赛集训 / 模块化实战",
-      duration: "6-12 周 (依据竞赛周期)",
-      outcome: "掌握 Deep Research Agent，高中生可参加 HiMCM 比赛，成人可构建个人专属的数据分析引擎。",
+      color: "from-indigo-400 to-violet-600",
+      target: "高中生 (HiMCM 竞赛)、成年人",
+      format: "竞赛辅导 / 深度研究",
+      duration: "6-8 周",
+      outcome: "掌握Deep Research Agent构建，辅助完成顶级数学建模竞赛或深度行业研报。",
       philosophyMap: {
         title: "科研闭环",
         points: [
@@ -164,6 +158,5 @@ const CONTENT_ZH: ContentData = {
 };
 
 export const getContent = (lang: 'en' | 'zh') => {
-  // Currently simplified to only return ZH as per prompt's focus on updated Chinese content
   return CONTENT_ZH;
 };

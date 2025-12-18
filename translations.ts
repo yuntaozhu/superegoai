@@ -9,122 +9,39 @@ export const translations = {
     },
     hero: {
       badge: 'The Modern Software Developer OS',
-      title_prefix: 'Building the',
-      title_highlight: "SuperEgo's",
+      title_prefix: 'AI First Course ——',
+      title_highlight: "Building Your SuperEgo's",
       title_suffix: 'Second Brain',
+      sub_headline: "Don't just Code, Orchestrate. (不仅仅是编程，而是编排。)",
       description: 'In the AI First era, success belongs to those who build a "Second Brain". Whether through our **Courses** for individuals or **Consulting** for enterprises, we help you evolve from executing to orchestrating.',
-      cta_primary: 'Start Learning',
+      cta_primary: 'Explore the Galaxy',
       cta_secondary: 'Enterprise Services',
     },
-    home: {
-      consulting_preview: {
-        badge: 'For Enterprise',
-        title: 'Super Ego Agent Consulting',
-        description: 'The Second Brain is not just for individuals. We build the "Ethical & Efficient" digital cortex for your organization.',
-        feature_1: 'Strategic Alignment',
-        feature_2: 'Agent Army Development',
-        feature_3: 'Staff Evolution',
-        cta: 'Enterprise Portal'
-      }
-    },
-    consulting: {
-      hero: {
-        title: 'Super Ego Agent Consulting',
-        subtitle: 'The Ethical & Efficient Digital Cortex',
-        description: 'We help organizations transition from traditional workflows to an AI-first operating model. Build your "Super Ego" — a governing intelligence that orchestrates specialized agents.',
-        cta_diagnose: 'Digital Audit',
-        cta_diagnose_tooltip: 'Assess your organization\'s AI readiness and ethical alignment.',
-        cta_army: 'Agent Deployment',
-      },
-      philosophy: {
-        title: 'The AI-First Organizational Model',
-        id_title: 'The Id (Execution)',
-        id_desc: 'Raw specialized agents performing tasks at lightning speed without context.',
-        ego_title: 'The Ego (Coordination)',
-        ego_desc: 'Management layer ensuring agents work together and resolve conflicts.',
-        superego_title: 'The Super Ego (Governance)',
-        superego_desc: 'The moral and strategic compass ensuring AI alignment with company values.',
-      },
-      value_dimensions: {
-        title: 'Strategic Impact',
-        leadership: {
-          title: 'Control Tower',
-          metaphor: 'The Orchestrator',
-          point1_title: 'Insight Generation',
-          point1_desc: 'Transform raw data into strategic foresight.',
-          point2_title: 'Risk Mitigation',
-          point2_desc: 'Ethical safeguards for generative AI outputs.',
-          point3_title: 'Decision Support',
-          point3_desc: 'Real-time modeling for C-suite decision making.',
-        },
-        workforce: {
-          title: 'Agent Army',
-          metaphor: 'The Iron Man Suit',
-          point1_title: 'Extreme Efficiency',
-          point1_desc: 'Automate high-volume cognitive tasks.',
-          point2_title: '24/7 Operations',
-          point2_desc: 'Global service without human fatigue.',
-          point3_title: 'Scale on Demand',
-          point3_desc: 'Deploy thousands of agents for spike events.',
-        }
-      },
-      methodology: {
-        title: 'Our Deployment Framework',
-        stage1_title: 'Diagnostics',
-        stage1_desc: 'Identifying high-impact AI opportunities.',
-        stage1_details: ['Infrastructure Audit', 'Workflow Mapping', 'Ethical Gap Analysis'],
-        stage2_title: 'Orchestration',
-        stage2_desc: 'Building the core SuperEgo controller.',
-        stage2_details: ['RAG Pipeline Setup', 'Security Governance', 'API Integration'],
-        stage3_title: 'Agentification',
-        stage3_desc: 'Deploying specialized task agents.',
-        stage3_details: ['Prompt Engineering', 'Role Training', 'Cross-Agent Comms'],
-        stage4_title: 'Evolution',
-        stage4_desc: 'Continuous learning and refinement.',
-        stage4_details: ['KPI Tracking', 'RLHF Loops', 'Model Upgrades'],
-      },
-      agents: {
-        title: 'The Elite Agent Squad',
-        marketing_title: 'Growth Catalyst',
-        marketing_desc: 'Multimodal content generation and hyper-personalized campaigns.',
-        marketing_features: ['Brand Voice Cloning', 'Trend Detection', 'Auto-Campaign Ops'],
-        marketing_stack: ['Gemini 2.5', 'SDXL', 'Vector DB'],
-        sales_title: 'Revenue Engine',
-        sales_desc: 'Autonomous lead qualification and intelligent outreach orchestration.',
-        sales_features: ['Intent Analysis', 'Dynamic Pricing', 'CRM Automation'],
-        sales_stack: ['LangGraph', 'Python', 'Stripe'],
-        hr_title: 'Culture Guardian',
-        hr_desc: 'Talent matching and institutional knowledge preservation.',
-        hr_features: ['Skill Mapping', 'Policy RAG', 'Onboarding Bots'],
-        hr_stack: ['Private LLM', 'PostgreSQL'],
-        ops_title: 'Efficiency Hub',
-        ops_desc: 'Supply chain optimization and internal process automation.',
-        ops_features: ['Logistics Modeling', 'Bug Auto-fix', 'Reporting'],
-        ops_stack: ['Go', 'TensorFlow', 'Kubernetes'],
-      },
-      special: {
-        title: 'Custom Engineering',
-        desc: 'Need a specialized planet for your enterprise? We build custom agents and sovereign data structures tailored to your vertical.',
-      },
-      case: {
-        title: 'Case Study: Project Alpha',
-        desc: 'Reduced operational overhead by 60% for a Fortune 500 logistics firm using our multi-agent orchestration framework.',
-      },
-      team: {
-        title: 'The Architects',
-        zhu_title: 'Zhu - Chief Visionary',
-        zhu_desc: 'Expert in Human-AI collaboration and systemic orchestration.',
-        du_title: 'Du - Head of Engineering',
-        du_desc: 'Specialist in secure enterprise-grade Agentic systems.',
-      },
-      footer: {
-        quote: 'The future of enterprise is not AI-assisted, it is AI-orchestrated.',
-        promise: 'We build the conductor, not just the instrument.',
-      }
-    },
     philosophy: {
-      title: 'The Core Philosophy: Evolution of a "New Species"',
+      title: 'Core Philosophy: Evolution of a "New Species" in the AI Era',
       subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine.',
+      pillars: [
+        {
+          title: '01 Cognitive Foundation: From "Skill-Based" to "System-Based"',
+          content: 'Old Concept: Learn all skills yourself. New Concept: On the eve of AGI, core competitiveness is "Building Systems" and "Asking Questions".',
+          quote: '"Human defines the \'Why\', AI solves the \'How\'."'
+        },
+        {
+          title: '02 Asset Building: Task Division Between Biological Brain and Second Brain',
+          content: 'Solution: Acknowledge the limits of the human brain. Build an "External Brain". Biological brain for intuition/judgment, AI Second Brain for memory/execution.',
+          quote: 'Become your unique digital twin.'
+        },
+        {
+          title: '03 Identity Shift: From "Craftsman" to "Director"',
+          content: 'Reframing: Refuse to be a "Code Worker" repeating wheels. New roles: Commander and Director. Define Target (Prompt), Set Boundaries (Constraints), Review Results.',
+          quote: 'Orchestrate rather than execute.'
+        },
+        {
+          title: '04 Workflow Revolution: One Person as a Company',
+          content: 'Methodology: Don\'t rely on an "All-in-one" AI, rely on "Division of Labor". Build an AI team (PM, Dev, Tester). You are the CEO of your digital legion.',
+          quote: 'Scale your impact infinitely.'
+        }
+      ],
       practice_label: 'Practice:',
       summary: 'In short: We teach you to use AI, build your own external brain, and orchestrate a virtual team of AIs.',
     },
@@ -167,12 +84,41 @@ export const translations = {
     },
     hero: {
       badge: '现代软件开发者操作系统',
-      title_prefix: '构建你的',
-      title_highlight: '“超我”',
+      title_prefix: 'AI First Course ——',
+      title_highlight: '构建你的“超我”',
       title_suffix: '第二大脑',
+      sub_headline: '不仅仅是编程，而是编排。(Don\'t just Code, Orchestrate.)',
       description: '在 AI First 时代，成功属于那些构建了“第二大脑”的人。无论是通过我们的**个人课程**还是**企业咨询**，我们都致力于帮助你从“执行者”进化为“指挥官”。',
-      cta_primary: '开始学习',
+      cta_primary: '探索星系',
       cta_secondary: '企业服务',
+    },
+    philosophy: {
+      title: '课程核心理念：AI 时代的“新物种”进化论',
+      subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。',
+      pillars: [
+        {
+          title: '01 认知基石：从“技能本位”到“系统本位”',
+          content: '旧观念：必须自己学会所有技能。新理念：在 AGI 前夜，核心竞争力是“构建系统”和“提出问题”。',
+          quote: '"Human defines the \'Why\', AI solves the \'How\'."'
+        },
+        {
+          title: '02 资产构建：生物脑与第二大脑的分工',
+          content: '解决方案：承认人类大脑的局限性，构建“外挂大脑”。生物脑负责直觉审判，AI 第二大脑负责记忆执行。沉淀私人知识库，成为你独一无二的数字分身。',
+          quote: '沉淀私人知识库，成为你独一无二的数字分身。'
+        },
+        {
+          title: '03 身份转变：从“工匠”到“总导演”',
+          content: '角色重塑：拒绝做重复造轮子的“代码工人”。新职责：指挥官 (Commander) 和总导演 (Director)。定义目标 (Prompt)，设定边界 (Constraints)，审查结果 (Review)。',
+          quote: '定义目标，设定边界，审查结果。'
+        },
+        {
+          title: '04 工作流革命：一人即一家公司',
+          content: '方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。你不再是孤独的开发者，你是这支“数字军团”的 CEO。',
+          quote: '你不再是孤独的开发者，你是这支“数字军团”的 CEO。'
+        }
+      ],
+      practice_label: '核心：',
+      summary: '一句话总结：我们教你利用 AI，构建一个只属于你的外挂大脑，指挥 AI 组成的虚拟团队。',
     },
     home: {
       consulting_preview: {
@@ -279,12 +225,6 @@ export const translations = {
         quote: '企业的未来不是 AI 辅助，而是 AI 编排。',
         promise: '我们构建的是指挥棒，而不仅仅是乐器。',
       }
-    },
-    philosophy: {
-      title: '课程核心理念：AI 时代的“新物种”进化论',
-      subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。',
-      practice_label: '实践：',
-      summary: '一句话总结：我们教你利用 AI，构建一个只属于你的外挂大脑，指挥 AI 组成的虚拟团队。',
     },
     galaxy: {
       title: '星系模型',
