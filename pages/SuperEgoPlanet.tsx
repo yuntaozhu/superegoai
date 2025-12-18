@@ -16,7 +16,7 @@ const SuperEgoPlanet: React.FC = () => {
       subtitle: '建立自动化的“数据摄取系统”',
       modules: [
         { name: '主权数据仓库', detail: '讲解 ETL (采集、清洗、入库) 概念，搭建私有知识库。' },
-        { name: '高级 RAG 实战', detail: '配置 Hybrid Search (混合检索)，实现精准的语义与关键词匹配。' }
+        { name: '高级 RAG 实战', detail: '配置 Hybrid Search (混合检索)，实现精准匹配。' }
       ],
       tech: ['FTI Architecture', 'Vector DB', 'Embedding', 'Hybrid Search'],
       gradient: 'from-cyan-500 to-blue-500',
@@ -28,7 +28,7 @@ const SuperEgoPlanet: React.FC = () => {
       subtitle: '给 AI 注入人格与逻辑',
       modules: [
         { name: '超我人格塑造', detail: '编写复杂的 System Prompt 链，实现 Retrieval-Reflection-Action。' },
-        { name: 'Text-to-SQL', detail: '自然语言驱动数据库，让 SuperEgo 懂文字也懂 Excel/CSV 数据。' }
+        { name: 'Text-to-SQL', detail: '自然语言驱动数据库，让 SuperEgo 懂文字也懂 Excel/CSV。' }
       ],
       tech: ['Prompt Engineering', 'SQL Agent', 'Logic Chains', 'Inference Pipeline'],
       gradient: 'from-blue-500 to-indigo-600',
@@ -39,7 +39,7 @@ const SuperEgoPlanet: React.FC = () => {
       title: '第三阶段：多模态通感 —— 右脑的爆发',
       subtitle: '实现从“逻辑”到“感性”的跨越',
       modules: [
-        { name: '视觉与动态叙事', detail: '利用 MJ/Flux/Luma 将笔记转化为专业海报与产品概念视频。' },
+        { name: '视觉与动态叙事', detail: '利用 MJ/Flux 将笔记转化为专业海报与产品概念视频。' },
         { name: '情绪共鸣创作', detail: '利用 Suno/Udio 根据心情日记生成特定情绪的 Lo-fi 音乐。' }
       ],
       tech: ['Midjourney', 'Luma / Kling', 'Suno', 'Creative Cortex'],
@@ -51,8 +51,8 @@ const SuperEgoPlanet: React.FC = () => {
       title: '第四阶段：终极形态 —— 自动化与自我进化',
       subtitle: '实现系统闭环与自我进化',
       modules: [
-        { name: '多智能体编排', detail: '使用 Dify/LangGraph 搭建从调研、脚本到视频生成的自动化流水线。' },
-        { name: '反馈优化闭环', detail: '通过点踩/修改回写向量库，让 SuperEgo 在交互中不断变聪明。' }
+        { name: '多智能体编排', detail: '使用 Dify/LangGraph 搭建调研、脚本到视频生成的流水线。' },
+        { name: '反馈优化闭环', detail: '通过点踩/修改回写向量库，让 SuperEgo 不断变聪明。' }
       ],
       tech: ['Multi-Agent', 'Optimization Loop', 'RLHF', 'Dify Workflow'],
       gradient: 'from-amber-500 to-orange-600',
@@ -63,36 +63,36 @@ const SuperEgoPlanet: React.FC = () => {
   return (
     <PlanetLayout course={course}>
       {/* Sovereignty Section */}
-      <section className="mt-16 mb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="mt-8 md:mt-16 mb-16 md:mb-24 px-4 md:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="space-y-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="space-y-6 md:space-y-8 text-center md:text-left"
           >
-            <div className="flex items-center gap-3">
-              <span className="w-12 h-1 bg-yellow-400 rounded-full" />
-              <span className="text-yellow-400 font-mono text-xs uppercase tracking-widest">Sovereign OS</span>
+            <div className="flex items-center justify-center md:justify-start gap-3">
+              <span className="w-10 h-0.5 bg-yellow-400 rounded-full" />
+              <span className="text-yellow-400 font-mono text-[10px] md:text-xs uppercase tracking-widest">Sovereign OS</span>
             </div>
-            <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight">
               构建你的“主权” <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">第二大脑</span>
             </h2>
-            <p className="text-xl text-gray-300 leading-relaxed font-light">
-              拒绝玩具级的“调包侠”教学。我们将企业级的 <span className="text-white font-bold">FTI (Feature-Training-Inference)</span> 架构翻译为个人知识系统的构建法则，实现数据、模型与创造的全面主权。
+            <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light">
+              拒绝玩具级的“调包侠”教学。我们将企业级的 <span className="text-white font-bold">FTI</span> 架构翻译为个人知识系统的构建法则，实现全方位主权。
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
              {[
-               { title: '数据主权', desc: '私有 Vector DB 存储', icon: '🔒' },
-               { title: '模型主权', desc: '多模型协同编排', icon: '🛡️' },
-               { title: '创造主权', desc: '通感多模态资产', icon: '🎨' },
+               { title: '数据主权', desc: '私有 Vector DB', icon: '🔒' },
+               { title: '模型主权', desc: '多模型协同', icon: '🛡️' },
+               { title: '创造主权', desc: '多模态通感', icon: '🎨' },
              ].map((p, i) => (
-               <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-3xl text-center hover:bg-white/10 transition-colors">
-                  <div className="text-3xl mb-4">{p.icon}</div>
-                  <h4 className="text-white font-bold text-sm mb-2">{p.title}</h4>
-                  <p className="text-gray-500 text-[10px] uppercase font-mono">{p.desc}</p>
+               <div key={i} className={`p-4 md:p-6 bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl text-center hover:bg-white/10 transition-colors ${i === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
+                  <div className="text-2xl md:text-3xl mb-2 md:mb-4">{p.icon}</div>
+                  <h4 className="text-white font-bold text-xs md:text-sm mb-1">{p.title}</h4>
+                  <p className="text-gray-500 text-[8px] md:text-[10px] uppercase font-mono">{p.desc}</p>
                </div>
              ))}
           </div>
@@ -100,51 +100,51 @@ const SuperEgoPlanet: React.FC = () => {
       </section>
 
       {/* Evolutionary Path */}
-      <section className="py-20">
-        <div className="space-y-16">
+      <section className="py-12 md:py-20 px-4 md:px-0">
+        <div className="space-y-12 md:space-y-16">
           {stages.map((stage, idx) => (
             <motion.div 
               key={stage.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="group relative bg-brand-surface border border-white/10 rounded-[56px] overflow-hidden backdrop-blur-xl hover:border-yellow-500/20 transition-all duration-500"
+              className="group relative bg-brand-surface border border-white/10 rounded-[32px] md:rounded-[56px] overflow-hidden backdrop-blur-xl hover:border-yellow-500/20 transition-all duration-500"
             >
-              <div className={`absolute top-0 left-0 w-3 h-full bg-gradient-to-b ${stage.gradient}`} />
-              <div className="p-12 md:p-20 flex flex-col lg:flex-row gap-12">
-                 <div className="lg:w-1/3 space-y-8">
+              <div className={`absolute top-0 left-0 w-1.5 md:w-3 h-full bg-gradient-to-b ${stage.gradient}`} />
+              <div className="p-8 md:p-16 flex flex-col lg:flex-row gap-8 md:gap-12">
+                 <div className="lg:w-1/3 space-y-4 md:space-y-8">
                     <div className="flex items-center gap-4">
-                       <div className={`w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-4xl shadow-inner`}>
+                       <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl md:text-4xl shadow-inner`}>
                           {stage.icon}
                        </div>
-                       <div className="text-xs font-mono text-gray-600">PHASE_{stage.id}</div>
+                       <div className="text-[10px] font-mono text-gray-600">PHASE_{stage.id}</div>
                     </div>
-                    <h3 className="text-3xl font-black text-white uppercase tracking-tighter leading-tight">{stage.title}</h3>
-                    <p className="text-gray-400 text-sm italic">{stage.subtitle}</p>
-                    <div className="flex flex-wrap gap-2 pt-4">
+                    <h3 className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter leading-tight">{stage.title}</h3>
+                    <p className="text-gray-400 text-xs md:text-sm italic">{stage.subtitle}</p>
+                    <div className="flex flex-wrap gap-2 pt-2 md:pt-4">
                        {stage.tech.map(t => (
-                         <span key={t} className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-mono text-gray-500">{t}</span>
+                         <span key={t} className="px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] md:text-[10px] font-mono text-gray-500">{t}</span>
                        ))}
                     </div>
                  </div>
 
-                 <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                     {stage.modules.map((m, i) => (
-                      <div key={i} className="p-10 bg-black/40 rounded-[40px] border border-white/5 hover:bg-black/60 transition-colors group-hover:translate-x-1 duration-300">
-                         <h4 className="text-white font-bold mb-4 flex items-center gap-2">
-                           <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
+                      <div key={i} className="p-6 md:p-10 bg-black/40 rounded-2xl md:rounded-[40px] border border-white/5 hover:bg-black/60 transition-colors">
+                         <h4 className="text-white font-bold mb-2 md:mb-4 flex items-center gap-2 text-sm md:text-base">
+                           <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
                            {m.name}
                          </h4>
-                         <p className="text-gray-400 text-xs leading-relaxed">{m.detail}</p>
+                         <p className="text-gray-400 text-[10px] md:text-xs leading-relaxed">{m.detail}</p>
                       </div>
                     ))}
-                    <div className="md:col-span-2 p-8 bg-white/5 rounded-3xl border border-white/5 text-center">
-                       <span className="text-[10px] font-mono text-yellow-500/60 uppercase tracking-[0.3em]">Stage Deliverable</span>
-                       <div className="text-white font-black mt-2 text-lg">
+                    <div className="md:col-span-2 p-6 md:p-8 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 text-center">
+                       <span className="text-[9px] md:text-[10px] font-mono text-yellow-500/60 uppercase tracking-[0.2em]">Stage Deliverable</span>
+                       <div className="text-white font-black mt-2 text-base md:text-lg">
                           {idx === 0 && '私有 FTI 数据管道'}
                           {idx === 1 && 'SQL 财务智能助理'}
                           {idx === 2 && '多模态灵感电影'}
-                          {idx === 3 && '自动化 Agent 视频工厂'}
+                          {idx === 3 && '自动化 Agent 工厂'}
                        </div>
                     </div>
                  </div>
@@ -155,34 +155,34 @@ const SuperEgoPlanet: React.FC = () => {
       </section>
 
       {/* Terminal Experience */}
-      <section className="mt-32 p-12 md:p-20 bg-black border border-white/10 rounded-[64px] relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 font-mono text-[10px] text-gray-700">TERMINAL_PREVIEW_SOVEREIGN_V1</div>
-        <div className="max-w-3xl mx-auto space-y-12">
+      <section className="mt-16 md:mt-32 p-8 md:p-20 bg-black border border-white/10 rounded-3xl md:rounded-[64px] relative overflow-hidden mx-4 md:mx-0 shadow-2xl">
+        <div className="absolute top-2 right-2 md:top-6 md:right-6 font-mono text-[8px] md:text-[10px] text-gray-700">EXPERIENCE_V1</div>
+        <div className="max-w-3xl mx-auto space-y-8 md:space-y-12">
           <div className="text-center">
-            <h3 className="text-4xl font-black text-white uppercase tracking-tighter mb-4">什么是“SuperEgo”体验？</h3>
-            <p className="text-gray-500 text-sm">不仅仅是回复，而是编排全媒体资产。</p>
+            <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">什么是“SuperEgo”体验？</h3>
+            <p className="text-gray-500 text-[10px] md:text-sm">不仅是回复，而是编排全媒体资产。</p>
           </div>
           
           <div className="space-y-6">
-            <div className="flex gap-4 items-start">
-               <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl">👤</div>
-               <div className="p-6 bg-white/5 rounded-2xl text-gray-300 text-sm leading-relaxed border border-white/5">
+            <div className="flex gap-3 md:gap-4 items-start">
+               <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-white/5 flex items-center justify-center text-base md:text-xl">👤</div>
+               <div className="p-4 md:p-6 bg-white/5 rounded-2xl text-gray-300 text-[11px] md:text-sm leading-relaxed border border-white/5 italic">
                  “帮我做一个关于咖啡市场的视频，参考我之前的研报笔记。”
                </div>
             </div>
-            <div className="flex gap-4 items-start justify-end">
-               <div className="p-8 bg-yellow-500/5 border border-yellow-500/20 rounded-[32px] text-yellow-50 text-sm leading-relaxed max-w-[85%]">
-                 <div className="flex gap-3 mb-6">
-                    <span className="px-2 py-1 bg-yellow-500/20 text-[10px] font-mono text-yellow-500 rounded uppercase">Retrieving_RAG</span>
-                    <span className="px-2 py-1 bg-amber-500/20 text-[10px] font-mono text-amber-500 rounded uppercase">Agent_Sync</span>
+            <div className="flex gap-3 md:gap-4 items-start justify-end">
+               <div className="p-5 md:p-8 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl md:rounded-[32px] text-yellow-50 text-[11px] md:text-sm leading-relaxed max-w-[90%]">
+                 <div className="flex gap-2 mb-4">
+                    <span className="px-1.5 py-0.5 bg-yellow-500/20 text-[8px] md:text-[10px] font-mono text-yellow-500 rounded uppercase">Retrieving_RAG</span>
+                    <span className="px-1.5 py-0.5 bg-amber-500/20 text-[8px] md:text-[10px] font-mono text-amber-500 rounded uppercase">Agent_Sync</span>
                  </div>
-                 <p className="mb-4">已调取 2023 年咖啡市场笔记。Agent A 已完成脚本撰写，Agent B 正在 Midjourney 生成分镜图，Agent C 正在 Luma 进行视频合成...</p>
-                 <div className="flex gap-6 p-4 bg-black/40 rounded-2xl border border-white/5 mt-4">
-                    <div className="flex items-center gap-2">🖼️ <span className="text-[10px] opacity-60">Poster.png</span></div>
-                    <div className="flex items-center gap-2">🎬 <span className="text-[10px] opacity-60">Final_Draft.mp4</span></div>
+                 <p className="mb-4">已调取 2023 年咖啡市场笔记。Agent A 已完成分镜图，Agent B 正在 Luma 进行合成...</p>
+                 <div className="flex gap-4 p-3 bg-black/40 rounded-xl border border-white/5 mt-4">
+                    <div className="flex items-center gap-2">🖼️ <span className="text-[8px] md:text-[10px] opacity-60">Poster.png</span></div>
+                    <div className="flex items-center gap-2">🎬 <span className="text-[8px] md:text-[10px] opacity-60">Draft.mp4</span></div>
                  </div>
                </div>
-               <div className="w-10 h-10 rounded-xl bg-yellow-500 flex items-center justify-center text-xl">🧠</div>
+               <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-base md:text-xl">🧠</div>
             </div>
           </div>
         </div>
