@@ -75,8 +75,8 @@ const ArtPlanet: React.FC = () => {
               课程愿景与哲学
             </h2>
             <p className="text-xl text-gray-300 leading-relaxed font-light">
-              告别“历史->数学->编程”的线性知识传递，拥抱一个
-              <span className="text-purple-400 font-bold">“历史理解 -> AI 美学对话 -> 数学抽象 -> 人机协同编程”</span>
+              告别“历史-&gt;数学-&gt;编程”的线性知识传递，拥抱一个
+              <span className="text-purple-400 font-bold">“历史理解 -&gt; AI 美学对话 -&gt; 数学抽象 -&gt; 人机协同编程”</span>
               的螺旋式上升创造闭环。
             </p>
             <div className="p-8 bg-white/5 border border-white/10 rounded-[32px] backdrop-blur-xl">
