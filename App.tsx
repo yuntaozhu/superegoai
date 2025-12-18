@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import CourseDetail from './pages/CourseDetail';
 import BlogPage from './pages/BlogPage';
 import Consulting from './pages/Consulting';
-import PlanetsPage from './pages/PlanetsPage';
 import { LanguageProvider, HashRouter as Router, Routes, Route } from './context/LanguageContext';
 import P5Background from './components/P5Background';
 
@@ -14,13 +13,11 @@ const App: React.FC = () => {
     <LanguageProvider>
       <Router>
         <div className="flex flex-col min-h-screen bg-brand-dark text-white relative">
-          {/* Main Global Background */}
           <P5Background />
           <Navbar />
           <main className="flex-grow z-10">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/planets" element={<PlanetsPage />} />
               <Route path="/consulting" element={<Consulting />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/course/:id" element={<CourseDetail />} />
