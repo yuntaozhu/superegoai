@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
-import logoImg from '../images/logo.png';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +21,9 @@ const Navbar: React.FC = () => {
   // Dynamic styles based on course
   const navStyle = currentCourse ? { paddingBottom: '1px' } : {};
 
+  // Direct relative path for the logo image to avoid ESM module resolution issues
+  const logoSrc = './images/logo.png';
+
   return (
     <nav 
       className="fixed w-full z-50 transition-all duration-500" 
@@ -39,9 +41,17 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-3 group">
-              {/* Logo Image with 3D hover effect */}
-              <div className="relative transition-transform duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-                 <img src={logoImg} alt="SuperEgoAI" className="w-10 h-10 object-contain" />
+              {/* Logo Image with interactive hover effect */}
+              <div className="relative transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 flex items-center">
+                 <img 
+                   src={logoSrc} 
+                   alt="SuperEgoAI Logo" 
+                   className="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.3)] group-hover:drop-shadow-[0_0_12px_rgba(59,130,246,0.6)]" 
+                   onError={(e) => {
+                     // Fallback if image fails to load
+                     (e.target as HTMLImageElement).style.display = 'none';
+                   }}
+                 />
               </div>
               <span className="text-white font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-400 group-hover:to-white transition-all duration-300 drop-shadow-sm">
                 SuperEgoAI

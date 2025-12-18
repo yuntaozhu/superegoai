@@ -1,5 +1,3 @@
-
-
 import { Course, PhilosophyPillar, BlogPost } from './types';
 
 interface ContentData {
@@ -268,38 +266,51 @@ unset AZP_TOKEN
     },
     {
       id: "data",
-      title: "AI Data Insight & Logic",
-      shortTitle: "Planet C: Data",
-      tagline: "Deep Reasoning & Explanation",
-      description: "Train the SuperEgo's causal reasoning. Connect perception to decision. It's not just about charts; it's about the 'Why' behind the data.",
-      icon: "📊",
+      title: "AI SuperEgo - Building your Sovereign Second Brain",
+      shortTitle: "Planet C: SuperEgo",
+      tagline: "From RAG architecture to multimodal creation, building your digital life form.",
+      description: "Based on the MLOps architecture concepts from Decoding ML, this course translates enterprise-level FTI (Feature-Training-Inference) and Advanced RAG technologies into personal knowledge system construction. We redefine 'Sovereignty' as data independence, model neutrality, and creative autonomy.",
+      icon: "🧠",
       color: "from-yellow-400 to-orange-500",
       philosophyMap: {
-        title: "Scientific Modeling & Research",
+        title: "Redefining Sovereignty",
         points: [
-          "Deep Research Agent: Automating the collection, cleaning, and modeling of messy real-world data.",
-          "Causal Reasoning: Moving beyond correlation. Why did X happen?",
-          "ExtBrain Integration: Building a personal knowledge base."
+          "Data Sovereignty: Your memories should not be locked in centralized platforms but in a private Vector DB.",
+          "Model Sovereignty: Not relying on a single model; mastering orchestration across various LLMs.",
+          "Creative Sovereignty: Moving beyond text. SuperEgo must convert thoughts into images, video, music, and data."
         ]
       },
       syllabus: [
         {
-          title: "Track A: Research & Math Modeling",
-          goal: "First-principles modeling of complex systems.",
+          title: "Phase 1: Foundation - FTI Architecture & Data Pipelines",
+          goal: "Build an automated data ingestion system.",
           content: [
-            { title: "Python Modeling & Simulation", description: "Based on 'ModSimPy'. System dynamics and simulation." },
-            { title: "The 'ExtBrain' Project", description: "Building a personalized AI Research Assistant." },
-            { title: "Literature Review Agent", description: "Automated summarization and trend extraction from papers." },
-            { title: "Model Analysis Agent", description: "Identifying key parameters and generating insights." }
+            { title: "The Sovereign Data Store", description: "ETL concepts applied to personal data: Capture, Clean, and Store into Vector DBs like Milvus or Qdrant." },
+            { title: "RAG Fundamentals & Optimization", description: "Understanding Embeddings and Chunking. Configuring Hybrid Search for precise recall of fuzzy ideas." }
           ]
         },
         {
-          title: "Data Logic Core",
-          goal: "Bridging the gap between raw data and actionable strategy.",
+          title: "Phase 2: Awakening - Reasoning & Decision",
+          goal: "Inject personality and logic into your AI.",
           content: [
-            { title: "Code Interpreter 进阶", description: "Conversational data mining with Pandas Agents." },
-            { title: "Optimization & Simulation", description: "Exploring parameter spaces to find optimal solutions." },
-            { title: "The Feynman Output", description: "Forcing the AI to explain complex models in simple terms." }
+            { title: "System Prompt Engineering", description: "Crafting the 'Constitution' for your SuperEgo. Implementing Retrieval and Reflection loops." },
+            { title: "Text-to-SQL (Making Data Speak)", description: "Bridging natural language and databases. Analyze family budgets or sales data automatically." }
+          ]
+        },
+        {
+          title: "Phase 3: Multimodal Cortex - Creative Expansion",
+          goal: "Cross the bridge from logic to sensory creation.",
+          content: [
+            { title: "Text-to-Image (Visualizing Thoughts)", description: "Automated MJ Prompt expansion based on knowledge retrieval. Create unified styles for content." },
+            { title: "Text-to-Video & Music", description: "Using Luma/Runway for dynamic narrative and Suno/Udio for emotional soundscapes." }
+          ]
+        },
+        {
+          title: "Phase 4: Ultimate Form - Automation & Evolution",
+          goal: "Closing the loop with self-evolution.",
+          content: [
+            { title: "Multi-Agent Orchestration", description: "Building complex workflows using Dify or LangGraph from Researcher to Director." },
+            { title: "Optimization Loop", description: "Implementing feedback mechanisms to write corrections back to long-term memory." }
           ]
         }
       ]
@@ -670,38 +681,51 @@ ENTRYPOINT [ "./start.sh" ]
     },
     {
       id: "data",
-      title: "AI 数据洞察与逻辑",
-      shortTitle: "行星 C: 数据",
-      tagline: "深度推理与解释",
-      description: "训练“超我”的深度推理与解释能力。这是连接“感知”与“决策”的桥梁。不仅仅是做报表，而是让 Agent 像数据科学家一样思考。",
-      icon: "📊",
+      title: "AI SuperEgo —— 构建你的“主权”第二大脑",
+      shortTitle: "行星 C: SuperEgo",
+      tagline: "从 RAG 架构到多模态创造，打造属于你的数字生命体。",
+      description: "本课程参考 Decoding ML 的顶级 MLOps 架构理念，拒绝玩具级的“调包侠”教学，而是将企业级的 FTI (Feature-Training-Inference) 架构和 Advanced RAG (高级检索增强生成) 技术，翻译为个人知识系统的构建法则。",
+      icon: "🧠",
       color: "from-yellow-400 to-orange-500",
       philosophyMap: {
-        title: "科学建模与研究",
+        title: "我们重新定义“主权” (Sovereignty)",
         points: [
-          "Deep Research Agent: 自动化收集、清洗和建模杂乱的现实数据。",
-          "因果推理 (Causal Reasoning): 超越相关性，寻找“为什么”。",
-          "第二大脑集成: 构建个性化的知识库。"
+          "数据主权：你的记忆（笔记/文档）不应被锁在 Notion 或微信里，而应存在私有的向量数据库 (Vector DB) 中。",
+          "模型主权：不依赖单一模型，学会使用开源模型或多模型编排。",
+          "创造主权：只有文本是不够的。SuperEgo 必须具备“通感”，能将你的思想转化为图像、视频、音乐和数据报表。"
         ]
       },
       syllabus: [
         {
-          title: "轨道 A: 科学研究与数学建模",
-          goal: "复杂系统的第一性原理建模。",
+          title: "第一阶段：构建地基 —— FTI 架构与数据管道",
+          goal: "建立自动化的“数据摄取系统”",
           content: [
-            { title: "Python 建模与仿真", description: "基于 ModSimPy。系统动力学与仿真。" },
-            { title: "ExtBrain 项目", description: "构建专属 AI 科研助手。" },
-            { title: "文献综述 Agent", description: "自动进行文献综述、信息抽取和趋势分析。" },
-            { title: "模型分析 Agent", description: "辅助分析模型输出，识别关键参数。" }
+            { title: "The Sovereign Data Store (主权数据仓库)", description: "ETL 实战：采集、清洗、入库。搭建基于 Dify 的私有知识库，将散落数据存入向量数据库。" },
+            { title: "RAG 原理与优化 (Advanced RAG)", description: "深入理解 Embedding 与 Chunking。配置混合检索 (Hybrid Search) 实现精准回忆。" }
           ]
         },
         {
-          title: "数据逻辑核心",
-          goal: "连接原始数据与可执行策略。",
+          title: "第二阶段：觉醒 SuperEgo —— 推理与决策",
+          goal: "给 AI 注入人格与逻辑",
           content: [
-            { title: "Code Interpreter 进阶", description: "使用 Pandas Agent 进行对话式数据挖掘。" },
-            { title: "优化与仿真", description: "探索参数空间寻找最优解。" },
-            { title: "费曼输出", description: "强制 AI 用简单的语言解释复杂的模型。" }
+            { title: "System Prompt Engineering (超我人格塑造)", description: "编写复杂的 Prompt 链。赋予 AI 理性、冷酷但远见的合伙人角色。实现检索、反思、建议的闭环。" },
+            { title: "Text-to-SQL (让数据说话)", description: "实现自然语言到 SQL 的转化。自动查询并分析家庭记账表或销售数据，发现异常并给出建议。" }
+          ]
+        },
+        {
+          title: "第三阶段：多模态通感 —— 右脑的爆发",
+          goal: "实现从“逻辑”到“感性”的跨越",
+          content: [
+            { title: "Text-to-Image (思想的视觉化)", description: "调用 MJ/Flux 接口。根据 SuperEgo 扩写的笔记自动生成风格统一的视觉资产。" },
+            { title: "Text-to-Video & Music", description: "利用 Runway/Suno。将产品构想笔记转化为演示视频，根据日记情绪生成安抚音乐。" }
+          ]
+        },
+        {
+          title: "第四阶段：终极形态 —— 自动化与自我进化",
+          goal: "让系统闭环实现“自我进化”",
+          content: [
+            { title: "The Orchestration (多智能体编排)", description: "搭建复杂流水线。从市场研究员到分镜脚本、原画生成、最终视频生成的全自动产出。" },
+            { title: "Optimization Loop (反馈优化)", description: "通过反馈循环，将修正后的数据回写到长效记忆，实现 SuperEgo 的持续进化。" }
           ]
         }
       ]
@@ -728,7 +752,7 @@ ENTRYPOINT [ "./start.sh" ]
           goal: "搭建基于 LangGraph 的多 Agent 编排环境。",
           content: [
             { title: "AI Native vs Assisted", description: "从辅助编程到自主代理的思维跃迁。" },
-            { title: "Gemini 3 核心", description: "1M+ 上下文阅读文档库。多模态视觉“看”图表。" },
+            { title: "Gemini 3 核心", description: "1M+ 上下文阅读文档库. 多模态视觉“看”图表。" },
             { title: "技术栈搭建", description: "LangGraph (编排), Google Vertex AI SDK, Backtrader/VectorBT。" }
           ]
         },
