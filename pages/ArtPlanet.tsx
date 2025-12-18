@@ -2,8 +2,7 @@ import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
-// Fix: Import Variants type from framer-motion to properly type the animation configuration
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, useScroll, useTransform } from 'framer-motion';
 
 const ArtPlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -22,7 +21,8 @@ const ArtPlanet: React.FC = () => {
       math: ['光的插值 (Lerp)', '动态黄金螺旋'],
       mission: '手动编写 curveVertex() 精确绘制黄金螺旋，并让粒子沿其轨迹运动。',
       gradient: 'from-blue-400 to-orange-400',
-      icon: '🌊'
+      icon: '🌊',
+      glow: 'rgba(59, 130, 246, 0.3)'
     },
     {
       id: '02',
@@ -35,7 +35,8 @@ const ArtPlanet: React.FC = () => {
       math: ['离散化与像素化', '网格平均色值计算'],
       mission: '编写嵌套 for 循环，将任意图片分割为网格，计算平均色值并用圆点重绘。',
       gradient: 'from-green-400 to-yellow-400',
-      icon: '🔳'
+      icon: '🔳',
+      glow: 'rgba(34, 197, 94, 0.3)'
     },
     {
       id: '03',
@@ -48,7 +49,8 @@ const ArtPlanet: React.FC = () => {
       math: ['向量场 (Vector Field)', '柏林噪声 (Perlin Noise)'],
       mission: '利用 noise() 构建不可见向量场，释放粒子随“风场”流动。',
       gradient: 'from-blue-600 to-purple-600',
-      icon: '✨'
+      icon: '✨',
+      glow: 'rgba(139, 92, 246, 0.3)'
     },
     {
       id: '04',
@@ -61,183 +63,256 @@ const ArtPlanet: React.FC = () => {
       math: ['泰森多边形 (Voronoi)', '三角剖分 (Delaunay)'],
       mission: '引入 d3-delaunay 库，编写着色算法根据块面朝向应用冷暖色调。',
       gradient: 'from-orange-500 to-red-600',
-      icon: '📐'
+      icon: '📐',
+      glow: 'rgba(239, 68, 68, 0.3)'
     }
   ];
 
   // Animation Variants
-  // Fix: Explicitly typed variants as Variants and used 'as any' for easing strings to avoid narrowing issues in strict TS environments
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
+        staggerChildren: 0.2,
+        delayChildren: 0.3
       }
     }
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" as any }
+      filter: 'blur(0px)',
+      transition: { duration: 0.8, ease: "easeOut" }
     }
   };
 
-  const tagVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { duration: 0.4, ease: "backOut" as any }
+  const scanLineVariants: Variants = {
+    animate: {
+      top: ['0%', '100%', '0%'],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        ease: 'linear'
+      }
     }
   };
 
   return (
     <PlanetLayout course={course}>
       {/* Immersive Vision Section */}
-      <section className="mt-8 md:mt-16 mb-16 md:mb-24 px-4 md:px-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
+      <section className="mt-8 md:mt-16 mb-24 md:mb-32 px-4 md:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6 md:space-y-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+            className="space-y-8 md:space-y-10"
           >
-            <div className="flex items-center gap-4">
-              <span className="h-px w-8 md:w-12 bg-purple-500"></span>
-              <span className="text-purple-400 font-mono text-[10px] md:text-xs uppercase tracking-widest">Aesthetic OS</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+            <motion.div variants={itemVariants} className="flex items-center gap-6">
+              <span className="h-px w-16 md:w-24 bg-gradient-to-r from-purple-500 to-transparent"></span>
+              <span className="text-purple-400 font-mono text-[10px] md:text-xs uppercase tracking-[0.4em] font-black">Aesthetic Orchestration System</span>
+            </motion.div>
+            
+            <motion.h2 variants={itemVariants} className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9] group">
               训练“超我”的 <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">审美与抽象能力</span>
-            </h2>
-            <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light">
-              AI 不再是简单的画图工具，而是将 <span className="text-white font-bold">“历史文脉”</span> 转化为 <span className="text-white font-bold">“数学逻辑”</span> 的翻译官。你将作为总导演，编排人类艺术史上最伟大的瞬间。
-            </p>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400 animate-gradient-x">
+                审美与抽象能力
+              </span>
+            </motion.h2>
+            
+            <motion.p variants={itemVariants} className="text-lg md:text-2xl text-gray-400 leading-relaxed font-light max-w-xl">
+              AI 不再是简单的画图工具，而是将 <span className="text-white font-semibold">“历史文脉”</span> 转化为 <span className="text-white font-semibold">“数学逻辑”</span> 的翻译官。
+            </motion.p>
+            
+            <motion.div variants={itemVariants} className="flex gap-4">
+               <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-full font-mono text-[10px] text-purple-300 uppercase tracking-widest backdrop-blur-md">
+                 Ver 3.0 Stable
+               </div>
+               <div className="px-6 py-3 bg-purple-500/10 border border-purple-500/20 rounded-full font-mono text-[10px] text-purple-400 uppercase tracking-widest backdrop-blur-md">
+                 Logic-Driven Art
+               </div>
+            </motion.div>
           </motion.div>
 
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, rotateY: 20 }}
+            whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="grid grid-cols-2 gap-4 md:gap-6 perspective-1000"
+          >
             {[
-              { label: 'Prompt Design', val: '85%' },
-              { label: 'Logic Coding', val: '92%' },
-              { label: 'Art Context', val: '78%' },
-              { label: 'Creative Swarm', val: 'Active' },
+              { label: 'Prompt Architecture', val: '98%', icon: '📜' },
+              { label: 'Mathematical Logic', val: 'Gen-AI', icon: '🧬' },
+              { label: 'Artistic Context', val: 'Epoch-4', icon: '🏛️' },
+              { label: 'Creative Autonomy', val: 'Active', icon: '📡' },
             ].map((stat, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl p-4 md:p-6 backdrop-blur-md"
+                whileHover={{ y: -10, scale: 1.02, backgroundColor: 'rgba(255,255,255,0.08)' }}
+                className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group shadow-2xl"
               >
-                <div className="text-[10px] font-mono text-gray-500 uppercase mb-1 md:mb-2">{stat.label}</div>
-                <div className="text-lg md:text-2xl font-black text-white">{stat.val}</div>
+                <div className="absolute -right-4 -bottom-4 text-4xl opacity-10 group-hover:opacity-20 transition-opacity">{stat.icon}</div>
+                <div className="text-[10px] font-mono text-gray-500 uppercase mb-3 tracking-widest">{stat.label}</div>
+                <div className="text-2xl md:text-4xl font-black text-white">{stat.val}</div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* The Acts Timeline */}
-      <section className="py-12 md:py-20 px-4 md:px-0">
-        <div className="space-y-16 md:space-y-32">
+      <section className="py-20 md:py-40 px-4 md:px-0">
+        <div className="space-y-32 md:space-y-64 relative">
+          {/* Central Vertical Line for Desktop */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/50 via-white/5 to-transparent hidden lg:block -translate-x-1/2" />
+
           {acts.map((act, idx) => (
             <div 
               key={act.id}
-              className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 md:gap-16 items-center`}
+              className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 md:gap-24 items-center relative`}
             >
-              {/* Textual Content Container */}
+              {/* Act Content Card */}
               <motion.div 
-                className="flex-1 space-y-6 md:space-y-8"
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
+                className="flex-1 space-y-8 md:space-y-12 z-10"
+                initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-150px" }}
+                transition={{ duration: 1, ease: "easeOut" }}
               >
-                <motion.div variants={itemVariants} className="flex items-center gap-4">
-                  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br ${act.gradient} flex items-center justify-center text-xl md:text-2xl shadow-lg`}>
+                <div className="flex items-center gap-6">
+                  <motion.div 
+                    whileHover={{ rotate: 90 }}
+                    className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-[32px] bg-gradient-to-br ${act.gradient} flex items-center justify-center text-3xl md:text-4xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/20`}
+                  >
                     {act.icon}
+                  </motion.div>
+                  <div className="space-y-1">
+                    <div className="font-mono text-xs md:text-sm text-purple-500 font-black tracking-[0.3em]">ACT_0{act.id}</div>
+                    <div className="text-[10px] text-gray-600 font-mono uppercase">Status: Analysis Ongoing</div>
                   </div>
-                  <div className="font-mono text-xs md:text-sm text-gray-500">ACT_{act.id}</div>
-                </motion.div>
+                </div>
                 
-                <motion.h3 variants={itemVariants} className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-tight">
+                <h3 className="text-3xl md:text-6xl font-black text-white tracking-tighter uppercase leading-none">
                   {act.title}
-                </motion.h3>
-                <motion.p variants={itemVariants} className="text-purple-400 font-bold italic text-sm md:text-base">
-                  {act.subtitle}
-                </motion.p>
+                </h3>
                 
-                <motion.div 
-                  variants={itemVariants}
-                  className="bg-white/5 border border-white/10 rounded-3xl md:rounded-[40px] p-6 md:p-10 space-y-4 md:space-y-6"
-                >
-                  <motion.div variants={itemVariants}>
-                    <div className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-2 md:mb-4">导演指令 // Director Prompt</div>
-                    <p className="text-gray-300 text-sm md:text-lg leading-relaxed italic">"{act.dialogue}"</p>
-                  </motion.div>
-                  
-                  <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-white/5">
-                    <div>
-                      <div className="text-[9px] font-mono text-purple-500 uppercase mb-2">数学模块</div>
-                      <div className="flex flex-wrap gap-2">
-                        {act.math.map(m => (
-                          <motion.span 
-                            key={m} 
-                            variants={tagVariants}
-                            whileHover={{ scale: 1.05, backgroundColor: "rgba(168, 85, 247, 0.2)" }}
-                            className="px-2 py-0.5 md:py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[9px] md:text-[10px] text-purple-300 cursor-default"
-                          >
-                            {m}
-                          </motion.span>
-                        ))}
+                <div className="bg-brand-surface/40 border border-white/10 rounded-[40px] md:rounded-[60px] p-8 md:p-14 space-y-10 backdrop-blur-3xl relative overflow-hidden group shadow-2xl">
+                   {/* Background Glow */}
+                   <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[100px] pointer-events-none" style={{ background: act.glow }} />
+                   
+                   <div className="space-y-4">
+                     <div className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.5em] mb-4">Director_Prompt.log</div>
+                     <p className="text-gray-200 text-lg md:text-3xl leading-snug italic font-light">"{act.dialogue}"</p>
+                   </div>
+                   
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-10 border-t border-white/5">
+                      <div className="space-y-4">
+                        <div className="text-[9px] font-mono text-purple-500 uppercase font-black tracking-widest">Logic Modules</div>
+                        <div className="flex flex-wrap gap-2">
+                          {act.math.map(m => (
+                            <motion.span 
+                              key={m} 
+                              whileHover={{ scale: 1.1, x: 5, backgroundColor: 'rgba(168, 85, 247, 0.2)' }}
+                              className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] md:text-xs text-gray-300 cursor-default font-medium transition-all"
+                            >
+                              {m}
+                            </motion.span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-[9px] font-mono text-purple-500 uppercase mb-2">艺术家</div>
-                      <motion.div variants={tagVariants} className="text-white font-bold text-xs md:text-sm">
-                        {act.artists}
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                </motion.div>
+                      <div className="space-y-4">
+                        <div className="text-[9px] font-mono text-purple-500 uppercase font-black tracking-widest">Master Reference</div>
+                        <div className="text-white font-black text-sm md:text-lg tracking-tight uppercase">
+                          {act.artists}
+                        </div>
+                        <div className="text-[10px] text-gray-500 font-light italic">
+                          {act.works}
+                        </div>
+                      </div>
+                   </div>
+                </div>
               </motion.div>
 
               {/* Visuals & Mission Block */}
               <motion.div 
-                className="flex-1 w-full"
-                initial={{ opacity: 0, x: idx % 2 === 0 ? 40 : -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" as any }}
-                viewport={{ once: true, margin: "-100px" }}
+                className="flex-1 w-full z-10"
+                initial={{ opacity: 0, scale: 0.8, rotate: idx % 2 === 0 ? 5 : -5 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                viewport={{ once: true, margin: "-150px" }}
+                transition={{ duration: 1, ease: "backOut" }}
               >
-                <div className="relative aspect-video rounded-3xl md:rounded-[48px] overflow-hidden group border border-white/5 shadow-2xl">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${act.gradient} opacity-10 md:opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <motion.div 
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 25, repeat: Infinity, ease: 'linear' as any }}
-                      className="w-48 h-48 md:w-64 md:h-64 border-2 border-white/5 rounded-full border-dashed"
-                    />
-                    <div className="absolute text-6xl md:text-8xl grayscale opacity-50 md:opacity-100 group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
-                      {act.icon}
+                <div className="relative aspect-square md:aspect-[4/5] rounded-[50px] md:rounded-[80px] overflow-hidden group border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)] bg-black">
+                  {/* Image/Visual Mockup */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${act.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-1000`} />
+                  
+                  {/* Grid Lines Pattern */}
+                  <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <pattern id={`grid-${act.id}`} width="40" height="40" patternUnits="userSpaceOnUse">
+                          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill={`url(#grid-${act.id})`} />
+                    </svg>
+                  </div>
+
+                  {/* Scanning HUD Elements */}
+                  <div className="absolute inset-0 p-10 flex flex-col justify-between">
+                    <div className="flex justify-between items-start opacity-40">
+                       <div className="font-mono text-[8px] text-white space-y-1">
+                          <div>[SYS] RENDER_PIPELINE_STABLE</div>
+                          <div>[AUTH] EGO_USER_001</div>
+                       </div>
+                       <div className="text-white text-xl">{act.icon}</div>
+                    </div>
+
+                    <div className="relative h-full flex items-center justify-center">
+                       {/* Floating Center Icon */}
+                       <motion.div 
+                         animate={{ 
+                           scale: [1, 1.1, 1],
+                           rotate: [0, 5, -5, 0]
+                         }}
+                         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                         className="text-8xl md:text-9xl drop-shadow-[0_0_40px_rgba(255,255,255,0.2)] grayscale group-hover:grayscale-0 transition-all duration-700"
+                       >
+                         {act.icon}
+                       </motion.div>
+                       
+                       {/* Scanning Line */}
+                       <motion.div 
+                         variants={scanLineVariants}
+                         animate="animate"
+                         className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white to-transparent shadow-[0_0_15px_rgba(255,255,255,0.8)] z-20 pointer-events-none"
+                       />
+                    </div>
+
+                    <div className="flex justify-between items-end opacity-40 font-mono text-[8px] text-white">
+                       <div>LATENCY: 12ms</div>
+                       <div className="animate-pulse">TARGETING_ACTIVE</div>
                     </div>
                   </div>
+
+                  {/* Mission Overlay (Reveals on View/Hover) */}
                   <motion.div 
-                    initial={{ y: 20, opacity: 0 }}
+                    initial={{ y: 100, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.4, duration: 0.6 }}
-                    className="absolute bottom-4 md:bottom-10 left-4 md:left-10 right-4 md:right-10 p-4 md:p-8 bg-black/60 backdrop-blur-xl rounded-2xl md:rounded-3xl border border-white/10 transform transition-all duration-500 group-hover:bg-black/80"
+                    transition={{ delay: 0.6, duration: 0.8 }}
+                    className="absolute bottom-6 left-6 right-6 md:bottom-12 md:left-12 md:right-12 p-8 md:p-12 bg-black/80 backdrop-blur-2xl rounded-[40px] border border-white/20 shadow-2xl group-hover:bg-white/5 transition-all duration-700 group-hover:scale-[1.02]"
                   >
-                    <div className="text-[9px] font-mono text-purple-400 uppercase mb-1 md:mb-2 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse"></span>
-                      实战任务 // Mission
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-2 h-2 rounded-full bg-purple-500 animate-ping" />
+                      <div className="text-[10px] font-mono text-purple-400 uppercase font-black tracking-[0.4em]">实战任务 // MISSION_OBJ</div>
                     </div>
-                    <p className="text-white font-bold leading-relaxed text-xs md:text-base">{act.mission}</p>
+                    <p className="text-white font-bold leading-relaxed text-sm md:text-xl tracking-tight">
+                      {act.mission}
+                    </p>
                   </motion.div>
                 </div>
               </motion.div>
@@ -247,48 +322,68 @@ const ArtPlanet: React.FC = () => {
       </section>
 
       {/* Philosophy Callout */}
-      <section className="mt-24 md:mt-40 mb-10 md:mb-20 text-center px-4 md:px-0">
+      <section className="mt-20 md:mt-40 mb-20 md:mb-40 text-center px-4 md:px-0">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="max-w-4xl mx-auto p-8 md:p-20 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-500/20 rounded-[40px] md:rounded-[64px] backdrop-blur-xl relative overflow-hidden"
+          className="max-w-6xl mx-auto p-12 md:p-32 bg-gradient-to-br from-purple-950/40 to-pink-950/40 border border-purple-500/20 rounded-[60px] md:rounded-[100px] backdrop-blur-3xl relative overflow-hidden shadow-[0_0_150px_rgba(0,0,0,0.5)]"
         >
-          <div className="relative z-10">
-            <h3 className="text-xl md:text-3xl font-black text-white mb-6 md:mb-8 uppercase tracking-tighter">费曼学习法与艺术抽象</h3>
-            <p className="text-gray-300 text-sm md:text-xl leading-relaxed font-light mb-8 md:mb-12 italic">
+          <div className="relative z-10 space-y-10">
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              className="w-24 h-24 md:w-32 md:h-32 mx-auto border-2 border-dashed border-purple-500/30 rounded-full flex items-center justify-center text-4xl"
+            >
+              🧠
+            </motion.div>
+            
+            <h3 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter">费曼学习法与艺术抽象</h3>
+            
+            <p className="text-gray-400 text-lg md:text-3xl leading-relaxed font-light max-w-4xl mx-auto italic">
               "我们不仅仅是在模拟艺术，我们是在解构审美。通过将流派的核心抽象为代码，你真正理解了什么是‘风格’。"
             </p>
-            <div className="flex justify-center gap-8 md:gap-12">
-              <motion.div 
-                whileHover={{ y: -5 }}
-                className="text-center"
-              >
-                <div className="text-purple-400 font-black text-xl md:text-2xl mb-1">100+</div>
-                <div className="text-[10px] text-gray-500 uppercase font-mono">Masterpieces Analyzed</div>
-              </motion.div>
-              <motion.div 
-                whileHover={{ y: -5 }}
-                className="text-center"
-              >
-                <div className="text-purple-400 font-black text-xl md:text-2xl mb-1">20+</div>
-                <div className="text-[10px] text-gray-500 uppercase font-mono">Algorithms Created</div>
-              </motion.div>
+            
+            <div className="flex flex-col sm:flex-row justify-center gap-12 md:gap-24 pt-10">
+              <div className="text-center space-y-2">
+                <div className="text-purple-400 font-black text-4xl md:text-7xl mb-1 tracking-tighter">100+</div>
+                <div className="text-[10px] md:text-xs text-gray-500 uppercase font-mono tracking-widest">Masterpieces Analyzed</div>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="text-purple-400 font-black text-4xl md:text-7xl mb-1 tracking-tighter">20+</div>
+                <div className="text-[10px] md:text-xs text-gray-500 uppercase font-mono tracking-widest">Original Algorithms</div>
+              </div>
             </div>
           </div>
-          {/* Decorative Pattern */}
-          <div className="absolute inset-0 opacity-5 pointer-events-none">
+
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <pattern id="grid-art" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" strokeWidth="0.5"/>
+                <pattern id="grid-phi" width="30" height="30" patternUnits="userSpaceOnUse">
+                  <circle cx="1" cy="1" r="1" fill="white" />
                 </pattern>
               </defs>
-              <rect width="100%" height="100%" fill="url(#grid-art)" />
+              <rect width="100%" height="100%" fill="url(#grid-phi)" />
             </svg>
           </div>
         </motion.div>
       </section>
+
+      <style>{`
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: gradient-x 15s ease infinite;
+        }
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+      `}</style>
     </PlanetLayout>
   );
 };
