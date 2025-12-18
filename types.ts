@@ -17,6 +17,9 @@ export interface Course {
   description: string;
   icon: string;
   color: string;
+  target: string;
+  duration: string;
+  outcome: string;
   philosophyMap: {
     title: string;
     points: string[];
