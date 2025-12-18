@@ -161,8 +161,8 @@ export const translations = {
     nav: {
       home: '首页',
       consulting: 'AI 咨询',
-      blog: '见解',
-      planets: '探索星系',
+      blog: '博客',
+      planets: '课程星球',
       studio: '灵感工坊',
     },
     hero: {
