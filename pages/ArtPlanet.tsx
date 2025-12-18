@@ -20,7 +20,8 @@ const ArtPlanet: React.FC = () => {
       dialogue: '训练 AI 融合印象派与浮世绘风格。',
       math: ['光的插值 (Lerp)', '动态黄金螺旋'],
       mission: '手动编写 curveVertex() 精确绘制黄金螺旋，并让粒子沿其轨迹运动。',
-      gradient: 'from-blue-400 to-orange-400'
+      gradient: 'from-blue-400 to-orange-400',
+      icon: '🌊'
     },
     {
       id: '02',
@@ -32,7 +33,8 @@ const ArtPlanet: React.FC = () => {
       dialogue: '命令 AI 用“点”思考，捕捉有序的宁静。',
       math: ['离散化与像素化', '网格平均色值计算'],
       mission: '编写嵌套 for 循环，将任意图片分割为网格，计算平均色值并用圆点重绘。',
-      gradient: 'from-green-400 to-yellow-400'
+      gradient: 'from-green-400 to-yellow-400',
+      icon: '🔳'
     },
     {
       id: '03',
@@ -44,7 +46,8 @@ const ArtPlanet: React.FC = () => {
       dialogue: '让 AI 表达情感，使用厚涂与颤动能量。',
       math: ['向量场 (Vector Field)', '柏林噪声 (Perlin Noise)'],
       mission: '利用 noise() 构建不可见向量场，释放粒子随“风场”流动。',
-      gradient: 'from-blue-600 to-purple-600'
+      gradient: 'from-blue-600 to-purple-600',
+      icon: '✨'
     },
     {
       id: '04',
@@ -56,144 +59,119 @@ const ArtPlanet: React.FC = () => {
       dialogue: '用几何眼光看世界，解构为几何平面。',
       math: ['泰森多边形 (Voronoi)', '三角剖分 (Delaunay)'],
       mission: '引入 d3-delaunay 库，编写着色算法根据块面朝向应用冷暖色调。',
-      gradient: 'from-orange-500 to-red-600'
+      gradient: 'from-orange-500 to-red-600',
+      icon: '📐'
     }
   ];
 
   return (
     <PlanetLayout course={course}>
-      {/* Vision & Philosophy Section */}
+      {/* Immersive Vision Section */}
       <section className="mt-16 mb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            <h2 className="text-3xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
-              <span className="w-8 h-1 bg-purple-500"></span>
-              课程愿景与哲学
+            <div className="flex items-center gap-4">
+              <span className="h-px w-12 bg-purple-500"></span>
+              <span className="text-purple-400 font-mono text-xs uppercase tracking-widest">Aesthetic OS</span>
+            </div>
+            <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+              训练“超我”的 <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">审美与抽象能力</span>
             </h2>
             <p className="text-xl text-gray-300 leading-relaxed font-light">
-              告别“历史-&gt;数学-&gt;编程”的线性知识传递，拥抱一个
-              <span className="text-purple-400 font-bold">“历史理解 -&gt; AI 美学对话 -&gt; 数学抽象 -&gt; 人机协同编程”</span>
-              的螺旋式上升创造闭环。
+              在艺术行星，AI 不再是简单的画图工具，而是将 <span className="text-white font-bold">“历史文脉”</span> 转化为 <span className="text-white font-bold">“数学逻辑”</span> 的翻译官。你将作为总导演，编排人类艺术史上最伟大的瞬间。
             </p>
-            <div className="p-8 bg-white/5 border border-white/10 rounded-[32px] backdrop-blur-xl">
-              <h4 className="text-purple-400 font-mono text-xs uppercase tracking-widest mb-4">导演角色定义</h4>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                你不再是埋头苦干的“独立工程师”，而是站在思想高地，调度全局的“总导演”。集洞察、品味、严谨于一身。
-              </p>
-            </div>
           </motion.div>
 
-          {/* Feynman Workflow Component */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="bg-brand-surface border border-white/10 rounded-[40px] p-10 shadow-2xl relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-4 font-mono text-[10px] text-purple-500 opacity-40">WORKFLOW: FEYNMAN_METHOD</div>
-            <h3 className="text-2xl font-black text-white mb-8 uppercase tracking-tight">费曼学习法：总导演的方法论</h3>
-            <div className="space-y-6">
-              {[
-                { title: '以教促学 (Teach to Learn)', desc: '通过精准指令（Prompt）“教”会 AI 你的艺术理解。' },
-                { title: '回顾与反思 (Review & Reflect)', desc: '在 AI “卡壳”时寻找历史理解与数学抽象的缺口。' },
-                { title: '简化与内化 (Simplify & Internalize)', desc: '设计最优雅的模型来体现艺术流派的核心思想。' }
-              ].map((step, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-xs font-bold text-purple-400">
-                    {i + 1}
-                  </div>
-                  <div>
-                    <h5 className="text-white font-bold text-sm mb-1">{step.title}</h5>
-                    <p className="text-gray-400 text-xs leading-relaxed">{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { label: 'Prompt Design', val: '85%' },
+              { label: 'Logic Coding', val: '92%' },
+              { label: 'Art Context', val: '78%' },
+              { label: 'Creative Swarm', val: 'Active' },
+            ].map((stat, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md"
+              >
+                <div className="text-[10px] font-mono text-gray-500 uppercase mb-2">{stat.label}</div>
+                <div className="text-2xl font-black text-white">{stat.val}</div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* The Four Acts - Detailed Roadmap */}
-      <section className="py-20 relative">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-full bg-gradient-to-b from-purple-500/50 via-white/10 to-transparent hidden lg:block" />
-        
+      {/* The Acts Timeline */}
+      <section className="py-20">
         <div className="space-y-32">
-          {acts.map((act, index) => (
+          {acts.map((act, idx) => (
             <motion.div 
               key={act.id}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className={`relative flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 items-center`}
+              className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 items-center`}
             >
-              {/* Act Number Bubble */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-brand-dark border-2 border-purple-500 rounded-full flex items-center justify-center z-20 hidden lg:flex">
-                <span className="text-white font-black">{act.id}</span>
-              </div>
-
-              {/* Content Card */}
-              <div className="flex-1 w-full">
-                <div className={`p-10 rounded-[40px] bg-white/5 border border-white/10 backdrop-blur-xl group hover:border-purple-500/50 transition-all duration-500`}>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className={`text-[10px] font-mono px-3 py-1 rounded-full bg-gradient-to-r ${act.gradient} text-white font-bold uppercase`}>
-                      {act.artists}
-                    </span>
-                    <span className="text-gray-600 font-mono text-xs">{act.id} // ACT</span>
+              <div className="flex-1 space-y-8">
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${act.gradient} flex items-center justify-center text-2xl shadow-lg`}>
+                    {act.icon}
                   </div>
-                  <h3 className="text-3xl font-black text-white mb-2 tracking-tighter">{act.title}</h3>
-                  <p className="text-purple-400 text-sm font-bold mb-6 italic">{act.subtitle}</p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 border-t border-white/5 pt-8">
-                    <div>
-                      <h4 className="text-xs font-mono text-gray-500 uppercase mb-4 tracking-widest">历史与哲学</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed mb-4">{act.philosophy}</p>
-                      <div className="p-4 bg-black/20 rounded-xl border border-white/5 italic text-xs text-gray-400">
-                        "代表作：{act.works}"
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-mono text-gray-500 uppercase mb-4 tracking-widest">美学对话</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed mb-4">对话 AI：{act.dialogue}</p>
-                      <div className="space-y-2">
-                        <div className="text-[10px] text-gray-500 font-mono">数学建模模块:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {act.math.map((m, i) => (
-                            <span key={i} className="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] text-purple-300">{m}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Interactive/Visual Representation Side */}
-              <div className="flex-1 w-full space-y-6">
-                <div className={`relative aspect-square md:aspect-video rounded-[40px] bg-gradient-to-br ${act.gradient} opacity-20 flex items-center justify-center overflow-hidden border border-white/10`}>
-                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
-                  <div className="relative z-10 text-6xl opacity-50 filter grayscale group-hover:grayscale-0 transition-all duration-700">
-                    {index === 0 && '🌀'}
-                    {index === 1 && '🔳'}
-                    {index === 2 && '✨'}
-                    {index === 3 && '📐'}
-                  </div>
-                  {/* Decorative Elements based on index */}
-                  {index === 2 && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-full h-1 bg-white/20 animate-pulse rotate-12" />
-                      <div className="w-full h-1 bg-white/20 animate-pulse -rotate-12" />
-                    </div>
-                  )}
+                  <div className="font-mono text-sm text-gray-500">ACT_{act.id}</div>
                 </div>
                 
-                <div className="p-8 bg-brand-surface border border-white/10 rounded-[32px] shadow-xl">
-                  <h4 className="text-xs font-mono text-purple-500 uppercase mb-4 tracking-widest">总导演任务：人机协同编程</h4>
-                  <p className="text-white text-md font-bold leading-relaxed">
-                    {act.mission}
-                  </p>
+                <h3 className="text-4xl font-black text-white tracking-tighter uppercase">{act.title}</h3>
+                <p className="text-purple-400 font-bold italic">{act.subtitle}</p>
+                
+                <div className="bg-white/5 border border-white/10 rounded-[40px] p-10 space-y-6">
+                  <div>
+                    <div className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-4">导演指令 // Director Prompt</div>
+                    <p className="text-gray-300 text-lg leading-relaxed">"{act.dialogue}"</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-white/5">
+                    <div>
+                      <div className="text-[10px] font-mono text-purple-500 uppercase mb-2">数学模块</div>
+                      <div className="flex flex-wrap gap-2">
+                        {act.math.map(m => (
+                          <span key={m} className="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded text-[10px] text-purple-300">{m}</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-mono text-purple-500 uppercase mb-2">艺术家</div>
+                      <div className="text-white font-bold text-sm">{act.artists}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex-1 w-full">
+                <div className="relative aspect-video rounded-[48px] overflow-hidden group">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${act.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                      className="w-64 h-64 border-2 border-white/5 rounded-full border-dashed"
+                    />
+                    <div className="absolute text-8xl grayscale group-hover:grayscale-0 transition-all duration-700">
+                      {act.icon}
+                    </div>
+                  </div>
+                  <div className="absolute bottom-10 left-10 right-10 p-8 bg-black/60 backdrop-blur-xl rounded-3xl border border-white/10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <div className="text-xs font-mono text-purple-400 uppercase mb-2">实战任务</div>
+                    <p className="text-white font-bold leading-relaxed">{act.mission}</p>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -201,37 +179,41 @@ const ArtPlanet: React.FC = () => {
         </div>
       </section>
 
-      {/* Tools & Tech Stack */}
-      <section className="mt-32 pt-20 border-t border-white/5">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-2xl font-black text-white mb-12 uppercase tracking-tight">核心技术栈与工具箱</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: 'p5.js', role: '视觉渲染' },
-              { name: 'p5.sound', role: '交互听觉' },
-              { name: 'd3-delaunay', role: '计算几何' },
-              { name: 'Gemini / Claude', role: '美学总参谋' }
-            ].map((tech, i) => (
-              <div key={tech.name} className="p-6 bg-white/5 rounded-2xl border border-white/10">
-                <div className="text-white font-black mb-1">{tech.name}</div>
-                <div className="text-[10px] font-mono text-gray-500 uppercase">{tech.role}</div>
+      {/* Philosophy Callout */}
+      <section className="mt-40 mb-20 text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          className="max-w-4xl mx-auto p-20 bg-gradient-to-br from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-[64px] backdrop-blur-xl relative overflow-hidden"
+        >
+          <div className="relative z-10">
+            <h3 className="text-3xl font-black text-white mb-8 uppercase tracking-tighter">费曼学习法与艺术抽象</h3>
+            <p className="text-gray-300 text-xl leading-relaxed font-light mb-12 italic">
+              "我们不仅仅是在模拟艺术，我们是在解构审美。通过将流派的核心抽象为代码，你真正理解了什么是‘风格’。"
+            </p>
+            <div className="flex justify-center gap-12">
+              <div className="text-center">
+                <div className="text-purple-400 font-black text-2xl mb-1">100+</div>
+                <div className="text-xs text-gray-500 uppercase font-mono">Masterpieces Analyzed</div>
               </div>
-            ))}
+              <div className="text-center">
+                <div className="text-purple-400 font-black text-2xl mb-1">20+</div>
+                <div className="text-xs text-gray-500 uppercase font-mono">Algorithms Created</div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="mt-32 py-20 px-4">
-        <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-500/30 rounded-[64px] p-12 text-center backdrop-blur-xl">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-8 tracking-tighter">准备好开启你的“创意探索之旅”了吗？</h2>
-          <p className="text-gray-300 mb-10 text-lg font-light">
-            掌握 AI 时代的全新心智模式，从今天开始，不再做孤立的技能学习者。
-          </p>
-          <button className="px-12 py-6 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-black uppercase tracking-widest shadow-2xl transition-all">
-            立即加入艺术行星
-          </button>
-        </div>
+          {/* Decorative SVG Pattern */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+          </div>
+        </motion.div>
       </section>
     </PlanetLayout>
   );
