@@ -8,63 +8,21 @@ interface ContentData {
 }
 
 const CONTENT_ZH: ContentData = {
-  philosophyPillars: [], // Using specific translations now
+  philosophyPillars: [
+    { title: '认知基石', concept: '系统本位', practice: '构建超我控制中枢' },
+    { title: '资产构建', concept: '数字分身', practice: 'FTI 架构数据闭环' },
+    { title: '身份转变', concept: '总导演', practice: '编排而非执行' },
+    { title: '工作流革命', concept: '一人公司', practice: '多智能体协同' }
+  ],
   blogPosts: [
     {
       id: "1",
       title: "从执行到编排：AI 时代的认知跨越",
       excerpt: "在这个 AGI 的前夜，最核心的竞争力不再是你会多少门编程语言，而是你如何构建一个能够理解并执行复杂逻辑的系统。",
-      content: `
-        <h2>认知基石的重塑</h2>
-        <p>传统的技能本位正在向系统本位转移。在过去，掌握一门技术需要数年的深耕，而现在，AI 正在将这些技能商品化。作为一个“超我”架构师，你的任务不再是手动编写每一个循环，而是定义系统的边界、逻辑和目标。</p>
-        <blockquote>“Human defines the 'Why', AI solves the 'How'.”</blockquote>
-        <h3>核心分工逻辑</h3>
-        <p>我们承认生物脑在逻辑推导和记忆容量上的局限性。构建“外挂大脑”不是一个选项，而是一个生存必备品。生物脑应该释放出来，专注于直觉审判、审美定义和战略决策。</p>
-        <p>通过 RAG (检索增强生成) 技术，我们可以将零散的知识沉淀在私有的向量数据库中，形成你独一无二的数字分身。这个分身不仅是你知识的载体，更是你行动的指挥官。</p>
-        <pre><code>// 编排指令示例
-const supervisor = new Agent('Chief-Architect');
-await supervisor.delegate(tasks.frontend, 'Gemini-3-Pro');
-await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
-        <h3>一人即一公司的时代</h3>
-        <p>不再需要庞大的开发团队。通过多智能体编排 (Multi-Agent Orchestration)，你一个人就可以指挥一个由产品经理、架构师、程序员和测试员组成的数字军团。这就是我们课程核心要传达的力量。</p>
-      `,
+      content: `<h2>认知基石的重塑</h2><p>传统的技能本位正在向系统本位转移。在过去，掌握一门技术需要数年的深耕，而现在，AI 正在将这些技能商品化。作为一个“超我”架构师，你的任务不再是手动编写每一个循环，而是定义系统的边界、逻辑和目标。</p><blockquote>“Human defines the 'Why', AI solves the 'How'.”</blockquote>`,
       date: "2024-05-20",
       author: "朱云涛",
       tags: ["AI", "哲学", "认知"]
-    },
-    {
-      id: "2",
-      title: "构建第二大脑：FTI 架构实战指南",
-      excerpt: "FTI 架构（Feed-Transform-Integrate）是我们推荐的构建个人知识库的标准范式，它确保了数据的主权与效能。",
-      content: `
-        <h2>什么是 FTI 架构？</h2>
-        <p>FTI 架构是我们通过大量企业咨询实战提炼出的、最适合个人与小微组织的 AI 数据闭环模型。</p>
-        <ul>
-          <li><strong>Feed (摄取):</strong> 自动化捕获全媒体资产，从网页剪藏到语音备忘录。</li>
-          <li><strong>Transform (转换):</strong> 利用 LLM 将非结构化数据转化为向量化记忆。</li>
-          <li><strong>Integrate (集成):</strong> 通过 RAG 管道将记忆无缝嵌入到你的创作流中。</li>
-        </ul>
-        <p>这种架构的核心在于“主权”。你不依赖于任何单一的 SaaS 供应商，你的向量数据库可以部署在任何地方，你的模型可以随时切换。</p>
-        <h3>实战步骤</h3>
-        <p>在我们的“AI SuperEgo”课程中，我们会手把手带你使用 Dify 和 Vector DB 搭建这套地基。从零配置 Embedding 模型，到实现混合检索 (Hybrid Search)，确保你的 AI 能够像你一样思考，但比你更博学。</p>
-      `,
-      date: "2024-05-18",
-      author: "杜占源",
-      tags: ["架构", "实战", "RAG"]
-    },
-    {
-      id: "3",
-      title: "艺术与代码：在数学中重现莫奈的色彩",
-      excerpt: "当我们谈论 AI 艺术时，我们谈论的不仅仅是生成。我们是在探讨如何用代码解构人类几千年的审美逻辑。",
-      content: `
-        <h2>艺术行星的逻辑</h2>
-        <p>在“艺术行星”课程中，我们挑战学生不仅要用 AI 画图，还要理解“为什么这幅图好看”。</p>
-        <p>莫奈对光的处理可以被抽象为一种对色温和亮度的插值算法。当我们用代码去实现这种插值时，我们不仅在复现艺术，我们是在内化这种审美能力。</p>
-        <p>这就是费曼学习法在艺术领域的应用：如果你不能用代码写出一个流派的特征，说明你还没有真正看懂它。</p>
-      `,
-      date: "2024-05-15",
-      author: "朱云涛",
-      tags: ["艺术", "代码", "费曼学习法"]
     }
   ],
   courses: [
@@ -89,7 +47,30 @@ await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
         ]
       },
       syllabus: [
-        { title: "第一幕：光的革命", goal: "从观察到主观感受", content: [{title: "莫奈与北斋", description: "用 AI 融合印象派与浮世绘。"}] }
+        {
+          title: "第一阶段：光的革命",
+          goal: "从客观观察到主观感受",
+          content: [
+            { title: "莫奈与北斋的对话", description: "用 AI 融合印象派与浮世绘风格，理解色彩插值。" },
+            { title: "P5.js 基础：绘制光影", description: "学习变量、循环，用代码模拟自然光线的衰减。" }
+          ]
+        },
+        {
+          title: "第二阶段：点彩派的逻辑",
+          goal: "科学方法构建秩序感",
+          content: [
+            { title: "乔治·修拉的实验", description: "理解离散化与像素化，用网格重绘世界。" },
+            { title: "算法重构：网格平均色", description: "编写嵌套循环，计算色块平均值实现点彩效果。" }
+          ]
+        },
+        {
+          title: "第三阶段：情感的旋涡",
+          goal: "主观真实高于客观现实",
+          content: [
+            { title: "梵高的星夜风场", description: "分析动态笔触，理解柏林噪声在艺术中的应用。" },
+            { title: "向量场实战", description: "构建不可见流场，让粒子随“风”舞动生成艺术。" }
+          ]
+        }
       ]
     },
     {
@@ -113,7 +94,30 @@ await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
         ]
       },
       syllabus: [
-        { title: "模块一：AI 视觉启蒙", goal: "让电脑“看懂”身体", content: [{title: "关键点检测", description: "提取 33 个身体地标坐标。"}] }
+        {
+          title: "第一阶段：AI 视觉启蒙",
+          goal: "让电脑“看懂”身体",
+          content: [
+            { title: "关键点检测原理", description: "提取 33 个身体地标坐标，理解 (x, y, z) 坐标系。" },
+            { title: "Python 环境搭建", description: "配置 MediaPipe 与 OpenCV，实现实时摄像头采集。" }
+          ]
+        },
+        {
+          title: "第二阶段：动力学建模",
+          goal: "提取运动性能指标",
+          content: [
+            { title: "三角函数计算夹角", description: "利用向量夹角公式计算深蹲角度、肘部弯曲度。" },
+            { title: "状态机逻辑控制", description: "编写逻辑判断动作的起始与结束，实现自动计数。" }
+          ]
+        },
+        {
+          title: "第三阶段：智能纠错系统",
+          goal: "构建反馈闭环",
+          content: [
+            { title: "生物力学阈值设定", description: "定义“正确”动作的阈值区间，检测代偿动作。" },
+            { title: "多模态反馈设计", description: "实现语音提醒与视觉叠加，打造一体化终端应用。" }
+          ]
+        }
       ]
     },
     {
@@ -137,7 +141,30 @@ await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
         ]
       },
       syllabus: [
-        { title: "第一阶段：构建地基", goal: "FTI 架构搭建", content: [{title: "向量化记忆", description: "将笔记/文档存入 Vector DB。"}] }
+        {
+          title: "第一阶段：构建地基",
+          goal: "FTI 架构搭建",
+          content: [
+            { title: "向量化记忆原理", description: "理解 Embedding，将非结构化笔记转化为高维矢量。" },
+            { title: "私有数据库部署", description: "搭建 Vector DB，建立个人数据的“主权仓库”。" }
+          ]
+        },
+        {
+          title: "第二阶段：神经检索",
+          goal: "实现毫秒级知识调用",
+          content: [
+            { title: "混合检索策略", description: "结合关键词与语义，实现超越搜索的“联想式检索”。" },
+            { title: "RAG 管道调优", description: "优化 Prompt 链，让 AI 拒绝幻觉，只基于事实回答。" }
+          ]
+        },
+        {
+          title: "第三阶段：智能体编排",
+          goal: "从检索到行动",
+          content: [
+            { title: "多智能体协同 (Dify)", description: "构建调研、整理、创作的一站式 Agent 工作流。" },
+            { title: "自动化反馈循环", description: "建立 RLHF 闭环，通过人工反馈让大脑不断进化。" }
+          ]
+        }
       ]
     },
     {
@@ -161,7 +188,22 @@ await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
         ]
       },
       syllabus: [
-        { title: "模块一：新范式", goal: "Agentic Quant 基座", content: [{title: "金融多模态", description: "用视觉能力读取 K 线与公式。"}] }
+        {
+          title: "第一阶段：Alpha 捕捉",
+          goal: "多模态投研基座",
+          content: [
+            { title: "研报阅读 Agent", description: "利用长窗口 AI 提取研报因子，解析 K 线图表特征。" },
+            { title: "策略文档生成", description: "将人类语言的投资逻辑转化为严谨的伪代码文档。" }
+          ]
+        },
+        {
+          title: "第二阶段：回测竞技场",
+          goal: "双智能体对抗调优",
+          content: [
+            { title: "回测执行 Agent", description: "利用 VectorBT 实现高速回测，输出多维风险报告。" },
+            { title: "优化器 Agent", description: "基于推理能力进行参数调优，对话直至 Sharpe > 2.0。" }
+          ]
+        }
       ]
     },
     {
@@ -185,7 +227,22 @@ await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
         ]
       },
       syllabus: [
-        { title: "第一阶段：环境搭建", goal: "建立人机协作感", content: [{title: "Cursor 深度应用", description: "掌握自然语言编程的核心指令。"}] }
+        {
+          title: "第一阶段：环境觉醒",
+          goal: "建立人机协作感",
+          content: [
+            { title: "Cursor 深度应用", description: "掌握自然语言编程，通过编排而非编写实现功能。" },
+            { title: "架构蓝图绘制", description: "利用 AI 将产品需求拆解为技术规格书 (Spec)。" }
+          ]
+        },
+        {
+          title: "第二阶段：MVP 快速开发",
+          goal: "从 0 到 1 上线",
+          content: [
+            { title: "V0.dev 前端快速成型", description: "通过截图与描述快速生成高质量 UI 组件。" },
+            { title: "后端逻辑自动化", description: "利用 AI 快速集成数据库、身份验证与支付网关。" }
+          ]
+        }
       ]
     },
     {
@@ -209,7 +266,14 @@ await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
         ]
       },
       syllabus: [
-        { title: "模块一：数字神经元", goal: "搭建科研日志系统", content: [{title: "自动化捕获", description: "将阅读笔记转化为结构化数据。"}] }
+        {
+          title: "第一阶段：数字神经元",
+          goal: "搭建科研日志系统",
+          content: [
+            { title: "自动化文献捕获", description: "通过 API 自动监控 Arxiv，提取核心创新点。" },
+            { title: "模型抽象实战", description: "利用 AI 驱动求解器处理复杂微分方程与数值模拟。" }
+          ]
+        }
       ]
     }
   ]

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Course } from '../types';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { ArrowLeft, Home } from 'lucide-react';
+import SyllabusTrajectory from './SyllabusTrajectory';
 
 interface PlanetLayoutProps {
   course: Course;
@@ -73,39 +74,22 @@ const PlanetLayout: React.FC<PlanetLayoutProps> = ({ course, children }) => {
           {children}
         </div>
 
-        {/* Detailed Syllabus */}
-        <div id="syllabus" className="mt-20 md:mt-32 mb-16 md:mb-20">
-          <div className="flex items-center justify-between mb-8 md:mb-12 px-1">
+        {/* Detailed Syllabus Trajectory */}
+        <div id="syllabus" className="mt-20 md:mt-32 mb-16 md:mb-20 overflow-hidden">
+          <div className="flex items-center justify-between mb-16 px-1">
              <div className="flex items-center gap-3 md:gap-4">
                 <div className={`w-6 sm:w-12 h-1 bg-gradient-to-r ${course.color} rounded-full`}></div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">
                   {t('course.syllabus') || 'MISSION TRAJECTORY'}
                 </h2>
              </div>
-             <span className="text-[8px] md:text-[9px] font-mono text-gray-600 hidden xs:block">VER 2.5_STABLE</span>
+             <div className="flex flex-col items-end">
+                <span className="text-[8px] md:text-[10px] font-mono text-gray-600">VER 3.0_ORCHESTRATED</span>
+                <span className="text-[8px] md:text-[10px] font-mono text-gray-800">COORDINATE_SET: {course.id.toUpperCase()}</span>
+             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {course.syllabus.map((module, idx) => (
-              <div key={idx} className="group bg-white/5 border border-white/10 rounded-3xl p-6 sm:p-8 hover:bg-white/[0.07] transition-all">
-                <span className="text-[9px] md:text-[10px] font-mono text-blue-500 uppercase mb-3 md:mb-4 block tracking-widest font-bold">PHASE 0{idx + 1}</span>
-                <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6 tracking-tight border-b border-white/5 pb-3 md:pb-4">
-                  {module.title}
-                </h3>
-                <ul className="space-y-5 md:space-y-6">
-                  {module.content.map((item, i) => (
-                    <li key={i} className="flex gap-3 md:gap-4">
-                      <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
-                      <div>
-                        <h4 className="text-sm md:text-md font-bold text-gray-200 mb-1">{item.title}</h4>
-                        <p className="text-[11px] md:text-sm text-gray-500 leading-relaxed font-light">{item.description}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+          <SyllabusTrajectory syllabus={course.syllabus} color={course.color} />
         </div>
 
         {/* Quick Stats Grid */}
