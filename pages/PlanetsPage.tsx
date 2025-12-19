@@ -19,7 +19,8 @@ const PlanetsPage: React.FC = () => {
     const checkMobile = () => {
       const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
       const mobileRegex = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
-      setIsMobile(mobileRegex.test(userAgent.toLowerCase()) || window.innerWidth < 768);
+      const mobileWidth = window.innerWidth < 768;
+      setIsMobile(mobileRegex.test(userAgent.toLowerCase()) || mobileWidth);
     };
 
     checkMobile();
@@ -43,24 +44,24 @@ const PlanetsPage: React.FC = () => {
       </div>
 
       {/* UI Overlay */}
-      <div className="relative z-10 pointer-events-none flex flex-col items-center pt-24 px-4 text-center h-full">
+      <div className="relative z-10 pointer-events-none flex flex-col items-center pt-20 px-4 text-center h-full">
         <div className="pointer-events-auto">
-          <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-8 font-mono text-[10px] uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
-            <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-            {language === 'en' ? 'Home' : '返回首页'}
+          <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-6 font-mono text-[10px] uppercase tracking-widest bg-white/5 px-5 py-2 rounded-full border border-white/5">
+            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+            {language === 'en' ? 'Back to Hub' : '返回星港'}
           </Link>
         </div>
         
-        <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-transparent opacity-90 tracking-tighter mb-4 uppercase select-none">
-          AI FIRST GALAXY
+        <h1 className="text-7xl lg:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-100 to-transparent opacity-90 tracking-tighter mb-2 uppercase select-none">
+          AI GALAXY
         </h1>
-        <p className="text-blue-400 font-mono tracking-widest uppercase text-sm mb-12 px-6 max-w-md mx-auto leading-relaxed select-none">
-          "Don't just Code, Orchestrate."
+        <p className="text-blue-500 font-mono tracking-[0.4em] uppercase text-xs mb-10 select-none">
+          SYSTEM_ORCHESTRATION_MODE_V3.5
         </p>
 
-        <div className="mt-auto pb-10">
-           <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.6em] animate-pulse select-none">
-             Drag to Rotate the Galaxy // Click a Planet to Explore
+        <div className="mt-auto pb-12">
+           <p className="text-gray-700 font-mono text-[9px] uppercase tracking-[0.8em] animate-pulse select-none">
+             Drag to Rotate // Click Planet to Engage
            </p>
         </div>
       </div>

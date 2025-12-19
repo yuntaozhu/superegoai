@@ -25,24 +25,24 @@ const PlanetsPageMobile: React.FC = () => {
       </div>
 
       {/* Overlay UI */}
-      <div className="relative z-10 flex flex-col items-center pt-20 px-6 text-center pointer-events-none flex-grow">
-        <div className="pointer-events-auto mb-6">
-          <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors font-mono text-[9px] uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
-            <ArrowLeft className="w-3 h-3" />
+      <div className="relative z-10 flex flex-col items-center pt-16 px-6 text-center pointer-events-none flex-grow">
+        <div className="pointer-events-auto mb-4">
+          <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors font-mono text-[8px] uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+            <ArrowLeft className="w-2.5 h-2.5" />
             {language === 'en' ? 'HOME' : '首页'}
           </Link>
         </div>
 
-        <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-transparent tracking-tighter mb-2 uppercase">
+        <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-transparent tracking-tighter mb-1 uppercase">
           AI GALAXY
         </h1>
-        <p className="text-blue-400 font-mono text-[10px] uppercase tracking-widest">
-          SYSTEM_ORCHESTRATION_V3
+        <p className="text-blue-400 font-mono text-[8px] uppercase tracking-widest mb-2">
+          ORCHESTRATION_HUB_V3
         </p>
 
-        <div className="mt-auto pb-8">
-           <p className="text-gray-600 font-mono text-[8px] uppercase tracking-[0.4em] animate-pulse">
-             Swipe to Rotate
+        <div className="mt-auto pb-6">
+           <p className="text-gray-600 font-mono text-[7px] uppercase tracking-[0.3em] animate-pulse">
+             Swipe to Navigate Galaxy
            </p>
         </div>
       </div>
