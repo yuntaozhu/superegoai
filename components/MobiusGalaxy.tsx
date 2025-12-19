@@ -23,10 +23,11 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
 
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050814);
+    scene.background = new THREE.Color(0x02040a);
     
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    camera.position.z = isMobile ? 7 : 10;
+    // Move camera further back on mobile to see the full spiral
+    camera.position.z = isMobile ? 8.5 : 10;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
@@ -34,12 +35,13 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     mountRef.current.appendChild(renderer.domElement);
 
     // Params
-    const segments = 200;
-    const stripWidth = isMobile ? 0.4 : 0.8;
-    const radius = isMobile ? 3.0 : 4.5;
-    const particleCount = isMobile ? 3000 : 8000;
+    const segments = 300;
+    // Wider strip on mobile to allow scattered distribution
+    const stripWidth = isMobile ? 1.5 : 1.2; 
+    const radius = isMobile ? 3.2 : 4.5;
+    const particleCount = isMobile ? 5000 : 12000;
 
-    // 1. Nebula Stardust System
+    // 1. Nebula Stardust System (More cloud-like)
     const starGeometry = new THREE.BufferGeometry();
     const starPositions = new Float32Array(particleCount * 3);
     const starColors = new Float32Array(particleCount * 3);
@@ -49,15 +51,16 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       new THREE.Color(0x3b82f6), // Blue
       new THREE.Color(0x8b5cf6), // Purple
       new THREE.Color(0x06b6d4), // Cyan
+      new THREE.Color(0x1e3a8a), // Deep Blue
       new THREE.Color(0xffffff), // White
     ];
 
     for (let i = 0; i < particleCount; i++) {
       const u = Math.random() * Math.PI * 2;
-      const v = (Math.random() - 0.5) * stripWidth * 1.5;
+      // Gaussian-like distribution for particles around the core path
+      const v = (Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1)) * stripWidth;
       
-      // Mobius path + some jitter for nebula thickness
-      const jitter = (Math.random() - 0.5) * 0.2;
+      const jitter = (Math.random() - 0.5) * 0.4;
       const x = (radius + v * Math.cos(u / 2)) * Math.cos(u) + jitter;
       const y = (radius + v * Math.cos(u / 2)) * Math.sin(u) + jitter;
       const z = (v * Math.sin(u / 2)) + jitter;
@@ -78,7 +81,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       starColors[idx + 1] = col.g;
       starColors[idx + 2] = col.b;
 
-      starSizes[i] = Math.random() * (isMobile ? 0.03 : 0.05);
+      starSizes[i] = Math.random() * (isMobile ? 0.04 : 0.06);
     }
 
     starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
@@ -86,10 +89,10 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
 
     const starMaterial = new THREE.PointsMaterial({
-      size: 0.05,
+      size: isMobile ? 0.03 : 0.05,
       vertexColors: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
       sizeAttenuation: true
     });
@@ -97,43 +100,21 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const nebula = new THREE.Points(starGeometry, starMaterial);
     scene.add(nebula);
 
-    // 2. Core Ribbon (Faint glow following the path)
-    const ribbonGeometry = new THREE.PlaneGeometry(radius * 2, stripWidth, segments, 1);
-    const ribbonMaterial = new THREE.MeshBasicMaterial({
-      color: 0x1e3a8a,
-      transparent: true,
-      opacity: 0.05,
-      side: THREE.DoubleSide,
-      wireframe: false
-    });
-
-    // We reuse the Mobius logic to deform a ribbon if needed, but for nebula look, the particles are better.
-    // Let's add a soft glowing tube instead for more "core" feel.
-    const curvePoints = [];
-    for (let i = 0; i <= segments; i++) {
-        const u = (i / segments) * Math.PI * 2;
-        const x = radius * Math.cos(u);
-        const y = radius * Math.sin(u);
-        const z = 0;
-        if (orientation === 'vertical') curvePoints.push(new THREE.Vector3(z, y, x));
-        else curvePoints.push(new THREE.Vector3(x, z, y));
-    }
-    const tubeCurve = new THREE.CatmullRomCurve3(curvePoints, true);
-    const tubeGeo = new THREE.TubeGeometry(tubeCurve, segments, 0.05, 8, true);
-    const tubeMat = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.2 });
-    const tube = new THREE.Mesh(tubeGeo, tubeMat);
-    scene.add(tube);
-
-    // 3. Planet Objects
+    // 2. Planet Objects (Scattered laterally)
     const planetGroup = new THREE.Group();
     scene.add(planetGroup);
 
     const planetMeshes: THREE.Mesh[] = [];
-    const planetScale = isMobile ? 0.25 : 0.45;
+    const planetScale = isMobile ? 0.22 : 0.45;
 
     courses.forEach((course, idx) => {
       const u = (idx / courses.length) * Math.PI * 2;
-      const v = 0;
+      
+      // SCATTER LOGIC: Stagger planets across the ribbon's width
+      // Alternate left, center-ish, right to avoid vertical alignment in vertical mode
+      const scatterWidth = stripWidth * 0.6;
+      const vOffsets = [scatterWidth, -scatterWidth, scatterWidth * 0.3, -scatterWidth * 0.3, 0];
+      const v = vOffsets[idx % vOffsets.length];
 
       const x = (radius + v * Math.cos(u / 2)) * Math.cos(u);
       const y = (radius + v * Math.cos(u / 2)) * Math.sin(u);
@@ -156,9 +137,8 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const sphereMat = new THREE.MeshPhongMaterial({
         color: baseColor,
         emissive: baseColor,
-        emissiveIntensity: 0.6,
-        shininess: 100,
-        flatShading: false
+        emissiveIntensity: 0.8,
+        shininess: 100
       });
 
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
@@ -173,52 +153,39 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       planetMeshes.push(sphere);
       planetGroup.add(sphere);
 
-      // Atmosphere Glow
-      const glowGeo = new THREE.SphereGeometry(planetScale * 1.25, 32, 32);
-      const glowMat = new THREE.MeshBasicMaterial({
-        color: baseColor,
-        transparent: true,
-        opacity: 0.15,
-        side: THREE.BackSide
-      });
-      const glow = new THREE.Mesh(glowGeo, glowMat);
-      sphere.add(glow);
-
-      // Course Name Label
+      // Course Name Label (Optimized for mobile)
       const canvas = document.createElement('canvas');
       canvas.width = 512;
       canvas.height = 128;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.fillStyle = 'rgba(0,0,0,0)';
-        ctx.fillRect(0,0,512,128);
-        ctx.font = 'bold 48px Inter, Arial';
+        ctx.font = `bold ${isMobile ? '40px' : '48px'} Inter, Arial`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        
-        // Shadow for readability
-        ctx.shadowColor = 'rgba(0,0,0,0.8)';
-        ctx.shadowBlur = 10;
         ctx.fillStyle = 'white';
+        // Stroke for text legibility against nebula
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
         
-        // Split title if too long or just use shortTitle
         const text = course.shortTitle || course.title.split('：')[0];
-        ctx.fillText(text.toUpperCase(), 256, 64);
+        const displayText = text.toUpperCase();
+        ctx.strokeText(displayText, 256, 64);
+        ctx.fillText(displayText, 256, 64);
       }
       const labelTexture = new THREE.CanvasTexture(canvas);
       const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
       const labelSprite = new THREE.Sprite(labelMat);
-      labelSprite.scale.set(isMobile ? 1.5 : 2.5, isMobile ? 0.375 : 0.625, 1);
-      labelSprite.position.y = planetScale + (isMobile ? 0.4 : 0.6);
+      labelSprite.scale.set(isMobile ? 1.2 : 2.5, isMobile ? 0.3 : 0.625, 1);
+      labelSprite.position.y = planetScale + (isMobile ? 0.35 : 0.6);
       sphere.add(labelSprite);
       
-      // Icon above text
+      // Floating Icon
       const iconCanvas = document.createElement('canvas');
       iconCanvas.width = 128;
       iconCanvas.height = 128;
       const iCtx = iconCanvas.getContext('2d');
       if (iCtx) {
-        iCtx.font = '80px Arial';
+        iCtx.font = `${isMobile ? '60px' : '80px'} Arial`;
         iCtx.textAlign = 'center';
         iCtx.textBaseline = 'middle';
         iCtx.fillText(course.icon, 64, 64);
@@ -227,7 +194,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const iconMat = new THREE.SpriteMaterial({ map: iconTexture, transparent: true });
       const iconSprite = new THREE.Sprite(iconMat);
       iconSprite.scale.set(planetScale * 1.2, planetScale * 1.2, 1);
-      iconSprite.position.y = - (planetScale + (isMobile ? 0.3 : 0.4));
+      iconSprite.position.y = - (planetScale + (isMobile ? 0.25 : 0.4));
       sphere.add(iconSprite);
     });
 
@@ -235,15 +202,11 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
     
-    const pointLight = new THREE.PointLight(0xffffff, 15);
+    const pointLight = new THREE.PointLight(0xffffff, 20);
     pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
 
-    const blueLight = new THREE.PointLight(0x3b82f6, 10);
-    blueLight.position.set(-10, -5, -10);
-    scene.add(blueLight);
-
-    // Interaction vars
+    // Dynamic rotation logic
     let rotationTarget = 0;
     let currentRotation = 0;
     let isDragging = false;
@@ -282,8 +245,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(planetMeshes);
       if (intersects.length > 0) {
-        const clickedCourse = (intersects[0].object as any).userData.course;
-        onSelectCourse(clickedCourse);
+        onSelectCourse((intersects[0].object as any).userData.course);
       }
     };
 
@@ -299,23 +261,19 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       requestAnimationFrame(animate);
 
       currentRotation += (rotationTarget - currentRotation) * 0.05;
-      rotationTarget += 0.001; // Slower constant drift
+      rotationTarget += 0.0015; // Slow ambient drift
 
       if (orientation === 'vertical') {
         nebula.rotation.x = currentRotation;
-        tube.rotation.x = currentRotation;
         planetGroup.rotation.x = currentRotation;
       } else {
         nebula.rotation.y = currentRotation;
-        tube.rotation.y = currentRotation;
         planetGroup.rotation.y = currentRotation;
       }
 
-      // Keep labels facing camera
       planetMeshes.forEach((mesh) => {
-        mesh.rotation.y += 0.005;
-        // Make planets "wobble" slightly for organic feel
-        mesh.position.y += Math.sin(Date.now() * 0.001 + mesh.id) * 0.0005;
+        mesh.rotation.y += 0.01;
+        mesh.position.y += Math.sin(Date.now() * 0.001 + mesh.id) * 0.001;
       });
 
       renderer.render(scene, camera);
@@ -345,8 +303,6 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       renderer.dispose();
       starGeometry.dispose();
       starMaterial.dispose();
-      tubeGeo.dispose();
-      tubeMat.dispose();
     };
   }, [courses, orientation, isMobile]);
 

@@ -24,25 +24,25 @@ const PlanetsPageMobile: React.FC = () => {
         />
       </div>
 
-      {/* Overlay UI */}
-      <div className="relative z-10 flex flex-col items-center pt-16 px-6 text-center pointer-events-none flex-grow">
-        <div className="pointer-events-auto mb-4">
-          <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors font-mono text-[8px] uppercase tracking-widest bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
-            <ArrowLeft className="w-2.5 h-2.5" />
+      {/* Overlay UI - Tighter & More Compact */}
+      <div className="relative z-10 flex flex-col items-center pt-10 px-6 text-center pointer-events-none flex-grow">
+        <div className="pointer-events-auto mb-3">
+          <Link to="/" className="group inline-flex items-center gap-1.5 text-gray-500 hover:text-white transition-colors font-mono text-[7px] uppercase tracking-widest bg-white/5 px-2.5 py-1 rounded-full border border-white/5">
+            <ArrowLeft className="w-2 h-2" />
             {language === 'en' ? 'HOME' : '首页'}
           </Link>
         </div>
 
-        <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-transparent tracking-tighter mb-1 uppercase">
+        <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-transparent tracking-tighter mb-0.5 uppercase drop-shadow-sm">
           AI GALAXY
         </h1>
-        <p className="text-blue-400 font-mono text-[8px] uppercase tracking-widest mb-2">
-          ORCHESTRATION_HUB_V3
+        <p className="text-blue-500 font-mono text-[7px] uppercase tracking-[0.2em]">
+          ORCHESTRATION_V4_MOBILE
         </p>
 
-        <div className="mt-auto pb-6">
-           <p className="text-gray-600 font-mono text-[7px] uppercase tracking-[0.3em] animate-pulse">
-             Swipe to Navigate Galaxy
+        <div className="mt-auto pb-4">
+           <p className="text-gray-700 font-mono text-[6px] uppercase tracking-[0.3em] animate-pulse">
+             Swipe to Navigate
            </p>
         </div>
       </div>
