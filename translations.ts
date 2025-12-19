@@ -1,3 +1,4 @@
+
 export const translations = {
   en: {
     nav: {
@@ -6,6 +7,7 @@ export const translations = {
       blog: 'Insights',
       planets: 'Galaxy',
       studio: 'AI Studio',
+      about: 'Mission',
     },
     hero: {
       badge: 'The Modern Software Developer OS',
@@ -72,6 +74,14 @@ export const translations = {
       syllabus_anchor: 'Syllabus',
       return_galaxy: 'Return to Galaxy Map',
       goal: 'GOAL',
+    },
+    about: {
+      hero_title: 'The Mission',
+      hero_subtitle: 'From Execution to Orchestration',
+      philosophy_section: 'Evolutionary Pillars',
+      brain_title: 'The SuperEgo System',
+      brain_desc: 'The SuperEgo Second Brain is not just a database; it is a personalized agentic layer that extends your cognitive boundaries.',
+      team_title: 'Meet the Architects',
     }
   },
   zh: {
@@ -81,6 +91,7 @@ export const translations = {
       blog: '博客',
       planets: '课程星球',
       studio: '灵感工坊',
+      about: '愿景',
     },
     hero: {
       badge: '现代软件开发者操作系统',
@@ -107,12 +118,12 @@ export const translations = {
           quote: '沉淀私人知识库，成为你独一无二的数字分身。'
         },
         {
-          title: '03 身份转变：从“工匠”到“总导演”',
+          title: '03 Identity Shift: 从“工匠”到“总导演”',
           content: '角色重塑：拒绝做重复造轮子的“代码工人”。新职责：指挥官 (Commander) 和总导演 (Director)。定义目标 (Prompt)，设定边界 (Constraints)，审查结果 (Review)。',
           quote: '定义目标，设定边界，审查结果。'
         },
         {
-          title: '04 工作流革命：一人即一家公司',
+          title: '04 Workflow Revolution: 一人即一家公司',
           content: '方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。你不再是孤独的开发者，你是这支“数字军团”的 CEO。',
           quote: '你不再是孤独的开发者，你是这支“数字军团”的 CEO。'
         }
@@ -253,6 +264,14 @@ export const translations = {
       syllabus_anchor: '课程大纲',
       return_galaxy: '返回星系图',
       goal: '目标',
+    },
+    about: {
+      hero_title: '愿景与使命',
+      hero_subtitle: '从执行者到编排者的跨越',
+      philosophy_section: '进化支柱',
+      brain_title: '“超我”第二大脑系统',
+      brain_desc: '超我第二大脑不仅是一个数据库，它是一个个性化的智能体层，旨在扩展你的认知边界。',
+      team_title: '创始团队',
     }
   }
 };

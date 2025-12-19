@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
@@ -36,6 +37,15 @@ const Navbar: React.FC = () => {
               }`}
             >
               {t('nav.home')}
+            </Link>
+
+            <Link
+              to="/about"
+              className={`px-5 py-2 rounded-lg text-base font-bold transition-all ${
+                location.pathname === '/about' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {t('nav.about')}
             </Link>
 
             <Link
@@ -117,6 +127,13 @@ const Navbar: React.FC = () => {
               className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
             >
               {t('nav.home')}
+            </Link>
+            <Link 
+              to="/about" 
+              onClick={() => setIsOpen(false)} 
+              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/about' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+            >
+              {t('nav.about')}
             </Link>
             <Link 
               to="/consulting" 

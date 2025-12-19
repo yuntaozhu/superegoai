@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -6,6 +7,7 @@ import BlogPage from './pages/BlogPage';
 import Consulting from './pages/Consulting';
 import PlanetsPage from './pages/PlanetsPage';
 import Studio from './pages/Studio';
+import AboutPage from './pages/AboutPage';
 
 // Import specific planet pages
 import ArtPlanet from './pages/ArtPlanet';
@@ -28,6 +30,7 @@ const App: React.FC = () => {
           <main className="flex-grow z-10">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<AboutPage />} />
               <Route path="/planets" element={<PlanetsPage />} />
               <Route path="/studio" element={<Studio />} />
               <Route path="/consulting" element={<Consulting />} />
