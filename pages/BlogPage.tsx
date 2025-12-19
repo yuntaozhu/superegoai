@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, BlogPost, Link } from '../context/LanguageContext';
-import { ArrowLeft } from 'lucide-react';
 
 const POSTS_INCREMENT = 10;
 
@@ -308,6 +307,7 @@ const ChevronRight = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
 );
 
+// Local definition of ArrowLeft used for consistent SVG icon styling
 const ArrowLeft = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
 );
