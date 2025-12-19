@@ -21,192 +21,212 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // Scene setup
+    // 1. 初始化场景与相机
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x02040a);
+    scene.background = new THREE.Color(0x020308);
     
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-    // Move camera further back on mobile to see the full spiral
-    camera.position.z = isMobile ? 8.5 : 10;
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
+    camera.position.z = isMobile ? 9 : 12;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
     mountRef.current.appendChild(renderer.domElement);
 
-    // Params
+    // 参数配置
     const segments = 300;
-    // Wider strip on mobile to allow scattered distribution
-    const stripWidth = isMobile ? 1.5 : 1.2; 
-    const radius = isMobile ? 3.2 : 4.5;
-    const particleCount = isMobile ? 5000 : 12000;
-
-    // 1. Nebula Stardust System (More cloud-like)
-    const starGeometry = new THREE.BufferGeometry();
-    const starPositions = new Float32Array(particleCount * 3);
-    const starColors = new Float32Array(particleCount * 3);
-    const starSizes = new Float32Array(particleCount);
-
-    const colorPalette = [
-      new THREE.Color(0x3b82f6), // Blue
-      new THREE.Color(0x8b5cf6), // Purple
-      new THREE.Color(0x06b6d4), // Cyan
-      new THREE.Color(0x1e3a8a), // Deep Blue
-      new THREE.Color(0xffffff), // White
-    ];
-
-    for (let i = 0; i < particleCount; i++) {
-      const u = Math.random() * Math.PI * 2;
-      // Gaussian-like distribution for particles around the core path
-      const v = (Math.pow(Math.random(), 2) * (Math.random() < 0.5 ? 1 : -1)) * stripWidth;
-      
-      const jitter = (Math.random() - 0.5) * 0.4;
-      const x = (radius + v * Math.cos(u / 2)) * Math.cos(u) + jitter;
-      const y = (radius + v * Math.cos(u / 2)) * Math.sin(u) + jitter;
-      const z = (v * Math.sin(u / 2)) + jitter;
-
-      const idx = i * 3;
-      if (orientation === 'vertical') {
-        starPositions[idx] = z;
-        starPositions[idx + 1] = y;
-        starPositions[idx + 2] = x;
-      } else {
-        starPositions[idx] = x;
-        starPositions[idx + 1] = z;
-        starPositions[idx + 2] = y;
-      }
-
-      const col = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-      starColors[idx] = col.r;
-      starColors[idx + 1] = col.g;
-      starColors[idx + 2] = col.b;
-
-      starSizes[i] = Math.random() * (isMobile ? 0.04 : 0.06);
+    const stripWidth = isMobile ? 1.8 : 2.5; 
+    const radius = isMobile ? 3.5 : 5.5;
+    
+    // 2. 背景：远景星空 (Starfield)
+    const starGeo = new THREE.BufferGeometry();
+    const starCoords = [];
+    for (let i = 0; i < 6000; i++) {
+      starCoords.push(THREE.MathUtils.randFloatSpread(1000));
+      starCoords.push(THREE.MathUtils.randFloatSpread(1000));
+      starCoords.push(THREE.MathUtils.randFloatSpread(1000));
     }
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.7, transparent: true, opacity: 0.5 });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
 
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+    // 3. 莫比乌斯星云轨迹 (Nebula Ribbon)
+    const nebulaGeo = new THREE.BufferGeometry();
+    const nebulaCount = isMobile ? 4000 : 10000;
+    const nebulaPos = new Float32Array(nebulaCount * 3);
+    const nebulaColors = new Float32Array(nebulaCount * 3);
+    const palette = [new THREE.Color(0x3b82f6), new THREE.Color(0x8b5cf6), new THREE.Color(0x06b6d4)];
 
-    const starMaterial = new THREE.PointsMaterial({
-      size: isMobile ? 0.03 : 0.05,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending,
-      sizeAttenuation: true
-    });
+    for (let i = 0; i < nebulaCount; i++) {
+      const u = Math.random() * Math.PI * 2;
+      const v = (Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1)) * stripWidth;
+      const x = (radius + v * Math.cos(u / 2)) * Math.cos(u);
+      const y = (radius + v * Math.cos(u / 2)) * Math.sin(u);
+      const z = (v * Math.sin(u / 2));
+      
+      const idx = i * 3;
+      if (orientation === 'vertical') { nebulaPos[idx] = z; nebulaPos[idx + 1] = y; nebulaPos[idx + 2] = x; }
+      else { nebulaPos[idx] = x; nebulaPos[idx + 1] = z; nebulaPos[idx + 2] = y; }
+      
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      nebulaColors[idx] = col.r; nebulaColors[idx + 1] = col.g; nebulaColors[idx + 2] = col.b;
+    }
+    nebulaGeo.setAttribute('position', new THREE.BufferAttribute(nebulaPos, 3));
+    nebulaGeo.setAttribute('color', new THREE.BufferAttribute(nebulaColors, 3));
+    const nebulaMat = new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
+    const nebulaPoints = new THREE.Points(nebulaGeo, nebulaMat);
+    scene.add(nebulaPoints);
 
-    const nebula = new THREE.Points(starGeometry, starMaterial);
-    scene.add(nebula);
+    // 4. 程序化星球纹理生成器
+    const createPlanetTexture = (baseColor: number) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512; canvas.height = 256;
+      const ctx = canvas.getContext('2d')!;
+      const color = new THREE.Color(baseColor);
+      
+      // 填充底色
+      ctx.fillStyle = `rgb(${color.r*255},${color.g*255},${color.b*255})`;
+      ctx.fillRect(0, 0, 512, 256);
+      
+      // 添加程序化噪点
+      for (let i = 0; i < 1500; i++) {
+        const x = Math.random() * 512;
+        const y = Math.random() * 256;
+        const size = Math.random() * 3;
+        const alpha = Math.random() * 0.3;
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      
+      // 添加纹路
+      for (let i = 0; i < 5; i++) {
+        ctx.strokeStyle = `rgba(0,0,0,0.1)`;
+        ctx.lineWidth = Math.random() * 20;
+        ctx.beginPath();
+        ctx.moveTo(0, Math.random() * 256);
+        ctx.bezierCurveTo(170, Math.random() * 256, 340, Math.random() * 256, 512, Math.random() * 256);
+        ctx.stroke();
+      }
+      return new THREE.CanvasTexture(canvas);
+    };
 
-    // 2. Planet Objects (Scattered laterally)
+    // 5. 行星系统
     const planetGroup = new THREE.Group();
     scene.add(planetGroup);
-
     const planetMeshes: THREE.Mesh[] = [];
-    const planetScale = isMobile ? 0.22 : 0.45;
+    const planetScale = isMobile ? 0.3 : 0.5;
 
     courses.forEach((course, idx) => {
       const u = (idx / courses.length) * Math.PI * 2;
-      
-      // SCATTER LOGIC: Stagger planets across the ribbon's width
-      // Alternate left, center-ish, right to avoid vertical alignment in vertical mode
-      const scatterWidth = stripWidth * 0.6;
-      const vOffsets = [scatterWidth, -scatterWidth, scatterWidth * 0.3, -scatterWidth * 0.3, 0];
-      const v = vOffsets[idx % vOffsets.length];
+      const v = (idx % 2 === 0 ? 0.6 : -0.6) * stripWidth * 0.4; // 螺旋交错排列
 
       const x = (radius + v * Math.cos(u / 2)) * Math.cos(u);
       const y = (radius + v * Math.cos(u / 2)) * Math.sin(u);
       const z = v * Math.sin(u / 2);
 
-      // Planet Sphere
-      const sphereGeo = new THREE.SphereGeometry(planetScale, 64, 64);
-      
+      // 行星本体
       const getColor = (colorStr: string) => {
         if (colorStr.includes('blue')) return 0x3b82f6;
-        if (colorStr.includes('purple')) return 0xa855f7;
+        if (colorStr.includes('purple')) return 0x8b5cf6;
         if (colorStr.includes('orange')) return 0xf97316;
         if (colorStr.includes('emerald')) return 0x10b981;
         if (colorStr.includes('yellow')) return 0xfacc15;
         if (colorStr.includes('indigo')) return 0x6366f1;
         return 0xffffff;
       };
-
       const baseColor = getColor(course.color);
-      const sphereMat = new THREE.MeshPhongMaterial({
-        color: baseColor,
+      
+      const sphereGeo = new THREE.SphereGeometry(planetScale, 64, 64);
+      const sphereMat = new THREE.MeshStandardMaterial({
+        map: createPlanetTexture(baseColor),
+        roughness: 0.8,
+        metalness: 0.2,
         emissive: baseColor,
-        emissiveIntensity: 0.8,
-        shininess: 100
+        emissiveIntensity: 0.15
       });
-
       const sphere = new THREE.Mesh(sphereGeo, sphereMat);
       
-      if (orientation === 'vertical') {
-        sphere.position.set(z, y, x);
-      } else {
-        sphere.position.set(x, z, y);
-      }
+      if (orientation === 'vertical') sphere.position.set(z, y, x);
+      else sphere.position.set(x, z, y);
       
       sphere.userData = { course };
       planetMeshes.push(sphere);
       planetGroup.add(sphere);
 
-      // Course Name Label (Optimized for mobile)
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 128;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.font = `bold ${isMobile ? '40px' : '48px'} Inter, Arial`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'white';
-        // Stroke for text legibility against nebula
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 4;
-        
-        const text = course.shortTitle || course.title.split('：')[0];
-        const displayText = text.toUpperCase();
-        ctx.strokeText(displayText, 256, 64);
-        ctx.fillText(displayText, 256, 64);
+      // 大气层光晕效果 (Atmosphere Glow)
+      const glowGeo = new THREE.SphereGeometry(planetScale * 1.25, 32, 32);
+      const glowMat = new THREE.ShaderMaterial({
+        uniforms: {
+          glowColor: { value: new THREE.Color(baseColor) },
+          viewVector: { value: camera.position }
+        },
+        vertexShader: `
+          uniform vec3 viewVector;
+          varying float intensity;
+          void main() {
+            vec3 vNormal = normalize(normalMatrix * normal);
+            vec3 vNormel = normalize(viewVector - vec3(modelViewMatrix * vec4(position, 1.0)));
+            intensity = pow(0.7 - dot(vNormal, vNormel), 4.0);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform vec3 glowColor;
+          varying float intensity;
+          void main() {
+            vec3 glow = glowColor * intensity;
+            gl_FragColor = vec4(glow, intensity);
+          }
+        `,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+      });
+      const glow = new THREE.Mesh(glowGeo, glowMat);
+      sphere.add(glow);
+
+      // 行星光环 (针对特定行星，如量化或代码行星)
+      if (course.id === 'quant' || course.id === 'solopreneur') {
+        const ringGeo = new THREE.RingGeometry(planetScale * 1.4, planetScale * 2.2, 64);
+        const ringMat = new THREE.MeshBasicMaterial({ color: baseColor, side: THREE.DoubleSide, transparent: true, opacity: 0.2 });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2.5;
+        sphere.add(ring);
       }
-      const labelTexture = new THREE.CanvasTexture(canvas);
+
+      // 文字标签 (HTML Canvas)
+      const labelCanvas = document.createElement('canvas');
+      labelCanvas.width = 512; labelCanvas.height = 128;
+      const lCtx = labelCanvas.getContext('2d')!;
+      lCtx.font = `bold ${isMobile ? '38px' : '48px'} Arial`;
+      lCtx.textAlign = 'center';
+      lCtx.fillStyle = 'white';
+      lCtx.shadowBlur = 10; lCtx.shadowColor = 'black';
+      lCtx.fillText((course.shortTitle || course.title).split('：')[0].toUpperCase(), 256, 64);
+      const labelTexture = new THREE.CanvasTexture(labelCanvas);
       const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
       const labelSprite = new THREE.Sprite(labelMat);
-      labelSprite.scale.set(isMobile ? 1.2 : 2.5, isMobile ? 0.3 : 0.625, 1);
-      labelSprite.position.y = planetScale + (isMobile ? 0.35 : 0.6);
+      labelSprite.scale.set(isMobile ? 1.4 : 2, isMobile ? 0.35 : 0.5, 1);
+      labelSprite.position.y = planetScale + (isMobile ? 0.5 : 0.7);
       sphere.add(labelSprite);
-      
-      // Floating Icon
-      const iconCanvas = document.createElement('canvas');
-      iconCanvas.width = 128;
-      iconCanvas.height = 128;
-      const iCtx = iconCanvas.getContext('2d');
-      if (iCtx) {
-        iCtx.font = `${isMobile ? '60px' : '80px'} Arial`;
-        iCtx.textAlign = 'center';
-        iCtx.textBaseline = 'middle';
-        iCtx.fillText(course.icon, 64, 64);
-      }
-      const iconTexture = new THREE.CanvasTexture(iconCanvas);
-      const iconMat = new THREE.SpriteMaterial({ map: iconTexture, transparent: true });
-      const iconSprite = new THREE.Sprite(iconMat);
-      iconSprite.scale.set(planetScale * 1.2, planetScale * 1.2, 1);
-      iconSprite.position.y = - (planetScale + (isMobile ? 0.25 : 0.4));
-      sphere.add(iconSprite);
     });
 
-    // Lights
+    // 6. 光照系统 (模仿恒星光源)
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
     
-    const pointLight = new THREE.PointLight(0xffffff, 20);
-    pointLight.position.set(10, 10, 10);
-    scene.add(pointLight);
+    const sunLight = new THREE.PointLight(0xffffff, 25);
+    sunLight.position.set(0, 0, 0); // 放在莫比乌斯环中心
+    scene.add(sunLight);
 
-    // Dynamic rotation logic
+    const rimLight = new THREE.DirectionalLight(0x3b82f6, 1);
+    rimLight.position.set(5, 5, 5);
+    scene.add(rimLight);
+
+    // 交互逻辑
     let rotationTarget = 0;
     let currentRotation = 0;
     let isDragging = false;
@@ -217,29 +237,23 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       isDragging = true;
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      startX = clientX;
-      startY = clientY;
+      startX = clientX; startY = clientY;
     };
 
     const onPointerMove = (e: any) => {
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      
       if (isDragging) {
         const delta = orientation === 'vertical' ? clientY - startY : clientX - startX;
         rotationTarget += delta * 0.005;
-        startX = clientX;
-        startY = clientY;
+        startX = clientX; startY = clientY;
       }
-      
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((clientX - rect.left) / width) * 2 - 1;
       mouse.y = -((clientY - rect.top) / height) * 2 + 1;
     };
 
-    const onPointerUp = () => {
-      isDragging = false;
-    };
+    const onPointerUp = () => isDragging = false;
 
     const onClick = () => {
       raycaster.setFromCamera(mouse, camera);
@@ -257,23 +271,27 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     window.addEventListener('touchend', onPointerUp);
     window.addEventListener('click', onClick);
 
+    // 动画循环
     const animate = () => {
       requestAnimationFrame(animate);
 
       currentRotation += (rotationTarget - currentRotation) * 0.05;
-      rotationTarget += 0.0015; // Slow ambient drift
+      rotationTarget += 0.001; // 环境自动漂移
 
       if (orientation === 'vertical') {
-        nebula.rotation.x = currentRotation;
+        nebulaPoints.rotation.x = currentRotation;
         planetGroup.rotation.x = currentRotation;
       } else {
-        nebula.rotation.y = currentRotation;
+        nebulaPoints.rotation.y = currentRotation;
         planetGroup.rotation.y = currentRotation;
       }
 
-      planetMeshes.forEach((mesh) => {
+      stars.rotation.y += 0.0001; // 背景星空极慢旋转
+
+      // 行星自转
+      planetMeshes.forEach((mesh, i) => {
         mesh.rotation.y += 0.01;
-        mesh.position.y += Math.sin(Date.now() * 0.001 + mesh.id) * 0.001;
+        mesh.position.y += Math.sin(Date.now() * 0.001 + i) * 0.001;
       });
 
       renderer.render(scene, camera);
@@ -301,8 +319,8 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       window.removeEventListener('click', onClick);
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      starGeometry.dispose();
-      starMaterial.dispose();
+      starGeo.dispose();
+      nebulaGeo.dispose();
     };
   }, [courses, orientation, isMobile]);
 
