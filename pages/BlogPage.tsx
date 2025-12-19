@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { getContent } from '../constants';
-import { useLanguage, BlogPost } from '../context/LanguageContext';
+import { useLanguage, BlogPost, Link } from '../context/LanguageContext';
+import { ArrowLeft } from 'lucide-react';
 
 const POSTS_INCREMENT = 10;
 
@@ -12,6 +14,7 @@ const BlogPage: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(POSTS_INCREMENT);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const observerTarget = useRef<HTMLDivElement>(null);
 
   // Extract all unique tags
@@ -32,8 +35,8 @@ const BlogPage: React.FC = () => {
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(POSTS_INCREMENT);
-    window.scrollTo(0, 0);
-  }, [searchValue, selectedTag]);
+    if (!selectedPost) window.scrollTo(0, 0);
+  }, [searchValue, selectedTag, selectedPost]);
 
   // Infinite Scroll Observer
   useEffect(() => {
@@ -57,11 +60,17 @@ const BlogPage: React.FC = () => {
     };
   }, [hasMore]);
 
-  // Scroll to top when entering detail view
+  // Reading Progress Logic
   useEffect(() => {
-    if (selectedPost) {
-        window.scrollTo(0, 0);
-    }
+    const handleScroll = () => {
+      if (!selectedPost) return;
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / totalHeight) * 100;
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [selectedPost]);
 
   // SEO: Dynamic Meta Tags
@@ -70,25 +79,17 @@ const BlogPage: React.FC = () => {
     const baseDesc = language === 'en' 
         ? 'Insights on AI, Architecture, and the SuperEgo. Technical deep dives into AI agents, architecture, and the future of coding.' 
         : '关于 AI、架构与超我的深度洞察。关于 AI 智能体、架构与编程未来的技术深度探索。';
-    const baseKeywords = language === 'en'
-        ? 'AI, Technology, Artificial Intelligence, SuperEgo, Agents, Architecture, Coding, Future, Gemini, LLM'
-        : 'AI, 科技, 人工智能, 超我, 智能体, 架构, 编程, 未来, Gemini, 大语言模型';
 
     let title = baseTitle;
     let description = baseDesc;
-    let keywords = baseKeywords;
 
     if (selectedPost) {
         title = `${selectedPost.title} | AI First Course`;
         description = selectedPost.excerpt;
-        // Add post specific tags to keywords
-        keywords = `${baseKeywords}, ${selectedPost.tags.join(', ')}`;
     }
 
-    // Update Title
     document.title = title;
-
-    // Helper to update or create meta tags
+    
     const setMetaTag = (name: string, content: string) => {
         let element = document.querySelector(`meta[name="${name}"]`);
         if (!element) {
@@ -99,83 +100,20 @@ const BlogPage: React.FC = () => {
         element.setAttribute('content', content);
     };
 
-    // Helper for Open Graph tags (using property attribute)
-    const setOgTag = (property: string, content: string) => {
-        let element = document.querySelector(`meta[property="${property}"]`);
-        if (!element) {
-            element = document.createElement('meta');
-            element.setAttribute('property', property);
-            document.head.appendChild(element);
-        }
-        element.setAttribute('content', content);
-    };
-
     setMetaTag('description', description);
-    setMetaTag('keywords', keywords);
-    
-    // Open Graph
-    setOgTag('og:title', title);
-    setOgTag('og:description', description);
-    setOgTag('og:type', selectedPost ? 'article' : 'website');
-    setOgTag('og:site_name', 'AI First Course');
-
   }, [selectedPost, language]);
 
-  // Generate RSS Feed URL
-  const rssFeedUrl = useMemo(() => {
-    const baseUrl = window.location.origin + window.location.pathname + '#/blog';
-    const feedTitle = language === 'en' ? 'AI First Course Blog' : 'AI First Course 博客';
-    const feedDesc = language === 'en' 
-        ? 'Insights on AI, Architecture, and the SuperEgo.' 
-        : '关于 AI、架构与超我的深度洞察。';
-    const buildDate = new Date().toUTCString();
-
-    let rss = `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-<channel>
- <title>${feedTitle}</title>
- <description>${feedDesc}</description>
- <link>${baseUrl}</link>
- <language>${language}</language>
- <lastBuildDate>${buildDate}</lastBuildDate>
- <pubDate>${buildDate}</pubDate>
- <ttl>60</ttl>
-`;
-
-    content.blogPosts.forEach(post => {
-      rss += ` <item>
-  <title><![CDATA[${post.title}]]></title>
-  <description><![CDATA[${post.excerpt}]]></description>
-  <link>${baseUrl}?id=${post.id}</link>
-  <guid isPermaLink="false">${post.id}</guid>
-  <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-  <author><![CDATA[${post.author}]]></author>
-  ${post.tags.map(tag => `<category>${tag}</category>`).join('')}
- </item>
-`;
-    });
-
-    rss += `</channel>\n</rss>`;
-    
-    const blob = new Blob([rss], { type: 'application/xml' });
-    return URL.createObjectURL(blob);
-  }, [content.blogPosts, language]);
-
-  // Handle Social Sharing
+  // Social Sharing Logic
   const handleShare = (platform: 'twitter' | 'wechat' | 'rednote') => {
     if (!selectedPost) return;
-
     const url = window.location.href;
     const text = `${selectedPost.title} - AI First Course`;
 
     if (platform === 'twitter') {
       window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
     } else {
-      // For WeChat and RedNote, copy link to clipboard
       navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-        const msg = platform === 'wechat' 
-          ? (language === 'en' ? 'Link copied! Share on WeChat.' : '链接已复制！请在微信分享。')
-          : (language === 'en' ? 'Link copied! Share on RedNote.' : '链接已复制！请在小红书分享。');
+        const msg = language === 'en' ? 'Link copied!' : '链接已复制！';
         setToastMsg(msg);
         setTimeout(() => setToastMsg(null), 3000);
       });
@@ -186,11 +124,18 @@ const BlogPage: React.FC = () => {
   if (selectedPost) {
     return (
       <div className="min-h-screen bg-brand-dark pt-24 pb-20 px-4 sm:px-6 lg:px-8 relative">
+        {/* Reading Progress Bar */}
+        <div className="fixed top-0 left-0 w-full h-1 z-[100] bg-white/5">
+           <div 
+             className="h-full bg-blue-500 transition-all duration-100" 
+             style={{ width: `${scrollProgress}%` }} 
+           />
+        </div>
+
         {/* Toast Notification */}
         {toastMsg && (
           <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4">
-             <div className="bg-white/10 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-2">
-               <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+             <div className="bg-brand-surface/90 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-full shadow-2xl">
                {toastMsg}
              </div>
           </div>
@@ -199,289 +144,172 @@ const BlogPage: React.FC = () => {
         <article className="max-w-3xl mx-auto">
           {/* Back Button */}
           <button 
-            onClick={() => setSelectedPost(null)}
-            className="group mb-8 flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors font-medium"
+            onClick={() => { setSelectedPost(null); setScrollProgress(0); }}
+            className="group mb-12 flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors font-medium bg-white/5 px-4 py-2 rounded-full border border-white/5"
           >
-            <svg className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            {language === 'en' ? 'Back to blog' : '返回博客'}
+            <ArrowLeft className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" />
+            {language === 'en' ? 'All Posts' : '所有文章'}
           </button>
 
           {/* Header */}
-          <header className="mb-10 text-center border-b border-white/10 pb-10">
-             <div className="mb-4 text-sm text-gray-500 font-mono tracking-wider">
-                <time dateTime={selectedPost.date}>
-                  {new Date(selectedPost.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </time>
+          <header className="mb-12 text-center">
+             <div className="mb-4 text-xs text-blue-500 font-mono tracking-widest uppercase">
+                {new Date(selectedPost.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
              </div>
-             <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">
+             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-[1.1] uppercase">
                {selectedPost.title}
              </h1>
              <div className="flex justify-center gap-3 flex-wrap">
                 {selectedPost.tags.map(tag => (
-                  <span key={tag} className="text-xs font-bold px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wide">
+                  <span key={tag} className="text-[10px] font-bold px-3 py-1 rounded-full bg-white/5 text-gray-400 border border-white/10 uppercase tracking-widest">
                     {tag}
                   </span>
                 ))}
              </div>
           </header>
           
-          {/* Prose Content - Using Tailwind Typography */}
+          {/* Main Content */}
           <div 
-            className="prose prose-invert prose-lg max-w-none text-gray-300 leading-8 prose-headings:text-gray-100 prose-a:text-blue-400 prose-strong:text-white prose-code:text-pink-400 prose-pre:bg-gray-800 prose-pre:border prose-pre:border-white/10"
+            className="prose prose-invert prose-lg max-w-none text-gray-300 leading-8"
             dangerouslySetInnerHTML={{ __html: selectedPost.content }}
           />
 
-          {/* Author Footer with Social Sharing */}
-          <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-500 gap-6">
-             <div className="flex items-center gap-2">
-               Author: <span className="text-gray-200 font-medium">{selectedPost.author}</span>
+          {/* Social Share & Author */}
+          <div className="mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-8">
+             <div className="flex items-center gap-4">
+               <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-xl">🧠</div>
+               <div>
+                  <div className="text-white font-bold">{selectedPost.author}</div>
+                  <div className="text-xs text-gray-500">SuperEgo Architect</div>
+               </div>
              </div>
              
-             <div className="flex items-center gap-3">
-                <span className="text-xs uppercase tracking-wider font-medium text-gray-600 mr-2">Share</span>
-                
-                {/* Twitter Button */}
-                <button 
-                  onClick={() => handleShare('twitter')}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-gray-400 hover:bg-[#1DA1F2] hover:text-white transition-all duration-300 group"
-                  aria-label="Share on Twitter"
-                  title="Share on Twitter"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+             <div className="flex items-center gap-4">
+                <button onClick={() => handleShare('twitter')} className="p-3 bg-white/5 rounded-full hover:bg-blue-400 hover:text-white transition-all">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                 </button>
-
-                {/* WeChat Button */}
-                <button 
-                  onClick={() => handleShare('wechat')}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-gray-400 hover:bg-[#07C160] hover:text-white transition-all duration-300 group"
-                  aria-label="Share on WeChat"
-                  title="Copy Link for WeChat"
-                >
+                <button onClick={() => handleShare('wechat')} className="p-3 bg-white/5 rounded-full hover:bg-green-500 hover:text-white transition-all">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.5,13.5A2.5,2.5 0 0,0 11,11A2.5,2.5 0 0,0 8.5,8.5C7.12,8.5 6,9.62 6,11A2.5,2.5 0 0,0 8.5,13.5M16.5,13.5A2.5,2.5 0 0,0 19,11A2.5,2.5 0 0,0 16.5,8.5C15.12,8.5 14,9.62 14,11A2.5,2.5 0 0,0 16.5,13.5M12.5,2C6.98,2 2.5,6.03 2.5,11C2.5,13.68 3.93,16.09 6.24,17.72L5.5,22L9.56,20.06C10.47,20.36 11.45,20.53 12.47,20.53L12.5,20.53C18.02,20.53 22.5,16.5 22.5,11.53C22.5,6.56 18.02,2 12.5,2Z"></path></svg>
                 </button>
-
-                {/* XiaoHongShu Button (Styled Text/Icon) */}
-                <button 
-                  onClick={() => handleShare('rednote')}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-gray-400 hover:bg-[#FF2442] hover:text-white transition-all duration-300 group"
-                  aria-label="Share on XiaoHongShu"
-                  title="Copy Link for XiaoHongShu"
-                >
-                  <span className="font-bold text-xs">小</span>
-                </button>
              </div>
-          </div>
-
-          {/* Bottom Back Button */}
-          <div className="mt-16 text-center">
-             <button 
-               onClick={() => setSelectedPost(null)}
-               className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-all border border-white/10 group"
-             >
-                <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                {language === 'en' ? 'Back to all posts' : '返回所有文章'}
-             </button>
           </div>
         </article>
       </div>
     );
   }
 
-  // Handle Main List View with Sidebar
+  // List View
   return (
     <div className="min-h-screen bg-brand-dark pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        
-        {/* Page Header */}
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5 border-b border-white/10 mb-10">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-white sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+        <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-12 font-mono text-xs uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          {language === 'en' ? 'Back to Home' : '返回首页'}
+        </Link>
+
+        <header className="mb-16 border-b border-white/10 pb-12">
+          <h1 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter mb-4">
             {t('nav.blog')}
           </h1>
-          <p className="text-lg leading-7 text-gray-400">
+          <p className="text-xl text-gray-400 font-light max-w-2xl">
             {language === 'en' ? 'Insights on AI, Architecture, and the SuperEgo.' : '关于 AI、架构与超我的深度洞察。'}
           </p>
           
-          {/* Search Bar - Styled to match reference */}
-          <div className="relative max-w-lg mt-6">
+          <div className="mt-10 relative max-w-xl">
             <input
-              aria-label="Search articles"
               type="text"
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder={language === 'en' ? 'Search articles' : '搜索文章'}
-              className="block w-full rounded-md border border-white/10 bg-white/5 px-4 py-2 pl-10 text-gray-100 focus:border-blue-500 focus:ring-blue-500 focus:outline-none focus:ring-1 sm:text-sm placeholder-gray-500 transition-all backdrop-blur-sm shadow-inner"
+              placeholder={language === 'en' ? 'Search signals...' : '搜索信号...'}
+              className="w-full bg-white/5 border border-white/10 rounded-2xl px-12 py-4 text-white focus:outline-none focus:border-blue-500 transition-all backdrop-blur-md"
             />
-            <svg
-              className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           </div>
-        </div>
+        </header>
 
-        {/* 2-Column Layout: Main Content + Tags Sidebar */}
-        <div className="flex flex-col md:flex-row gap-12">
-          
-          {/* Left Column: Post List */}
-          <div className="md:w-3/4">
-            <ul className="divide-y divide-white/10">
-              {displayedPosts.length === 0 && (
-                <li className="py-12 text-center text-gray-500 italic">
-                    {language === 'en' ? 'No posts found matching your criteria.' : '没有找到匹配的文章。'}
-                </li>
-              )}
-              {displayedPosts.map((post) => {
-                const date = new Date(post.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                });
-                return (
-                  <li key={post.id} className="py-12 group animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0 gap-6">
-                      
-                      {/* Date Column - Sticky for visual structure */}
-                      <dl className="xl:col-span-1">
-                        <dt className="sr-only">Published on</dt>
-                        <dd className="text-base font-medium leading-6 text-gray-500 font-mono">
-                          <time dateTime={post.date}>{date}</time>
-                        </dd>
-                      </dl>
-                      
-                      {/* Content Column */}
-                      <div className="space-y-5 xl:col-span-3">
-                        <div className="space-y-6">
-                          <div>
-                            <h2 className="text-2xl font-bold leading-8 tracking-tight mb-2">
-                              <button
-                                onClick={() => setSelectedPost(post)}
-                                className="text-gray-100 hover:text-blue-400 transition-colors duration-200 text-left"
-                              >
-                                {post.title}
-                              </button>
-                            </h2>
-                            <div className="flex flex-wrap gap-2">
-                              {post.tags.map((tag) => (
-                                <button 
-                                  key={tag} 
-                                  onClick={(e) => { e.stopPropagation(); setSelectedTag(tag); }}
-                                  className="text-xs font-medium px-2 py-0.5 rounded uppercase text-blue-400 hover:text-blue-300 transition-colors"
-                                >
-                                  {tag.toUpperCase()}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="prose prose-invert max-w-none text-gray-400 line-clamp-3">
-                            {post.excerpt}
-                          </div>
-                        </div>
-                        <div className="text-base font-medium leading-6">
-                          <button
-                            onClick={() => setSelectedPost(post)}
-                            className="text-blue-500 hover:text-blue-400 transition-colors flex items-center gap-1 group-hover:gap-2 duration-300"
-                            aria-label={`Read "${post.title}"`}
-                          >
-                            {language === 'en' ? 'Read more' : '阅读更多'} &rarr;
-                          </button>
-                        </div>
-                      </div>
-                    </article>
-                  </li>
-                );
-              })}
-            </ul>
-
-            {/* Infinite Scroll Sentinel */}
-            {hasMore && (
-              <div ref={observerTarget} className="py-12 flex justify-center">
-                 <div className="animate-pulse flex space-x-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animation-delay-200"></div>
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animation-delay-400"></div>
-                 </div>
-              </div>
+        <div className="flex flex-col lg:flex-row gap-16">
+          <div className="flex-grow space-y-20">
+            {displayedPosts.length === 0 && (
+              <div className="text-center py-20 text-gray-500 italic">No signals found in the matrix.</div>
             )}
-            
-            {/* End of Content Message */}
-            {!hasMore && displayedPosts.length > 0 && (
-                <div className="py-12 text-center text-gray-600 text-sm font-mono border-t border-white/5 mt-8">
-                    {language === 'en' ? 'END OF SIGNAL' : '信号终止'}
-                </div>
-            )}
-          </div>
-
-          {/* Right Column: Tags Sidebar (Sticky) */}
-          <aside className="md:w-1/4">
-             <div className="sticky top-24 space-y-8 bg-white/5 p-6 rounded-xl border border-white/10 backdrop-blur-md shadow-lg">
-                <div>
-                   <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-white/10 pb-2">
-                      {language === 'en' ? 'Tags' : '标签'}
-                   </h3>
-                   <div className="flex flex-wrap gap-3">
-                      {/* 'All' Tag */}
-                      <button
-                        onClick={() => setSelectedTag(null)}
-                        className={`text-xs px-2 py-1 rounded transition-all font-mono ${
-                            !selectedTag 
-                            ? 'text-blue-400 underline underline-offset-4 decoration-blue-500/50' 
-                            : 'text-gray-400 hover:text-blue-400'
-                        }`}
-                      >
-                         ALL
+            {displayedPosts.map((post) => (
+              <article key={post.id} className="group relative">
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="md:w-1/4">
+                    <div className="text-xs font-mono text-gray-600 uppercase tracking-widest">{post.date}</div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                       {post.tags.map(t => (
+                         <button 
+                           key={t} 
+                           onClick={() => setSelectedTag(t)}
+                           className="text-[9px] font-bold text-blue-500/60 hover:text-blue-500 uppercase tracking-widest transition-colors"
+                         >
+                           {t}
+                         </button>
+                       ))}
+                    </div>
+                  </div>
+                  <div className="md:w-3/4 space-y-6">
+                    <h2 className="text-3xl md:text-4xl font-black text-white group-hover:text-blue-400 transition-colors uppercase tracking-tight">
+                      <button onClick={() => setSelectedPost(post)} className="text-left leading-tight">
+                        {post.title}
                       </button>
-                      {/* Dynamic Tags */}
-                      {allTags.map(tag => (
-                        <button
-                          key={tag}
-                          onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
-                          className={`text-xs px-2 py-1 rounded transition-all font-mono uppercase ${
-                              selectedTag === tag
-                              ? 'text-blue-400 underline underline-offset-4 decoration-blue-500/50'
-                              : 'text-gray-400 hover:text-blue-400'
-                          }`}
-                        >
-                          {tag}
-                        </button>
-                      ))}
-                   </div>
+                    </h2>
+                    <p className="text-gray-400 text-lg leading-relaxed font-light line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    <button 
+                      onClick={() => setSelectedPost(post)}
+                      className="inline-flex items-center gap-4 px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-black uppercase tracking-widest text-[10px] border border-white/5 transition-all group/btn"
+                    >
+                      {language === 'en' ? 'Read Signal' : '阅读信号'}
+                      <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
                 </div>
+              </article>
+            ))}
+            
+            <div ref={observerTarget} className="h-10" />
+          </div>
 
-                {/* About Widget */}
-                <div className="pt-4 border-t border-white/10">
-                   <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
-                      About
-                   </h3>
-                   <p className="text-sm text-gray-500 leading-relaxed mb-4">
-                      {language === 'en' 
-                        ? 'Technical deep dives into AI agents, architecture, and the future of coding.' 
-                        : '关于 AI 智能体、架构与编程未来的技术深度探索。'}
-                   </p>
-                   {/* RSS Feed Link */}
-                   <a 
-                     href={rssFeedUrl}
-                     download="feed.xml"
-                     className="inline-flex items-center gap-2 text-xs font-bold text-orange-400 hover:text-orange-300 transition-colors uppercase tracking-wider"
+          <aside className="lg:w-1/4 space-y-12">
+             <div className="sticky top-24">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-[0.3em] mb-6 border-b border-white/10 pb-2">Archives</h3>
+                <div className="flex flex-wrap gap-2">
+                   <button 
+                     onClick={() => setSelectedTag(null)}
+                     className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${!selectedTag ? 'bg-blue-600 text-white' : 'bg-white/5 text-gray-400 hover:text-white'}`}
                    >
-                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-                     RSS Feed
-                   </a>
+                     All
+                   </button>
+                   {allTags.map(tag => (
+                     <button 
+                       key={tag}
+                       onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+                       className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${selectedTag === tag ? 'bg-blue-600 text-white' : 'bg-white/5 text-gray-400 hover:text-white'}`}
+                     >
+                       {tag}
+                     </button>
+                   ))}
                 </div>
              </div>
           </aside>
-
         </div>
       </div>
     </div>
   );
 };
+
+const Search = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+);
+
+const ChevronRight = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+);
+
+const ArrowLeft = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+);
 
 export default BlogPage;

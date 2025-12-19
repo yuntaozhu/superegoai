@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { getContent } from '../constants';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, Link } from '../context/LanguageContext';
 import MissionCard from '../components/MissionCard';
 import { Course } from '../types';
+import { ArrowLeft } from 'lucide-react';
 
 const PlanetsPage: React.FC = () => {
   const { language } = useLanguage();
@@ -105,6 +107,11 @@ const PlanetsPage: React.FC = () => {
       
       {/* Hero Content */}
       <div className="relative z-10 flex flex-col items-center pt-12 sm:pt-16 md:pt-20 px-4 text-center">
+        <Link to="/" className="group inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-8 font-mono text-[10px] uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/5">
+          <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+          {language === 'en' ? 'Home' : '返回首页'}
+        </Link>
+        
         <h1 className="text-3xl sm:text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-transparent opacity-90 tracking-tighter animate-pulse mb-2 md:mb-4">
           AI FIRST GALAXY
         </h1>

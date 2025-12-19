@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { 
@@ -19,12 +20,13 @@ import {
   Briefcase,
   CheckCircle2,
   Globe,
-  Database
+  Database,
+  ArrowLeft
 } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage, Link } from '../context/LanguageContext';
 
 const Consulting: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [activeSection, setActiveSection] = useState('philosophy');
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -146,10 +148,13 @@ const Consulting: React.FC = () => {
       {/* Corporate Navbar */}
       <nav className="fixed top-0 w-full z-[90] bg-[#0B1026]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-white font-black text-2xl tracking-tighter">
-              SUPER EGO <span className="text-[#E31937]">AGENT</span>
-            </span>
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex items-center gap-2 group">
+              <ArrowLeft className="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" />
+              <span className="text-white font-black text-2xl tracking-tighter">
+                SUPER EGO <span className="text-[#E31937]">AGENT</span>
+              </span>
+            </Link>
           </div>
           
           <div className="hidden lg:flex items-center space-x-8">

@@ -1,3 +1,4 @@
+
 import { Course, PhilosophyPillar, BlogPost } from './types';
 
 interface ContentData {
@@ -8,7 +9,64 @@ interface ContentData {
 
 const CONTENT_ZH: ContentData = {
   philosophyPillars: [], // Using specific translations now
-  blogPosts: [],
+  blogPosts: [
+    {
+      id: "1",
+      title: "从执行到编排：AI 时代的认知跨越",
+      excerpt: "在这个 AGI 的前夜，最核心的竞争力不再是你会多少门编程语言，而是你如何构建一个能够理解并执行复杂逻辑的系统。",
+      content: `
+        <h2>认知基石的重塑</h2>
+        <p>传统的技能本位正在向系统本位转移。在过去，掌握一门技术需要数年的深耕，而现在，AI 正在将这些技能商品化。作为一个“超我”架构师，你的任务不再是手动编写每一个循环，而是定义系统的边界、逻辑和目标。</p>
+        <blockquote>“Human defines the 'Why', AI solves the 'How'.”</blockquote>
+        <h3>核心分工逻辑</h3>
+        <p>我们承认生物脑在逻辑推导和记忆容量上的局限性。构建“外挂大脑”不是一个选项，而是一个生存必备品。生物脑应该释放出来，专注于直觉审判、审美定义和战略决策。</p>
+        <p>通过 RAG (检索增强生成) 技术，我们可以将零散的知识沉淀在私有的向量数据库中，形成你独一无二的数字分身。这个分身不仅是你知识的载体，更是你行动的指挥官。</p>
+        <pre><code>// 编排指令示例
+const supervisor = new Agent('Chief-Architect');
+await supervisor.delegate(tasks.frontend, 'Gemini-3-Pro');
+await supervisor.delegate(tasks.backend, 'Gemini-3-Flash');</code></pre>
+        <h3>一人即一公司的时代</h3>
+        <p>不再需要庞大的开发团队。通过多智能体编排 (Multi-Agent Orchestration)，你一个人就可以指挥一个由产品经理、架构师、程序员和测试员组成的数字军团。这就是我们课程核心要传达的力量。</p>
+      `,
+      date: "2024-05-20",
+      author: "朱云涛",
+      tags: ["AI", "哲学", "认知"]
+    },
+    {
+      id: "2",
+      title: "构建第二大脑：FTI 架构实战指南",
+      excerpt: "FTI 架构（Feed-Transform-Integrate）是我们推荐的构建个人知识库的标准范式，它确保了数据的主权与效能。",
+      content: `
+        <h2>什么是 FTI 架构？</h2>
+        <p>FTI 架构是我们通过大量企业咨询实战提炼出的、最适合个人与小微组织的 AI 数据闭环模型。</p>
+        <ul>
+          <li><strong>Feed (摄取):</strong> 自动化捕获全媒体资产，从网页剪藏到语音备忘录。</li>
+          <li><strong>Transform (转换):</strong> 利用 LLM 将非结构化数据转化为向量化记忆。</li>
+          <li><strong>Integrate (集成):</strong> 通过 RAG 管道将记忆无缝嵌入到你的创作流中。</li>
+        </ul>
+        <p>这种架构的核心在于“主权”。你不依赖于任何单一的 SaaS 供应商，你的向量数据库可以部署在任何地方，你的模型可以随时切换。</p>
+        <h3>实战步骤</h3>
+        <p>在我们的“AI SuperEgo”课程中，我们会手把手带你使用 Dify 和 Vector DB 搭建这套地基。从零配置 Embedding 模型，到实现混合检索 (Hybrid Search)，确保你的 AI 能够像你一样思考，但比你更博学。</p>
+      `,
+      date: "2024-05-18",
+      author: "杜占源",
+      tags: ["架构", "实战", "RAG"]
+    },
+    {
+      id: "3",
+      title: "艺术与代码：在数学中重现莫奈的色彩",
+      excerpt: "当我们谈论 AI 艺术时，我们谈论的不仅仅是生成。我们是在探讨如何用代码解构人类几千年的审美逻辑。",
+      content: `
+        <h2>艺术行星的逻辑</h2>
+        <p>在“艺术行星”课程中，我们挑战学生不仅要用 AI 画图，还要理解“为什么这幅图好看”。</p>
+        <p>莫奈对光的处理可以被抽象为一种对色温和亮度的插值算法。当我们用代码去实现这种插值时，我们不仅在复现艺术，我们是在内化这种审美能力。</p>
+        <p>这就是费曼学习法在艺术领域的应用：如果你不能用代码写出一个流派的特征，说明你还没有真正看懂它。</p>
+      `,
+      date: "2024-05-15",
+      author: "朱云涛",
+      tags: ["艺术", "代码", "费曼学习法"]
+    }
+  ],
   courses: [
     {
       id: "art",
