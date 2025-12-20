@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Course } from '../types';
 
@@ -14,6 +14,12 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
   const mountRef = useRef<HTMLDivElement>(null);
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+
+  // Refs for animation values to avoid re-renders while maintaining smooth transitions
+  const rotationTargetRef = useRef(0);
+  const currentRotationRef = useRef(0);
+  const isDraggingRef = useRef(false);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -118,7 +124,6 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
 
     courses.forEach((course, idx) => {
       const u = (idx / courses.length) * Math.PI * 2;
-      // 更加交错的排列，确保点击区域不重叠
       const vOffsets = [0.8, -0.8, 0.4, -0.4, 0.9, -0.9];
       const v = vOffsets[idx % vOffsets.length] * stripWidth * 0.45;
 
@@ -150,7 +155,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       if (orientation === 'vertical') sphere.position.set(z, y, x);
       else sphere.position.set(x, z, y);
       
-      sphere.userData = { course };
+      sphere.userData = { course, originalScale: planetScale };
       planetMeshes.push(sphere);
       planetGroup.add(sphere);
 
@@ -185,37 +190,20 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const glow = new THREE.Mesh(glowGeo, glowMat);
       sphere.add(glow);
 
-      // 行星光环 (针对特定行星)
-      if (course.id === 'quant' || course.id === 'solopreneur') {
-        const ringGeo = new THREE.RingGeometry(planetScale * 1.4, planetScale * 2.3, 64);
-        const ringMat = new THREE.MeshBasicMaterial({ color: baseColor, side: THREE.DoubleSide, transparent: true, opacity: 0.25 });
-        const ring = new THREE.Mesh(ringGeo, ringMat);
-        ring.rotation.x = Math.PI / 2.5;
-        sphere.add(ring);
-      }
-
-      // 提取核心课程名称
-      // 原始格式为 "行星 A：艺术"，我们需要提取出 "艺术"
+      // 文字标签绘制
       const courseName = course.shortTitle.includes('：') 
         ? course.shortTitle.split('：')[1] 
         : (course.shortTitle || course.title).split('：')[0];
 
-      // 文字标签绘制
       const labelCanvas = document.createElement('canvas');
       labelCanvas.width = 512; labelCanvas.height = 160;
       const lCtx = labelCanvas.getContext('2d')!;
-      
-      // 文字发光效果
       lCtx.shadowBlur = 15;
       lCtx.shadowColor = 'rgba(0,0,0,0.9)';
-      
-      // 绘制主标题
       lCtx.font = `bold ${isMobile ? '64px' : '72px'} Inter, "Microsoft YaHei", sans-serif`;
       lCtx.textAlign = 'center';
       lCtx.fillStyle = 'white';
       lCtx.fillText(courseName.toUpperCase(), 256, 80);
-      
-      // 绘制副标题 (ID)
       lCtx.font = `bold 24px monospace`;
       lCtx.fillStyle = `rgba(255,255,255,0.5)`;
       lCtx.fillText(`PLANET_${course.id.toUpperCase()}`, 256, 120);
@@ -246,24 +234,19 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     // 6. 光照系统
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-    
     const sunLight = new THREE.PointLight(0xffffff, 30);
     sunLight.position.set(0, 0, 0);
     scene.add(sunLight);
-
     const rimLight = new THREE.DirectionalLight(0x3b82f6, 1.5);
     rimLight.position.set(10, 10, 10);
     scene.add(rimLight);
 
     // 交互逻辑
-    let rotationTarget = 0;
-    let currentRotation = 0;
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
+    const SENSITIVITY = isMobile ? 0.012 : 0.008;
+    const INTERPOLATION = 0.1;
 
     const onPointerDown = (e: any) => {
-      isDragging = true;
+      isDraggingRef.current = true;
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       startX = clientX; startY = clientY;
@@ -272,9 +255,9 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const onPointerMove = (e: any) => {
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      if (isDragging) {
+      if (isDraggingRef.current) {
         const delta = orientation === 'vertical' ? clientY - startY : clientX - startX;
-        rotationTarget += delta * 0.005;
+        rotationTargetRef.current += delta * SENSITIVITY;
         startX = clientX; startY = clientY;
       }
       const rect = renderer.domElement.getBoundingClientRect();
@@ -282,7 +265,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       mouse.y = -((clientY - rect.top) / height) * 2 + 1;
     };
 
-    const onPointerUp = () => isDragging = false;
+    const onPointerUp = () => isDraggingRef.current = false;
 
     const onClick = () => {
       raycaster.setFromCamera(mouse, camera);
@@ -292,6 +275,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       }
     };
 
+    let startX = 0, startY = 0;
     window.addEventListener('mousedown', onPointerDown);
     window.addEventListener('mousemove', onPointerMove);
     window.addEventListener('mouseup', onPointerUp);
@@ -304,15 +288,17 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const animate = () => {
       requestAnimationFrame(animate);
 
-      currentRotation += (rotationTarget - currentRotation) * 0.05;
-      rotationTarget += 0.0012; // 缓慢的环境漂移
+      currentRotationRef.current += (rotationTargetRef.current - currentRotationRef.current) * INTERPOLATION;
+      if (!isDraggingRef.current && focusedIndex === -1) {
+        rotationTargetRef.current += 0.0012;
+      }
 
       if (orientation === 'vertical') {
-        nebulaPoints.rotation.x = currentRotation;
-        planetGroup.rotation.x = currentRotation;
+        nebulaPoints.rotation.x = currentRotationRef.current;
+        planetGroup.rotation.x = currentRotationRef.current;
       } else {
-        nebulaPoints.rotation.y = currentRotation;
-        planetGroup.rotation.y = currentRotation;
+        nebulaPoints.rotation.y = currentRotationRef.current;
+        planetGroup.rotation.y = currentRotationRef.current;
       }
 
       stars.rotation.y += 0.00015;
@@ -320,6 +306,13 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       planetMeshes.forEach((mesh, i) => {
         mesh.rotation.y += 0.012;
         mesh.position.y += Math.sin(Date.now() * 0.001 + i) * 0.0015;
+        
+        // Highlight focused planet
+        const isFocused = i === focusedIndex;
+        const targetScale = isFocused ? 1.3 : 1.0;
+        mesh.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+        const mat = mesh.material as THREE.MeshStandardMaterial;
+        mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, isFocused ? 0.8 : 0.2, 0.1);
       });
 
       renderer.render(scene, camera);
@@ -350,9 +343,44 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       starGeo.dispose();
       nebulaGeo.dispose();
     };
-  }, [courses, orientation, isMobile]);
+  }, [courses, orientation, isMobile, focusedIndex]);
 
-  return <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />;
+  // Keyboard Navigation Effect
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        setFocusedIndex(prev => (prev + 1) % courses.length);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        setFocusedIndex(prev => (prev - 1 + courses.length) % courses.length);
+      } else if (e.key === 'Enter' && focusedIndex !== -1) {
+        onSelectCourse(courses[focusedIndex]);
+      } else if (e.key === 'Escape') {
+        setFocusedIndex(-1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [courses, focusedIndex, onSelectCourse]);
+
+  // Rotate to focused planet
+  useEffect(() => {
+    if (focusedIndex !== -1) {
+      const u = (focusedIndex / courses.length) * Math.PI * 2;
+      // We need to rotate the group so that the planet at angle 'u' is facing the camera (angle 0)
+      // The current system rotates the group, so we set target to -u (plus some offset to align with camera start)
+      rotationTargetRef.current = -u;
+    }
+  }, [focusedIndex, courses.length]);
+
+  return (
+    <div 
+      ref={mountRef} 
+      className="w-full h-full cursor-grab active:cursor-grabbing outline-none" 
+      tabIndex={0}
+      aria-label="3D Galaxy Navigation"
+    />
+  );
 };
 
 export default MobiusGalaxy;

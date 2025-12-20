@@ -43,25 +43,27 @@ const PlanetLayout: React.FC<PlanetLayoutProps> = ({ course, children }) => {
             <div className={`inline-block px-3 md:px-4 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] md:text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest mb-4 md:mb-6`}>
               PLANET_ID: {course.id.toUpperCase()}
             </div>
-            <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 md:mb-6 leading-tight tracking-tighter uppercase break-words">
+            {/* 标题字号再次缩小，更显精致 */}
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white mb-4 md:mb-6 leading-tight tracking-tighter uppercase break-words">
               {course.title}
             </h1>
-            <p className="text-base sm:text-lg md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300 font-bold mb-6 md:mb-8 italic">
+            <p className="text-sm sm:text-base md:text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300 font-bold mb-6 md:mb-8 italic">
               {course.tagline}
             </p>
-            <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed mb-8 md:mb-10 max-w-xl mx-auto lg:mx-0 font-light">
+            <p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed mb-8 md:mb-10 max-w-xl mx-auto lg:mx-0 font-light">
               {course.description}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button className={`px-8 md:px-10 py-4 md:py-5 rounded-2xl bg-gradient-to-r ${course.color} text-white font-black shadow-2xl hover:brightness-110 active:scale-95 transition-all tracking-widest uppercase text-xs md:text-sm`}>
+              <button className={`px-6 md:px-8 py-3 md:py-4 rounded-2xl bg-gradient-to-r ${course.color} text-white font-black shadow-2xl hover:brightness-110 active:scale-95 transition-all tracking-widest uppercase text-[10px] md:text-xs`}>
                 {t('course.enroll') || 'START MISSION'}
               </button>
             </div>
           </div>
 
           <div className="flex justify-center animate-in fade-in zoom-in duration-1000">
-            <div className={`relative w-40 h-40 sm:w-64 sm:h-64 md:w-96 md:h-96 rounded-full bg-gradient-to-br ${course.color} shadow-[0_0_60px_rgba(255,255,255,0.05)] flex items-center justify-center text-6xl sm:text-7xl md:text-9xl animate-float-planet border border-white/10`}>
+            {/* 行星图片尺寸显著缩小 */}
+            <div className={`relative w-20 h-20 sm:w-32 sm:h-32 md:w-44 md:h-44 rounded-full bg-gradient-to-br ${course.color} shadow-[0_0_40px_rgba(255,255,255,0.05)] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl animate-float-planet border border-white/10`}>
               <div className="absolute inset-0 rounded-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-black/40 via-transparent to-white/20"></div>
               <span className="drop-shadow-2xl">{course.icon}</span>
@@ -79,7 +81,7 @@ const PlanetLayout: React.FC<PlanetLayoutProps> = ({ course, children }) => {
           <div className="flex items-center justify-between mb-16 px-1">
              <div className="flex items-center gap-3 md:gap-4">
                 <div className={`w-6 sm:w-12 h-1 bg-gradient-to-r ${course.color} rounded-full`}></div>
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">
+                <h2 className="text-xl sm:text-2xl md:text-4xl font-black text-white uppercase tracking-tighter">
                   {t('course.syllabus') || 'MISSION TRAJECTORY'}
                 </h2>
              </div>
