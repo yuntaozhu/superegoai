@@ -1,7 +1,7 @@
 
 /**
- * ContentService: Metadata-Driven Bilingual Knowledge Indexer
- * Replicates Nextra/dair-ai logic for structured documentation with i18n support.
+ * ContentService: Knowledge Indexer for Prompt Engineering Guide
+ * Strictly indexes content from prompt-engineering/pages structure.
  */
 
 export interface PageMeta {
@@ -17,55 +17,83 @@ export interface CategoryStructure {
   pages: PageMeta[];
 }
 
-// 1. Meta Registry (Mapped from _meta.en.json and _meta.zh.json logic)
+// 1. Root Metadata (Mapped from prompt-engineering/pages/_meta.*.json)
 const CATEGORY_TITLES: Record<string, Record<string, string>> = {
   en: {
     introduction: "Introduction",
     techniques: "Prompting Techniques",
     agents: "AI Agents",
     applications: "Applications",
-    research: "LLM Research Findings",
-    risks: "Risks & Misuses"
+    prompts: "Prompt Hub",
+    models: "Models",
+    risks: "Risks & Misuses",
+    research: "LLM Research Findings"
   },
   zh: {
     introduction: "提示工程简介",
     techniques: "提示技术",
     agents: "AI 智能体",
     applications: "提示应用",
-    research: "LLM 研究发现",
-    risks: "风险与误用"
+    prompts: "Prompt Hub",
+    models: "模型",
+    risks: "风险和误用",
+    research: "LLM Research Findings"
   }
 };
 
+// 2. Sub-page Metadata (Mapped from sub-directory _meta.*.json files)
 const CATEGORY_MAP: Record<string, Record<string, Record<string, string>>> = {
   en: {
     introduction: {
       "basics": "Basics of Prompting",
       "settings": "LLM Settings",
       "elements": "Prompt Elements",
-      "tips": "General Tips"
+      "tips": "General Tips",
+      "examples": "Examples of Prompts"
     },
     techniques: {
       "zeroshot": "Zero-shot Prompting",
       "fewshot": "Few-shot Prompting",
-      "cot": "Chain-of-Thought",
-      "react": "ReAct Framework",
-      "consistency": "Self-Consistency"
+      "cot": "Chain-of-Thought Prompting",
+      "meta-prompting": "Meta Prompting",
+      "consistency": "Self-Consistency",
+      "knowledge": "Generate Knowledge Prompting",
+      "prompt_chaining": "Prompt Chaining",
+      "tot": "Tree of Thoughts",
+      "rag": "Retrieval Augmented Generation",
+      "art": "Automatic Reasoning and Tool-use",
+      "ape": "Automatic Prompt Engineer",
+      "activeprompt": "Active-Prompt",
+      "dsp": "Directional Stimulus Prompting",
+      "pal": "Program-Aided Language Models",
+      "react": "ReAct",
+      "reflexion": "Reflexion",
+      "multimodalcot": "Multimodal CoT",
+      "graph": "Graph Prompting"
     },
     agents: {
       "introduction": "Introduction to Agents",
       "components": "Agent Components",
-      "ai-workflows-vs-ai-agents": "AI Workflows vs AI Agents"
+      "ai-workflows-vs-ai-agents": "AI Workflows vs AI Agents",
+      "context-engineering": "Context Engineering",
+      "context-engineering-deep-dive": "Deep Dive Context",
+      "deep-agents": "Deep Agents"
     },
     applications: {
+      "finetuning-gpt4o": "Fine-tuning GPT-4o",
+      "function_calling": "Function Calling",
+      "context-caching": "Context Caching",
       "generating": "Generating Data",
       "coding": "Generating Code",
-      "function_calling": "Function Calling"
+      "workplace_casestudy": "Workplace Case Study"
     },
     research: {
       "llm-agents": "LLM Agents",
       "rag": "RAG for LLMs",
-      "synthetic_data": "Synthetic Data"
+      "llm-reasoning": "LLM Reasoning",
+      "rag-faithfulness": "RAG Faithfulness",
+      "synthetic_data": "Synthetic Data",
+      "groq": "What is Groq?"
     }
   },
   zh: {
@@ -73,34 +101,54 @@ const CATEGORY_MAP: Record<string, Record<string, Record<string, string>>> = {
       "basics": "基本概念",
       "settings": "大语言模型设置",
       "elements": "提示词要素",
-      "tips": "设计提示的通用技巧"
+      "tips": "设计提示的通用技巧",
+      "examples": "提示词示例"
     },
     techniques: {
       "zeroshot": "零样本提示",
       "fewshot": "少样本提示",
-      "cot": "链式思考 (CoT)",
-      "react": "ReAct 框架",
-      "consistency": "自我一致性"
+      "cot": "链式思考（CoT）提示",
+      "consistency": "自我一致性",
+      "knowledge": "生成知识提示",
+      "prompt_chaining": "Prompt Chaining",
+      "tot": "思维树（ToT）",
+      "rag": "检索增强生成 (RAG)",
+      "art": "自动推理并使用工具（ART）",
+      "ape": "自动提示工程师",
+      "activeprompt": "Active-Prompt",
+      "dsp": "方向性刺激提示",
+      "pal": "Program-Aided Language Models",
+      "react": "ReAct框架",
+      "reflexion": "Reflexion",
+      "multimodalcot": "多模态思维链提示方法",
+      "graph": "基于图的提示"
     },
     agents: {
       "introduction": "智能体简介",
-      "components": "智能体架构组件",
-      "ai-workflows-vs-ai-agents": "AI 工作流与智能体对比"
+      "components": "智能体组件",
+      "ai-workflows-vs-ai-agents": "AI 工作流 vs AI 智能体",
+      "context-engineering": "智能体上下文工程",
+      "context-engineering-deep-dive": "上下文工程深度解析",
+      "deep-agents": "深度智能体"
     },
     applications: {
       "generating": "生成数据",
       "coding": "代码生成",
-      "function_calling": "函数调用"
+      "workplace_casestudy": "毕业生工作分类案例研究",
+      "pf": "提示函数"
     },
     research: {
-      "llm-agents": "智能体 Agents",
-      "rag": "检索增强生成 (RAG)",
-      "synthetic_data": "合成数据"
+      "llm-agents": "LLM Agents",
+      "rag": "RAG for LLMs",
+      "llm-reasoning": "LLM Reasoning",
+      "rag-faithfulness": "RAG Faithfulness",
+      "synthetic_data": "合成数据",
+      "groq": "Groq 是什么？"
     }
   }
 };
 
-// 2. Comprehensive Bilingual Content Store
+// 3. Content Store (Simulating file system)
 const SOURCE_CONTENT: Record<string, Record<string, string>> = {
   en: {
     "introduction/basics": `---
@@ -136,11 +184,6 @@ Think of an LLM as a "brain" and an Agent as a "brain with hands and memory".
 
 ### What makes an Agent?
 Standard LLMs are passive: they wait for input and provide output. Agents are active: they can use tools, browse the web, and correct their own mistakes in a loop.
-
-<Cards>
-  <Card title="Agent Components" href="agents/components">Learn about Brain, Planning, and Memory.</Card>
-  <Card title="Agent Research" href="research/llm-agents">Deep dive into recent Agent papers.</Card>
-</Cards>
 `,
     "agents/components": `---
 title: Agent Components
@@ -155,33 +198,20 @@ Based on popular research (e.g., Lilian Weng), an autonomous agent system consis
 3. **Memory**: Storing short-term context and long-term knowledge.
 4. **Tool Use**: The ability to call external APIs (Search, Calculator, Code Interpreter).
 </Steps>
-
-<Callout type="warning">
-The bottleneck for agents today is often "Planning" and "Reliability" rather than the LLM's raw knowledge.
-</Callout>
 `,
     "agents/ai-workflows-vs-ai-agents": `---
 title: AI Workflows vs AI Agents
 ---
 # AI Workflows vs AI Agents
 
-It is crucial to distinguish between a hard-coded sequence of LLM calls and a truly autonomous agent.
+Deterministic paths vs probabilistic reasoning.
 
-### Comparison
 | Feature | AI Workflows | AI Agents |
 | :--- | :--- | :--- |
-| **Path** | Pre-defined, deterministic | Dynamic, probabilistic |
-| **Autonomy** | Low (Step-by-step logic) | High (Goal-oriented) |
-| **Complexity** | High reliability, lower flexibility | Lower reliability, high flexibility |
+| **Path** | Pre-defined | Dynamic |
+| **Autonomy** | Low | High |
 
-\`\`\`text
-Workflows: If A then B then C.
-Agents: Here is Goal X. Figure out if you need A, B, or C.
-\`\`\`
-
-<Callout type="info">
-Most production "Agents" are actually complex Workflows with a bit of agentic reasoning.
-</Callout>
+<Callout type="warning">Most production "Agents" are actually complex Workflows.</Callout>
 `
   },
   zh: {
@@ -215,32 +245,20 @@ AI 智能体是由大语言模型（LLM）驱动的自主实体，能够感知�
 <Callout type="idea">
 如果把 LLM 比作“大脑”，那么智能体就是“拥有双手和记忆的大脑”。
 </Callout>
-
-### 智能体的核心特质
-传统的 LLM 是被动的：它们等待输入并提供输出。智能体是主动的：它们可以在循环中调用工具、浏览网页并纠正自己的错误。
-
-<Cards>
-  <Card title="架构组件" href="agents/components">了解大脑、规划和记忆。</Card>
-  <Card title="前沿研究" href="research/llm-agents">深入研究最新的智能体论文。</Card>
-</Cards>
 `,
     "agents/components": `---
 title: 智能体架构组件
 ---
 # 智能体架构组件
 
-根据主流研究（如 Lilian Weng 的分类），一个自主智能体系统主要由四个核心部分组成。
+智能体系统主要由四个核心部分组成：
 
 <Steps>
 1. **大脑 (LLM)**：核心推理引擎。
 2. **规划 (Planning)**：将复杂任务分解为可管理的子目标。
 3. **记忆 (Memory)**：存储短期上下文和长期知识。
-4. **工具使用 (Tool Use)**：调用外部 API 的能力（搜索、计算器、代码解释器）。
+4. **工具使用 (Tool Use)**：调用外部 API 的能力。
 </Steps>
-
-<Callout type="warning">
-目前智能体的瓶颈通常在于“规划能力”和“可靠性”，而非 LLM 本身的知识储备。
-</Callout>
 `,
     "agents/ai-workflows-vs-ai-agents": `---
 title: AI 工作流与智能体对比
@@ -249,21 +267,10 @@ title: AI 工作流与智能体对比
 
 区分“硬编码的 LLM 调用序列”与“真正的自主智能体”至关重要。
 
-### 核心对比
 | 特性 | AI 工作流 | AI 智能体 |
 | :--- | :--- | :--- |
-| **路径** | 预定义的、确定性的 | 动态的、概率性的 |
-| **自主性** | 低（步进逻辑） | 高（目标导向） |
-| **复杂度** | 高可靠性，较低灵活性 | 较低可靠性，高灵活性 |
-
-\`\`\`text
-工作流：如果 A，则执行 B，然后执行 C。
-智能体：这是目标 X。请自行判断需要 A、B 还是 C。
-\`\`\`
-
-<Callout type="info">
-目前大多数生产环境中的“智能体”实际上是带有少量智能推理的复杂“工作流”。
-</Callout>
+| **路径** | 确定性的 | 概率性的 |
+| **自主性** | 低 | 高 |
 `
   }
 };
@@ -290,7 +297,7 @@ export const ContentService = {
     const localeContent = SOURCE_CONTENT[lang] || SOURCE_CONTENT['en'];
     const fallbackContent = SOURCE_CONTENT['en'];
 
-    const raw = localeContent[cleanPath] || fallbackContent[cleanPath] || `# ${cleanPath.split('/').pop()}\n\nContent for this module (**${cleanPath}**) is being processed...`;
+    const raw = localeContent[cleanPath] || fallbackContent[cleanPath] || `# ${cleanPath.split('/').pop()}\n\nContent for this module is being processed...`;
     
     // Frontmatter Parser
     const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n/);
