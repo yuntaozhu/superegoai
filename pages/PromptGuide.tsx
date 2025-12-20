@@ -3,53 +3,74 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
-  Terminal, 
-  Layers, 
-  Sparkles, 
-  ShieldAlert, 
-  ChevronRight,
-  ArrowLeft,
-  ArrowRight,
-  BookOpen,
-  Search,
-  Globe,
-  Database,
-  Code
+  Terminal, Layers, Sparkles, ShieldAlert, ChevronRight, ArrowLeft, 
+  ArrowRight, BookOpen, Search, Globe, Database, Code, Cpu, Info
 } from 'lucide-react';
-import { PROMPT_REGISTRY, PromptNode } from '../constants/promptRegistry';
+import { loadPromptGuideContent, ParsedPrompt } from '../lib/content-parser';
+import PromptBlock from '../components/PromptBlock';
 
 const PromptGuide: React.FC = () => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
+  const [structure, setStructure] = useState<ReturnType<typeof loadPromptGuideContent> | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('techniques');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedNode, setSelectedNode] = useState<PromptNode | null>(null);
+  const [selectedNode, setSelectedNode] = useState<ParsedPrompt | null>(null);
+
+  useEffect(() => {
+    const content = loadPromptGuideContent(language);
+    setStructure(content);
+    // Auto-select first category if available
+    const keys = Object.keys(content.categories);
+    if (keys.length > 0 && !keys.includes(activeCategory)) {
+      setActiveCategory(keys[0]);
+    }
+  }, [language]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [selectedNode]);
 
-  const categories = useMemo(() => Array.from(new Set(PROMPT_REGISTRY.map(p => p.category))), []);
-
   const filteredNodes = useMemo(() => {
-    const nodes = PROMPT_REGISTRY.filter(n => n.category === activeCategory);
+    if (!structure) return [];
+    const nodes = structure.categories[activeCategory]?.nodes || [];
     if (!searchQuery) return nodes;
     return nodes.filter(node => 
-      node.title.zh.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      node.title.en.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      node.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      node.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      node.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, structure]);
 
   const getIcon = (cat: string) => {
     switch (cat) {
-      case 'introduction': return <Terminal className="w-5 h-5" />;
+      case 'introduction': return <Info className="w-5 h-5" />;
       case 'techniques': return <Layers className="w-5 h-5" />;
       case 'applications': return <Code className="w-5 h-5" />;
       case 'risks': return <ShieldAlert className="w-5 h-5" />;
       case 'research': return <Database className="w-5 h-5" />;
+      case 'agents': return <Cpu className="w-5 h-5" />;
       default: return <BookOpen className="w-5 h-5" />;
     }
   };
+
+  // Simple Markdown-ish renderer for raw content
+  const renderContent = (content: string) => {
+    const parts = content.split(/(```[\s\S]*?```)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('```')) {
+        const code = part.replace(/```(?:\w+)?\n([\s\S]*?)\n```/, '$1');
+        return <PromptBlock key={i} code={code} />;
+      }
+      return (
+        <div 
+          key={i} 
+          className="prose prose-invert prose-lg max-w-none prose-blue mb-6"
+          dangerouslySetInnerHTML={{ __html: part.replace(/\n/g, '<br/>') }} 
+        />
+      );
+    });
+  };
+
+  if (!structure) return <div className="min-h-screen bg-brand-dark flex items-center justify-center font-mono text-gray-500">INIT_CONTENT_INDEX...</div>;
 
   return (
     <div className="min-h-screen bg-brand-dark pt-24 pb-20">
@@ -66,7 +87,7 @@ const PromptGuide: React.FC = () => {
               Intelligence Orchestration Guide
             </div>
             <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-6">
-              提示词指南
+              {language === 'en' ? 'Prompt Guide' : '提示词指南'}
             </h1>
             <p className="text-xl text-gray-400 font-light italic mb-10">
               "Master the art of communicating with AGI."
@@ -87,24 +108,24 @@ const PromptGuide: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {!selectedNode && (
             <aside className="lg:col-span-3 space-y-6">
-              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-xl">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-xl sticky top-24">
                  <h3 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-6 px-2">Knowledge Matrix</h3>
                  <nav className="space-y-1">
-                  {categories.map((cat) => (
+                  {Object.entries(structure.categories).map(([key, cat]) => (
                     <button
-                      key={cat}
-                      onClick={() => { setActiveCategory(cat); setSearchQuery(''); }}
+                      key={key}
+                      onClick={() => { setActiveCategory(key); setSearchQuery(''); }}
                       className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all group ${
-                        activeCategory === cat 
+                        activeCategory === key 
                         ? 'bg-blue-600 text-white' 
                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      <div className={`transition-colors ${activeCategory === cat ? 'text-white' : 'text-blue-500'}`}>
-                        {getIcon(cat)}
+                      <div className={`transition-colors ${activeCategory === key ? 'text-white' : 'text-blue-500'}`}>
+                        {getIcon(key)}
                       </div>
-                      <span className="font-black text-xs uppercase tracking-widest">
-                        {cat}
+                      <span className="font-black text-xs uppercase tracking-widest truncate">
+                        {cat.title}
                       </span>
                     </button>
                   ))}
@@ -135,28 +156,27 @@ const PromptGuide: React.FC = () => {
                 >
                   <div className="mb-12 border-b border-white/10 pb-10">
                     <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
-                      {language === 'en' ? selectedNode.title.en : selectedNode.title.zh}
+                      {selectedNode.title}
                     </h2>
                     <div className="flex gap-4 items-center">
-                       {selectedNode.title.ar && <span className="text-blue-500/60 font-black font-mono" dir="rtl">{selectedNode.title.ar}</span>}
+                       <span className="text-blue-500 font-black font-mono uppercase text-xs">{selectedNode.categoryTitle}</span>
+                       <div className="w-1 h-1 rounded-full bg-white/20" />
                        <span className="text-gray-700 font-mono text-xs">REF: {selectedNode.id.toUpperCase()}</span>
                     </div>
                   </div>
 
-                  <div 
-                    className="prose prose-invert prose-lg max-w-none prose-blue"
-                    dangerouslySetInnerHTML={{ __html: selectedNode.content }}
-                  />
+                  <div className="reader-content">
+                    {renderContent(selectedNode.rawContent)}
+                  </div>
 
-                  {selectedNode.template && (
-                    <div className="mt-12 p-8 bg-black/40 border border-white/10 rounded-3xl">
-                       <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-4">Prompt Template</h4>
-                       <pre className="bg-brand-dark p-6 rounded-xl border border-white/5 font-mono text-sm text-gray-300 whitespace-pre-wrap">
-                         {selectedNode.template}
-                       </pre>
-                       <Link to="/studio" className="mt-6 inline-flex items-center gap-2 text-white font-bold uppercase tracking-widest text-xs hover:text-blue-400 transition-colors">
-                          Open in Studio <ArrowRight className="w-4 h-4" />
-                       </Link>
+                  {selectedNode.prompts.length > 0 && (
+                    <div className="mt-20 pt-10 border-t border-white/10">
+                       <h4 className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em] mb-8">Extracted Prompts</h4>
+                       <div className="space-y-6">
+                         {selectedNode.prompts.map((p, idx) => (
+                           <PromptBlock key={idx} code={p} />
+                         ))}
+                       </div>
                     </div>
                   )}
                 </motion.div>
@@ -171,18 +191,25 @@ const PromptGuide: React.FC = () => {
                       <div className="absolute top-0 left-0 w-1 h-full bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div>
                         <h4 className="text-2xl font-black text-white mb-3 group-hover:text-blue-400 transition-colors uppercase tracking-tight">
-                          {language === 'en' ? node.title.en : node.title.zh}
+                          {node.title}
                         </h4>
                         <p className="text-gray-500 text-xs line-clamp-2">
-                          {language === 'en' ? node.description.en : node.description.zh}
+                          {node.description}
                         </p>
                       </div>
                       <div className="flex justify-between items-end mt-auto pt-4 border-t border-white/5">
-                        <span className="text-xs font-mono text-gray-700" dir="rtl">{node.title.ar}</span>
+                        <div className="flex gap-2">
+                           {node.prompts.length > 0 && <span className="text-[8px] font-mono bg-blue-600/20 text-blue-400 px-2 py-0.5 rounded-full">{node.prompts.length} PROMPTS</span>}
+                        </div>
                         <ArrowRight className="w-4 h-4 text-gray-700 group-hover:text-blue-500" />
                       </div>
                     </div>
                   ))}
+                  {filteredNodes.length === 0 && (
+                    <div className="col-span-full py-20 text-center text-gray-600 font-mono text-sm italic">
+                      NO_NODES_MATCH_QUERY
+                    </div>
+                  )}
                 </div>
               )}
             </AnimatePresence>

@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from "@google/genai";
-import { useLanguage, Link } from '../context/LanguageContext';
+import { useLanguage, Link, useLocation } from '../context/LanguageContext';
 import { ArrowLeft, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History, Search, Trash2, FileText, Sparkles } from 'lucide-react';
 import { PROMPT_REGISTRY, PromptNode } from '../constants/promptRegistry';
 
 const Studio: React.FC = () => {
   const { language } = useLanguage();
+  const location = useLocation();
   
   const [prompt, setPrompt] = useState('');
   const [comparisonPrompt, setComparisonPrompt] = useState('');
@@ -19,6 +20,15 @@ const Studio: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [sidebarSearch, setSidebarSearch] = useState('');
+
+  // Handle incoming prompts from URL params (hash-based)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.hash.split('?')[1]);
+    const incomingPrompt = params.get('prompt');
+    if (incomingPrompt) {
+      setPrompt(decodeURIComponent(incomingPrompt));
+    }
+  }, []);
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('prompt_history');
