@@ -9,6 +9,7 @@ import PlanetsPage from './pages/PlanetsPage';
 import Studio from './pages/Studio';
 import AboutPage from './pages/AboutPage';
 import PromptGuide from './pages/PromptGuide';
+import ChatAssistant from './components/ChatAssistant';
 
 // Import specific planet pages
 import ArtPlanet from './pages/ArtPlanet';
@@ -49,6 +50,7 @@ const App: React.FC = () => {
                 <Route path="/course/digital-twin" element={<ResearchPlanet />} />
               </Routes>
             </main>
+            <ChatAssistant />
             <Footer />
           </div>
         </Router>

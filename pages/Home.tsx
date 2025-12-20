@@ -7,6 +7,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations';
 import WaitlistModal from '../components/WaitlistModal';
 import { motion } from 'framer-motion';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 // Using any to bypass framer-motion type mismatch in the current environment
 const m = motion as any;
@@ -40,8 +41,9 @@ const Home: React.FC = () => {
           <m.span 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block py-1.5 md:py-2 px-3 md:px-4 rounded-full bg-white/5 text-blue-300 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 md:mb-10 border border-white/10 backdrop-blur-md"
+            className="inline-flex items-center gap-2 py-1.5 md:py-2 px-3 md:px-4 rounded-full bg-white/5 text-blue-300 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 md:mb-10 border border-white/10 backdrop-blur-md"
           >
+            <Sparkles className="w-3 h-3" />
             {t('hero.badge')}
           </m.span>
           <m.h1 
@@ -72,13 +74,16 @@ const Home: React.FC = () => {
             dangerouslySetInnerHTML={{ __html: t('hero.description').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>') }}
           >
           </m.p>
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
-            <button 
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
+            <m.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={scrollToCourses} 
-              className="px-8 md:px-10 py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase tracking-widest transition-all hover:scale-105 shadow-2xl shadow-blue-500/25 border border-blue-400/50 text-xs md:text-base"
+              className="px-8 md:px-10 py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-black uppercase tracking-widest transition-all shadow-2xl shadow-blue-500/25 border border-blue-400/50 text-xs md:text-base flex items-center gap-3"
             >
               {t('hero.cta_primary')}
-            </button>
+              <ArrowRight className="w-5 h-5" />
+            </m.button>
             <Link 
               to="/consulting" 
               className="px-8 md:px-10 py-4 md:py-5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-black uppercase tracking-widest transition-all backdrop-blur-md text-xs md:text-base"
@@ -209,12 +214,14 @@ const Home: React.FC = () => {
           <p className="text-gray-300 mb-10 md:mb-12 text-base md:text-xl font-light relative z-10 max-w-2xl mx-auto">
             {t('cta.description')}
           </p>
-          <button 
+          <m.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setIsWaitlistOpen(true)}
             className="px-10 md:px-12 py-5 md:py-6 bg-white text-brand-dark rounded-xl font-black uppercase tracking-widest hover:bg-blue-50 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] relative z-10 text-xs md:text-base"
           >
             {t('cta.button')}
-          </button>
+          </m.button>
         </div>
       </section>
     </div>

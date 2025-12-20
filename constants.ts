@@ -279,6 +279,32 @@ const CONTENT_ZH: ContentData = {
   ]
 };
 
+const CONTENT_EN: ContentData = {
+  philosophyPillars: [
+    { title: 'Cognitive Core', concept: 'System Oriented', practice: 'Building the SuperEgo Hub' },
+    { title: 'Asset Building', concept: 'Digital Twin', practice: 'FTI Data Feedback Loop' },
+    { title: 'Identity Shift', concept: 'Director General', practice: 'Orchestrating, Not Executing' },
+    { title: 'Workflow Revolution', concept: 'Solopreneur', practice: 'Multi-Agent Collaboration' }
+  ],
+  blogPosts: [
+    {
+      id: "1",
+      title: "From Execution to Orchestration",
+      excerpt: "On the eve of AGI, the core competitiveness is no longer how many languages you speak, but how you build systems.",
+      content: `<h2>Reshaping Cognitive Foundations</h2><p>Traditional skill-based learning is shifting. AI is commoditizing skills. Your task is to define boundaries, logic, and goals.</p><blockquote>“Human defines the 'Why', AI solves the 'How'.”</blockquote>`,
+      date: "2024-05-20",
+      author: "Yuntao Zhu",
+      tags: ["AI", "Philosophy", "Cognition"]
+    }
+  ],
+  courses: CONTENT_ZH.courses.map(course => ({
+    ...course,
+    title: course.shortTitle.replace('行星', 'Planet'),
+    description: "The official English description for this module is being indexed. Explore the trajectory to learn more about the orchestration framework.",
+    outcome: "Master the architecture of AI orchestration and build your unique Second Brain assets."
+  }))
+};
+
 export const getContent = (lang: 'en' | 'zh') => {
-  return CONTENT_ZH;
+  return lang === 'en' ? CONTENT_EN : CONTENT_ZH;
 };
