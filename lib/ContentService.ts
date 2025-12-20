@@ -55,45 +55,14 @@ const CATEGORY_MAP: Record<string, Record<string, Record<string, string>>> = {
       "zeroshot": "Zero-shot Prompting",
       "fewshot": "Few-shot Prompting",
       "cot": "Chain-of-Thought Prompting",
-      "meta-prompting": "Meta Prompting",
       "consistency": "Self-Consistency",
       "knowledge": "Generate Knowledge Prompting",
-      "prompt_chaining": "Prompt Chaining",
-      "tot": "Tree of Thoughts",
-      "rag": "Retrieval Augmented Generation",
-      "art": "Automatic Reasoning and Tool-use",
-      "ape": "Automatic Prompt Engineer",
-      "activeprompt": "Active-Prompt",
-      "dsp": "Directional Stimulus Prompting",
-      "pal": "Program-Aided Language Models",
-      "react": "ReAct",
-      "reflexion": "Reflexion",
-      "multimodalcot": "Multimodal CoT",
-      "graph": "Graph Prompting"
+      "react": "ReAct"
     },
     agents: {
       "introduction": "Introduction to Agents",
       "components": "Agent Components",
-      "ai-workflows-vs-ai-agents": "AI Workflows vs AI Agents",
-      "context-engineering": "Context Engineering",
-      "context-engineering-deep-dive": "Deep Dive Context",
-      "deep-agents": "Deep Agents"
-    },
-    applications: {
-      "finetuning-gpt4o": "Fine-tuning GPT-4o",
-      "function_calling": "Function Calling",
-      "context-caching": "Context Caching",
-      "generating": "Generating Data",
-      "coding": "Generating Code",
-      "workplace_casestudy": "Workplace Case Study"
-    },
-    research: {
-      "llm-agents": "LLM Agents",
-      "rag": "RAG for LLMs",
-      "llm-reasoning": "LLM Reasoning",
-      "rag-faithfulness": "RAG Faithfulness",
-      "synthetic_data": "Synthetic Data",
-      "groq": "What is Groq?"
+      "ai-workflows-vs-ai-agents": "AI Workflows vs AI Agents"
     }
   },
   zh: {
@@ -110,40 +79,12 @@ const CATEGORY_MAP: Record<string, Record<string, Record<string, string>>> = {
       "cot": "链式思考（CoT）提示",
       "consistency": "自我一致性",
       "knowledge": "生成知识提示",
-      "prompt_chaining": "Prompt Chaining",
-      "tot": "思维树（ToT）",
-      "rag": "检索增强生成 (RAG)",
-      "art": "自动推理并使用工具（ART）",
-      "ape": "自动提示工程师",
-      "activeprompt": "Active-Prompt",
-      "dsp": "方向性刺激提示",
-      "pal": "Program-Aided Language Models",
-      "react": "ReAct框架",
-      "reflexion": "Reflexion",
-      "multimodalcot": "多模态思维链提示方法",
-      "graph": "基于图的提示"
+      "react": "ReAct框架"
     },
     agents: {
       "introduction": "智能体简介",
       "components": "智能体组件",
-      "ai-workflows-vs-ai-agents": "AI 工作流 vs AI 智能体",
-      "context-engineering": "智能体上下文工程",
-      "context-engineering-deep-dive": "上下文工程深度解析",
-      "deep-agents": "深度智能体"
-    },
-    applications: {
-      "generating": "生成数据",
-      "coding": "代码生成",
-      "workplace_casestudy": "毕业生工作分类案例研究",
-      "pf": "提示函数"
-    },
-    research: {
-      "llm-agents": "LLM Agents",
-      "rag": "RAG for LLMs",
-      "llm-reasoning": "LLM Reasoning",
-      "rag-faithfulness": "RAG Faithfulness",
-      "synthetic_data": "合成数据",
-      "groq": "Groq 是什么？"
+      "ai-workflows-vs-ai-agents": "AI 工作流 vs AI 智能体"
     }
   }
 };
@@ -153,237 +94,260 @@ const SOURCE_CONTENT: Record<string, Record<string, string>> = {
   en: {
     "introduction/basics": `---
 title: Basics of Prompting
-author: dair-ai
 ---
 # Basics of Prompting
-
 Prompt engineering is the art of crafting inputs to LLMs to get better results.
-
-<Callout type="info">
-The core principle is **Specificity**. Don't ask "how to cook", ask "provide a detailed recipe for vegan lasagna".
-</Callout>
-
+<Callout type="info">The core principle is **Specificity**. Don't ask "how to cook", ask "provide a detailed recipe for vegan lasagna".</Callout>
 ### Key Elements
 <Steps>
 1. **Instruction**: What you want the model to do.
 2. **Context**: Background info for the task.
 3. **Input Data**: The text to process.
 4. **Output Indicator**: How you want the result.
-</Steps>
-`,
+</Steps>`,
     "introduction/settings": `---
 title: LLM Settings
-author: dair-ai
 ---
 # LLM Settings
-
-When working with prompts, you interact with the LLM via an API or directly. You can configure parameters to get different results.
-
-### Core Parameters
+Parameters to control model behavior.
 <Steps>
-1. **Temperature**: Controls randomness. Lower is more deterministic, higher is more creative.
-2. **Top P**: A sampling technique called nucleus sampling. Low values target high-probability tokens.
-3. **Max Length**: Limits the number of tokens generated.
-4. **Stop Sequences**: Tokens that cause the model to stop generating.
-</Steps>
-
-<Callout type="warning">
-Usually, it is recommended to adjust either Temperature or Top P, but not both at once.
-</Callout>
-`,
+1. **Temperature**: Controls randomness. Higher = more creative.
+2. **Top P**: Nucleus sampling.
+3. **Max Length**: Limit output tokens.
+</Steps>`,
     "introduction/elements": `---
 title: Prompt Elements
-author: dair-ai
 ---
 # Prompt Elements
-
-A prompt can contain several key components that guide the LLM's behavior.
-
-### Components
-<Steps>
-1. **Instruction**: A specific task or instruction you want the model to perform.
-2. **Context**: External information that can steer the model.
-3. **Input Data**: The data or question for which we want a response.
-4. **Output Indicator**: The type or format of the output (e.g., JSON, table).
-</Steps>
-`,
+A prompt can contain:
+1. **Instruction**: The specific task.
+2. **Context**: External info to guide the model.
+3. **Input Data**: The specific data to process.
+4. **Output Indicator**: Format or style requirements.`,
     "introduction/tips": `---
 title: General Tips
-author: dair-ai
 ---
-# General Tips for Designing Prompts
-
-Iterative refinement is the key to effective prompt engineering.
-
-### Best Practices
+# General Tips
+- **Start Simple**: Iterate from basic to complex.
+- **Use Separators**: Like ### to clear boundaries.
+- **Be Specific**: Detail counts.
+- **Do over Don't**: Direct the model on what to do.`,
+    "introduction/examples": `---
+title: Examples of Prompts
+---
+# Examples of Prompts
+### Text Summarization
+\`\`\`text
+Summarize the following text into one sentence:
+[Insert Text Here]
+\`\`\`
+### Information Extraction
+\`\`\`text
+Extract the dates mentioned in this report:
+[Insert Text Here]
+\`\`\`
+### Code Generation
+\`\`\`text
+Write a Python script that scrapes headlines from a news site.
+\`\`\``,
+    "techniques/zeroshot": `---
+title: Zero-shot Prompting
+---
+# Zero-shot Prompting
+Perform tasks without any prior examples.
+### Example
+\`\`\`text
+Classify the sentiment: "The product exceeded my expectations!"
+Sentiment:
+\`\`\`
+<Callout type="idea">Modern models like Gemini are pre-trained on massive datasets, allowing them to generalize well to instructions without few-shot examples.</Callout>`,
+    "techniques/fewshot": `---
+title: Few-shot Prompting
+---
+# Few-shot Prompting
+Provide demonstrations to steer the model.
+### Example
+\`\`\`text
+Great movie! // Positive
+Waste of time. // Negative
+Decent enough. // Neutral
+What a blast! //
+\`\`\`
+<Callout type="warning">The format and consistency of examples matter more than the specific labels in some cases.</Callout>`,
+    "techniques/cot": `---
+title: Chain-of-Thought Prompting
+---
+# Chain-of-Thought (CoT) Prompting
+Enables complex reasoning through intermediate steps.
+### Example
+\`\`\`text
+Roger has 5 tennis balls. He buys 2 more cans. Each can has 3 balls. How many total?
+Let's think step by step:
+1. Roger starts with 5.
+2. 2 cans * 3 balls = 6 balls.
+3. 5 + 6 = 11.
+The answer is 11.
+\`\`\`
+<Callout type="success">Use "Let's think step by step" to trigger zero-shot CoT.</Callout>`,
+    "techniques/consistency": `---
+title: Self-Consistency
+---
+# Self-Consistency
+Sample multiple reasoning paths and select the most frequent answer. 
+### Why use it?
+It helps reduce the chance of the model making a one-off logic error by taking the "majority vote" of several generations.`,
+    "techniques/knowledge": `---
+title: Generate Knowledge Prompting
+---
+# Generate Knowledge Prompting
+Instruct the model to generate relevant facts before answering a complex question.
 <Steps>
-1. **Start Simple**: Begin with a basic instruction and gradually add detail.
-2. **The Instruction**: Place instructions at the beginning and use separators like "###".
-3. **Be Specific**: Describe desired outcomes in detail.
-4. **Do vs. Don't**: Tell the model what to do instead of what not to do.
-</Steps>
-
-<Callout type="idea">
-Think of the LLM as a very smart intern who needs extremely clear instructions.
-</Callout>
-`,
+1. Ask the model to generate knowledge about the topic.
+2. Use that knowledge as part of the final prompt to get a more accurate answer.
+</Steps>`,
+    "techniques/react": `---
+title: ReAct
+---
+# ReAct (Reason + Act)
+A framework where LLMs generate reasoning traces and task-specific actions in an interleaved manner.
+- **Reason**: Plan the next step.
+- **Act**: Interact with an external tool (Search, SQL).
+- **Observe**: Read results and update the logic chain.`,
     "agents/introduction": `---
 title: Introduction to Agents
 ---
 # Introduction to Agents
-
-An AI Agent is an autonomous entity powered by an LLM that can perceive its environment, reason about tasks, and take actions to achieve specific goals.
-
-<Callout type="idea">
-Think of an LLM as a "brain" and an Agent as a "brain with hands and memory".
-</Callout>
-
-### What makes an Agent?
-Standard LLMs are passive: they wait for input and provide output. Agents are active: they can use tools, browse the web, and correct their own mistakes in a loop.
-`,
-    "agents/components": `---
-title: Agent Components
----
-# Agent Components
-
-Based on popular research (e.g., Lilian Weng), an autonomous agent system consists of four key components.
-
-<Steps>
-1. **Brain (LLM)**: The core reasoning engine.
-2. **Planning**: Breaking down complex tasks into manageable sub-goals.
-3. **Memory**: Storing short-term context and long-term knowledge.
-4. **Tool Use**: The ability to call external APIs (Search, Calculator, Code Interpreter).
-</Steps>
-`,
-    "agents/ai-workflows-vs-ai-agents": `---
-title: AI Workflows vs AI Agents
----
-# AI Workflows vs AI Agents
-
-Deterministic paths vs probabilistic reasoning.
-
-| Feature | AI Workflows | AI Agents |
-| :--- | :--- | :--- |
-| **Path** | Pre-defined | Dynamic |
-| **Autonomy** | Low | High |
-
-<Callout type="warning">Most production "Agents" are actually complex Workflows.</Callout>
-`
+Autonomous entities powered by LLMs.
+<Callout type="idea">Think of an LLM as a "brain" and an Agent as a "brain with hands".</Callout>`
   },
   zh: {
     "introduction/basics": `---
 title: 提示词基础
-author: 提示词工程指南
 ---
 # 提示词基础
-
-提示工程（Prompt Engineering）是优化大语言模型（LLM）输入以获得高质量输出的艺术。
-
-<Callout type="info">
-核心原则是 **具体性**。不要只问“如何做饭”，而要问“请提供一份详细的四人份纯素千层面食谱”。
-</Callout>
-
+提示工程是优化大语言模型输入以获得高质量输出的艺术。
+<Callout type="info">核心原则是 **具体性**。不要只问“如何做饭”，而要问“请提供一份详细的四人份纯素千层面食谱”。</Callout>
 ### 关键要素
 <Steps>
 1. **指令 (Instruction)**：你希望模型执行的具体任务。
 2. **上下文 (Context)**：引导模型更好地响应的外部信息。
 3. **输入数据 (Input Data)**：我们感兴趣处理的数据。
 4. **输出指示 (Output Indicator)**：指示输出的类型或格式。
-</Steps>
-`,
+</Steps>`,
     "introduction/settings": `---
 title: 大语言模型设置
-author: 提示词工程指南
 ---
 # 大语言模型设置
-
-在使用提示词时，你会通过 API 或直接与 LLM 交互。你可以配置各种参数来获得不同的结果。
-
-### 核心参数
+控制模型行为的关键参数。
 <Steps>
-1. **Temperature (温度)**：控制生成的随机性。较低的值（如 0.2）使输出更确定，较高的值（如 0.8）使输出更具创意。
+1. **Temperature (温度)**：控制随机性。值越高越具创意。
 2. **Top P (核采样)**：另一种控制多样性的技术。
-3. **Max Length (最大长度)**：限制生成的 Token 数量。
-4. **Stop Sequences (停止序列)**：让模型停止生成的特定字符。
-</Steps>
-
-<Callout type="warning">
-通常建议只调整 Temperature 或 Top P 其中之一，不要同时大幅调整两者。
-</Callout>
-`,
+3. **最大长度**：限制生成的 Token 数量。
+</Steps>`,
     "introduction/elements": `---
 title: 提示词要素
-author: 提示词工程指南
 ---
 # 提示词要素
-
-一个高质量的提示词通常包含几个关键组件，用于引导 LLM 的行为。
-
-### 组件
-<Steps>
-1. **指令 (Instruction)**：你希望模型执行的具体任务。
-2. **上下文 (Context)**：为任务提供的背景信息。
-3. **输入数据 (Input Data)**：需要处理的具体内容或问题。
-4. **输出指示 (Output Indicator)**：期望的输出格式（如：表格、JSON、简短回答）。
-</Steps>
-`,
+一个完整的 Prompt 通常包含：
+1. **指令**：希望模型执行的任务。
+2. **上下文**：帮助模型更好理解任务的背景。
+3. **输入数据**：待处理的具体文本。
+4. **输出指示**：期望的返回格式。`,
     "introduction/tips": `---
 title: 设计提示的通用技巧
-author: 提示词工程指南
 ---
 # 设计提示的通用技巧
-
-提示工程是一个不断迭代优化的过程。
-
-### 最佳实践
+- **从简单开始**：逐步增加复杂度。
+- **使用分隔符**：如 ###，清晰标记不同部分。
+- **描述准确**：避免模糊语言。
+- **正面引导**：多说“做什么”，少说“不做什么”。`,
+    "introduction/examples": `---
+title: 提示词示例
+---
+# 提示词示例
+### 文本摘要
+\`\`\`text
+将以下文本概括为一句话：
+[在此处输入文本]
+\`\`\`
+### 信息提取
+\`\`\`text
+从以下报告中提取提到的所有日期：
+[在此处输入文本]
+\`\`\`
+### 代码生成
+\`\`\`text
+编写一个 Python 脚本，用于从新闻网站抓取标题。
+\`\`\``,
+    "techniques/zeroshot": `---
+title: 零样本提示
+---
+# 零样本提示
+在没有任何示例的情况下执行任务。
+### 示例
+\`\`\`text
+分类以下文本的情感：“这款产品超出了我的预期！”
+情感：
+\`\`\`
+<Callout type="idea">现代模型如 Gemini 经过大规模指令微调，具备极强的零样本泛化能力。</Callout>`,
+    "techniques/fewshot": `---
+title: 少样本提示
+---
+# 少样本提示
+通过提供少量示例来引导模型的输出格式或逻辑。
+### 示例
+\`\`\`text
+太棒了！ // 正面
+浪费时间。 // 负面
+还可以。 // 中性
+太刺激了！ // 
+\`\`\`
+<Callout type="warning">在某些情况下，示例的格式和一致性比具体标签的正确性更重要。</Callout>`,
+    "techniques/cot": `---
+title: 链式思考 (CoT)
+---
+# 链式思考（CoT）提示
+通过中间推理步骤启用复杂推理能力。
+### 示例
+\`\`\`text
+小明有 5 个网球，他又买了 2 罐，每罐 3 个。总共有多少个？
+让我们一步步思考：
+1. 初始有 5 个。
+2. 2 罐 * 罐 3 个 = 6 个。
+3. 5 + 6 = 11。
+答案是 11。
+\`\`\`
+<Callout type="success">加入“让我们一步步思考”即可触发零样本思维链。</Callout>`,
+    "techniques/consistency": `---
+title: 自我一致性
+---
+# 自我一致性
+对多个推理路径进行采样，并选择出现次数最多的答案。
+### 核心逻辑
+通过“多数投票”机制，减少模型在单次生成中出现偶然逻辑错误的可能性。`,
+    "techniques/knowledge": `---
+title: 生成知识提示
+---
+# 生成知识提示
+在回答复杂问题之前，先指示模型生成相关的背景事实。
 <Steps>
-1. **从简单开始**：先给出一个基础指令，然后根据反馈逐步增加细节。
-2. **位置原则**：将指令放在 Prompt 的开头，并使用分隔符（如 "###"）。
-3. **具体直接**：尽可能详细地描述你想要的结果。
-4. **正向指令**：多告诉模型“要做什么”，少说“不要做什么”。
-</Steps>
-
-<Callout type="idea">
-把 LLM 想象成一个非常聪明但没有常识的实习生，你需要给出极其明确的指令。
-</Callout>
-`,
+1. 要求模型生成关于该主题的知识。
+2. 将该知识作为最终提示的一部分，以获得更准确的答案。
+</Steps>`,
+    "techniques/react": `---
+title: ReAct框架
+---
+# ReAct (Reason + Act) 框架
+一种让 LLM 以交替方式生成推理轨迹和特定任务行动的框架。
+- **推理 (Reasoning)**：思考下一步该做什么。
+- **行动 (Action)**：调用外部工具（如搜索、计算器）。
+- **观察 (Observation)**：获取结果并更新推理链。`,
     "agents/introduction": `---
 title: 智能体简介
 ---
 # AI 智能体 (AI Agents) 简介
-
-AI 智能体是由大语言模型（LLM）驱动的自主实体，能够感知环境、进行任务推理并采取行动以实现特定目标。
-
-<Callout type="idea">
-如果把 LLM 比作“大脑”，那么智能体就是“拥有双手和记忆的大脑”。
-</Callout>
-`,
-    "agents/components": `---
-title: 智能体架构组件
----
-# 智能体架构组件
-
-智能体系统主要由四个核心部分组成：
-
-<Steps>
-1. **大脑 (LLM)**：核心推理引擎。
-2. **规划 (Planning)**：将复杂任务分解为可管理的子目标。
-3. **记忆 (Memory)**：存储短期上下文和长期知识。
-4. **工具使用 (Tool Use)**：调用外部 API 的能力。
-</Steps>
-`,
-    "agents/ai-workflows-vs-ai-agents": `---
-title: AI 工作流与智能体对比
----
-# AI 工作流 (Workflows) vs AI 智能体 (Agents)
-
-区分“硬编码的 LLM 调用序列”与“真正的自主智能体”至关重要。
-
-| 特性 | AI 工作流 | AI 智能体 |
-| :--- | :--- | :--- |
-| **路径** | 确定性的 | 概率性的 |
-| **自主性** | 低 | 高 |
-`
+由 LLM 驱动的自主实体。
+<Callout type="idea">如果把 LLM 比作“大脑”，那么智能体就是“拥有双手和记忆的大脑”。</Callout>`
   }
 };
 
