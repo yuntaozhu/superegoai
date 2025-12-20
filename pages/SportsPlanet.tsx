@@ -1,8 +1,12 @@
+
 import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const SportsPlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -47,7 +51,7 @@ const SportsPlanet: React.FC = () => {
       goal: '构建纠正性反馈系统与个性化计划生成器。',
       tech: ['运动解剖学', '逻辑引擎', 'Streamlit'],
       steps: [
-        { title: '生物力学入门', desc: '分析常见损伤风险，如深蹲时“膝内扣”的代码规则逻辑。' },
+        { title: '运动解剖学入门', desc: '分析常见损伤风险，如深蹲时“膝内扣”的代码规则逻辑。' },
         { title: '反馈建议系统', desc: '检测动作缺陷并根据 RAG 逻辑生成改进建议反馈。' },
         { title: 'UI 设计与整合', desc: '使用 Streamlit 打造拥有 GUI 界面的一体化应用终端。' }
       ],
@@ -58,7 +62,7 @@ const SportsPlanet: React.FC = () => {
   ];
 
   // Animation Variants
-  const containerVariants: Variants = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -69,7 +73,7 @@ const SportsPlanet: React.FC = () => {
     }
   };
 
-  const itemVariants: Variants = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 15 },
     visible: { 
       opacity: 1, 
@@ -83,7 +87,7 @@ const SportsPlanet: React.FC = () => {
       {/* HUD Hero Section */}
       <section className="mt-4 md:mt-16 mb-12 md:mb-24 px-1 md:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -108,9 +112,9 @@ const SportsPlanet: React.FC = () => {
                   REALTIME: 60FPS
                </div>
             </div>
-          </motion.div>
+          </m.div>
 
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
@@ -128,12 +132,12 @@ const SportsPlanet: React.FC = () => {
                    <line x1="70" y1="30" x2="75" y2="55" stroke="currentColor" strokeWidth="0.75" />
                    <line x1="35" y1="75" x2="50" y2="45" stroke="currentColor" strokeWidth="0.75" />
                    <line x1="65" y1="75" x2="50" y2="45" stroke="currentColor" strokeWidth="0.75" />
-                   <motion.circle 
+                   <m.circle 
                      cx="30" cy="30" r="1.5" fill="#ef4444" 
                      animate={{ opacity: [0.3, 1, 0.3] }}
                      transition={{ repeat: Infinity, duration: 1.5 }}
                    />
-                   <motion.circle 
+                   <m.circle 
                      cx="70" cy="30" r="1.5" fill="#ef4444" 
                      animate={{ opacity: [0.3, 1, 0.3] }}
                      transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }}
@@ -141,7 +145,7 @@ const SportsPlanet: React.FC = () => {
                 </svg>
                 
                 {/* Floating data windows - Tappable style */}
-                <motion.div 
+                <m.div 
                   initial={{ x: 10, opacity: 0 }}
                   whileInView={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
@@ -149,8 +153,8 @@ const SportsPlanet: React.FC = () => {
                 >
                    KNEE_ANGLE: 124.5&deg; <br/>
                    <span className="text-green-400 font-bold uppercase">Target Met</span>
-                </motion.div>
-                <motion.div 
+                </m.div>
+                <m.div 
                   initial={{ x: -10, opacity: 0 }}
                   whileInView={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -158,41 +162,41 @@ const SportsPlanet: React.FC = () => {
                 >
                    REP_COUNT: 14 <br/>
                    STAGE: ASCENT
-                </motion.div>
+                </m.div>
              </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* Module Timeline - Optimized Grid */}
       <section className="py-8 md:py-20 px-1 md:px-0">
         <div className="space-y-8 md:space-y-24">
-          {modules.map((m, idx) => (
-            <motion.div 
-              key={m.id}
+          {modules.map((module_item, idx) => (
+            <m.div 
+              key={module_item.id}
               initial="hidden"
               whileInView="visible"
               variants={containerVariants}
               viewport={{ once: true, margin: "-50px" }}
               className="group relative bg-white/5 border border-white/10 rounded-[32px] md:rounded-[48px] overflow-hidden backdrop-blur-xl hover:border-orange-500/30 transition-all duration-300"
             >
-              <div className={`absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b ${m.gradient}`} />
+              <div className={`absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b ${module_item.gradient}`} />
               <div className="p-6 sm:p-10 md:p-16 flex flex-col lg:flex-row gap-6 md:gap-12">
                  <div className="lg:w-1/3 space-y-3 md:space-y-6">
-                    <motion.span variants={itemVariants} className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full font-mono text-[9px] md:text-xs text-orange-400 font-bold uppercase tracking-widest">{m.period}</motion.span>
-                    <motion.h3 variants={itemVariants} className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-tight">{m.title}</motion.h3>
-                    <motion.p variants={itemVariants} className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed font-light">{m.goal}</motion.p>
-                    <motion.div variants={itemVariants} className="flex flex-wrap gap-2 pt-1 md:pt-4">
-                       {m.tech.map(t => (
+                    <m.span variants={itemVariants} className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full font-mono text-[9px] md:text-xs text-orange-400 font-bold uppercase tracking-widest">{module_item.period}</m.span>
+                    <m.h3 variants={itemVariants} className="text-xl sm:text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-tight">{module_item.title}</m.h3>
+                    <m.p variants={itemVariants} className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed font-light">{module_item.goal}</m.p>
+                    <m.div variants={itemVariants} className="flex flex-wrap gap-2 pt-1 md:pt-4">
+                       {module_item.tech.map(t => (
                          <span key={t} className="px-2 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] md:text-[9px] font-mono text-gray-500">{t}</span>
                        ))}
-                    </motion.div>
+                    </m.div>
                  </div>
 
                  <div className="lg:w-2/3 flex flex-col gap-5 md:gap-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                       {m.steps.map((step, i) => (
-                         <motion.div 
+                       {module_item.steps.map((step, i) => (
+                         <m.div 
                            key={i} 
                            variants={itemVariants}
                            className="p-5 bg-black/30 rounded-2xl border border-white/5 hover:border-white/10 transition-colors"
@@ -202,48 +206,48 @@ const SportsPlanet: React.FC = () => {
                                {step.title}
                             </h4>
                             <p className="text-gray-500 text-[10px] sm:text-xs leading-relaxed font-light">{step.desc}</p>
-                         </motion.div>
+                         </m.div>
                        ))}
                     </div>
                     
-                    <motion.div 
+                    <m.div 
                       variants={itemVariants}
                       whileHover={{ scale: 1.01 }}
-                      className={`p-6 sm:p-8 bg-gradient-to-br ${m.gradient} rounded-2xl sm:rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 cursor-default text-center sm:text-left`}
+                      className={`p-6 sm:p-8 bg-gradient-to-br ${module_item.gradient} rounded-2xl sm:rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 cursor-default text-center sm:text-left`}
                     >
                        <div className="text-white">
                           <div className="text-[8px] font-mono opacity-80 uppercase tracking-[0.2em] mb-1 font-black">PHASE_OUTPUT</div>
-                          <div className="text-sm sm:text-lg md:text-xl font-black uppercase tracking-tight">{m.outcome}</div>
+                          <div className="text-sm sm:text-lg md:text-xl font-black uppercase tracking-tight">{module_item.outcome}</div>
                        </div>
                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center text-xl sm:text-2xl shadow-inner flex-shrink-0">
-                          {m.icon}
+                          {module_item.icon}
                        </div>
-                    </motion.div>
+                    </m.div>
                  </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </section>
 
       {/* Safety Section - Mobile Optimized */}
-      <section className="mt-8 md:mt-32 p-6 sm:p-12 md:p-16 bg-red-500/5 border border-red-500/10 rounded-[32px] md:rounded-[48px] text-center mx-1 md:mx-0 shadow-inner">
-         <motion.div 
-           initial={{ opacity: 0 }}
-           whileInView={{ opacity: 1 }}
-           className="space-y-4 md:space-y-6"
-         >
+      <m.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="mt-8 md:mt-32 p-6 sm:p-12 md:p-16 bg-red-500/5 border border-red-500/10 rounded-[32px] md:rounded-[48px] text-center mx-1 md:mx-0 shadow-inner"
+      >
+         <div className="space-y-4 md:space-y-6">
            <div className="text-3xl md:text-5xl animate-bounce">⚠️</div>
            <h3 className="text-lg md:text-2xl font-black text-white uppercase tracking-tighter">安全与伦理协议 // Safety Protocols</h3>
            <p className="text-gray-500 max-w-2xl mx-auto text-[10px] sm:text-xs md:text-sm leading-relaxed font-light px-2">
               AI 教练仅提供动作纠正与数据分析参考。任何体育活动都存在损伤风险，请在专业人员指导下进行。我们尊重数据主权，所有训练视频仅供本地推理，确保隐私安全。
            </p>
-         </motion.div>
-      </section>
+         </div>
+      </m.div>
 
       {/* Philosophy Callout - Mobile Refinement */}
       <section className="mt-12 md:mt-32 mb-10 md:mb-20 text-center px-1 md:px-0">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -265,7 +269,7 @@ const SportsPlanet: React.FC = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </section>
       
       {/* Scroll Tip for Mobile */}

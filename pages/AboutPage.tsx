@@ -3,7 +3,10 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations';
-import { Brain, Target, Shield, Users, Rocket, Cpu } from 'lucide-react';
+import { Brain, Shield, Cpu } from 'lucide-react';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const AboutPage: React.FC = () => {
   const { language, t } = useLanguage();
@@ -19,7 +22,7 @@ const AboutPage: React.FC = () => {
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 text-center overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-4xl bg-blue-500/10 blur-[120px] rounded-full -z-10" />
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -34,7 +37,7 @@ const AboutPage: React.FC = () => {
           <p className="text-xl md:text-3xl text-gray-400 font-light max-w-2xl mx-auto">
             {t('about.hero_subtitle')}
           </p>
-        </motion.div>
+        </m.div>
       </section>
 
       {/* The 4 Pillars Section */}
@@ -49,7 +52,7 @@ const AboutPage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {philosophyPillars.map((pillar: any, index: number) => (
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -68,7 +71,7 @@ const AboutPage: React.FC = () => {
                   <span className="w-8 h-[1px] bg-blue-500/30" />
                   {pillar.quote}
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -142,7 +145,7 @@ const AboutPage: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Zhu */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -163,10 +166,10 @@ const AboutPage: React.FC = () => {
                   Specializes in human-AI collaboration and system orchestration, leading the strategic shift towards the "SuperEgo" era.
                 </p>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Du */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -187,14 +190,14 @@ const AboutPage: React.FC = () => {
                   Leading the development of secure, sovereign agent systems for enterprise and individuals.
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
 
       {/* Final Call to Action */}
       <section className="py-24 px-4 text-center">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           className="max-w-4xl mx-auto p-12 md:p-20 bg-gradient-to-r from-blue-600/10 to-purple-600/10 border border-white/10 rounded-[64px] backdrop-blur-xl"
@@ -213,7 +216,7 @@ const AboutPage: React.FC = () => {
               Enterprise Inquiry
             </button>
           </div>
-        </motion.div>
+        </m.div>
       </section>
     </div>
   );

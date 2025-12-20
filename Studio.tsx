@@ -1,10 +1,13 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from "@google/genai";
 import { useLanguage, Link } from './context/LanguageContext';
-import { ArrowLeft, Sparkles, Copy, Trash2, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History } from 'lucide-react';
+import { ArrowLeft, Trash2, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History } from 'lucide-react';
 import { PROMPT_GUIDE_DATA, PromptNode } from './features/prompts/promptData';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const Studio: React.FC = () => {
   const { language } = useLanguage();
@@ -115,7 +118,7 @@ const Studio: React.FC = () => {
         {/* Guide Sidebar */}
         <AnimatePresence>
           {isSidebarOpen && (
-            <motion.aside
+            <m.aside
               initial={{ x: -350 }}
               animate={{ x: 0 }}
               exit={{ x: -350 }}
@@ -167,7 +170,7 @@ const Studio: React.FC = () => {
                   </div>
                 )}
               </div>
-            </motion.aside>
+            </m.aside>
           )}
         </AnimatePresence>
 
@@ -216,7 +219,7 @@ const Studio: React.FC = () => {
           {/* Editor B (Comparison Mode) */}
           <AnimatePresence>
             {isComparing && (
-              <motion.div 
+              <m.div 
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
@@ -249,7 +252,7 @@ const Studio: React.FC = () => {
                      </div>
                    ) : <span className="text-gray-700 font-mono">Waiting for comparison...</span>}
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>

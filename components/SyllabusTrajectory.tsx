@@ -1,7 +1,10 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { CourseModule } from '../types';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 interface SyllabusTrajectoryProps {
   syllabus: CourseModule[];
@@ -35,7 +38,7 @@ const SyllabusTrajectory: React.FC<SyllabusTrajectoryProps> = ({ syllabus, color
           {/* SVG Connector Path */}
           <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2 hidden md:block">
             <svg className="h-full w-full" preserveAspectRatio="none">
-               <motion.path 
+               <m.path 
                  d={`M 0 0 V ${syllabus.length * 200}`}
                  stroke={strokeColor}
                  strokeWidth="2"
@@ -51,7 +54,7 @@ const SyllabusTrajectory: React.FC<SyllabusTrajectoryProps> = ({ syllabus, color
           {/* Nodes & Content */}
           <div className="w-full space-y-24 md:space-y-32">
             {syllabus.map((module, idx) => (
-              <motion.div 
+              <m.div 
                 key={idx}
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -63,7 +66,7 @@ const SyllabusTrajectory: React.FC<SyllabusTrajectoryProps> = ({ syllabus, color
                   className="absolute left-6 md:left-1/2 top-0 md:top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
                   onClick={() => setActiveNode(idx)}
                 >
-                   <motion.div 
+                   <m.div 
                      whileHover={{ scale: 1.2 }}
                      className={`w-12 h-12 rounded-full border-4 border-brand-dark flex items-center justify-center cursor-pointer shadow-2xl transition-all duration-500 ${activeNode === idx ? `bg-white` : 'bg-white/10 hover:bg-white/20'}`}
                      style={{ borderColor: activeNode === idx ? strokeColor : 'rgba(255,255,255,0.1)' }}
@@ -71,11 +74,11 @@ const SyllabusTrajectory: React.FC<SyllabusTrajectoryProps> = ({ syllabus, color
                      <span className={`text-[10px] font-black font-mono ${activeNode === idx ? 'text-brand-dark' : 'text-white'}`}>
                        0{idx + 1}
                      </span>
-                   </motion.div>
+                   </m.div>
                    
                    {/* Radar pulse for active node */}
                    {activeNode === idx && (
-                     <motion.div 
+                     <m.div 
                        initial={{ scale: 0.8, opacity: 0.5 }}
                        animate={{ scale: 2, opacity: 0 }}
                        transition={{ repeat: Infinity, duration: 2 }}
@@ -115,7 +118,7 @@ const SyllabusTrajectory: React.FC<SyllabusTrajectoryProps> = ({ syllabus, color
                       </div>
                    </div>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>

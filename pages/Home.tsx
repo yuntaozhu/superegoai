@@ -8,6 +8,9 @@ import { translations } from '../translations';
 import WaitlistModal from '../components/WaitlistModal';
 import { motion } from 'framer-motion';
 
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
+
 const Home: React.FC = () => {
   const { language, t } = useLanguage();
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
@@ -34,14 +37,14 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center px-4">
-          <motion.span 
+          <m.span 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-block py-1.5 md:py-2 px-3 md:px-4 rounded-full bg-white/5 text-blue-300 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 md:mb-10 border border-white/10 backdrop-blur-md"
           >
             {t('hero.badge')}
-          </motion.span>
-          <motion.h1 
+          </m.span>
+          <m.h1 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
@@ -52,23 +55,23 @@ const Home: React.FC = () => {
               {t('hero.title_highlight')}
             </span> <br className="hidden sm:block"/>
             {t('hero.title_suffix')}
-          </motion.h1>
-          <motion.p 
+          </m.h1>
+          <m.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
             className="text-lg md:text-2xl text-blue-200/80 mb-8 md:mb-10 max-w-3xl mx-auto font-medium tracking-wide"
           >
             {t('hero.sub_headline')}
-          </motion.p>
-          <motion.p 
+          </m.p>
+          <m.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
             className="text-sm md:text-lg text-gray-400 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed px-2" 
             dangerouslySetInnerHTML={{ __html: t('hero.description').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>') }}
           >
-          </motion.p>
+          </m.p>
           <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
             <button 
               onClick={scrollToCourses} 
@@ -100,7 +103,7 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {philosophyPillars.map((pillar: any, index: number) => (
-              <motion.div 
+              <m.div 
                 key={index} 
                 whileInView={{ opacity: 1, y: 0 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -120,7 +123,7 @@ const Home: React.FC = () => {
                   <span className="w-6 md:w-8 h-[1px] bg-blue-500/30" />
                   {pillar.quote}
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 

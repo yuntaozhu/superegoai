@@ -1,8 +1,12 @@
+
 import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const QuantPlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -82,7 +86,7 @@ const QuantPlanet: React.FC = () => {
           </div>
 
           <div className="p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               className="space-y-6 md:space-y-8"
@@ -102,7 +106,7 @@ const QuantPlanet: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
 
             <div className="relative aspect-video bg-emerald-950/20 rounded-3xl md:rounded-[48px] border border-emerald-500/10 p-6 md:p-8 flex flex-col justify-between overflow-hidden group">
                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />
@@ -129,7 +133,7 @@ const QuantPlanet: React.FC = () => {
                   <svg className="w-32 h-32 md:w-48 md:h-48 text-emerald-500/30 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="5 5" />
                     <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" strokeWidth="1" />
-                    <motion.path 
+                    <m.path 
                       d="M 50 5 L 50 95 M 5 50 L 95 50" 
                       stroke="currentColor" 
                       strokeWidth="0.5"
@@ -150,29 +154,29 @@ const QuantPlanet: React.FC = () => {
       {/* Modules Path */}
       <section className="py-12 md:py-20 px-4 md:px-0">
         <div className="space-y-12 md:space-y-16">
-          {modules.map((m, idx) => (
-            <motion.div 
-              key={m.id}
+          {modules.map((m_mod, idx) => (
+            <m.div 
+              key={m_mod.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="group relative bg-brand-surface border border-white/10 rounded-[32px] md:rounded-[56px] overflow-hidden backdrop-blur-xl hover:border-emerald-500/20 transition-all duration-500"
             >
-              <div className={`absolute top-0 left-0 w-1.5 md:w-3 h-full bg-gradient-to-b ${m.gradient}`} />
+              <div className={`absolute top-0 left-0 w-1.5 md:w-3 h-full bg-gradient-to-b ${m_mod.gradient}`} />
               <div className="p-8 md:p-16 flex flex-col lg:flex-row gap-8 md:gap-12">
                  <div className="lg:w-1/3 space-y-4 md:space-y-6">
                     <div className="text-[10px] font-mono text-gray-600 uppercase tracking-widest">Phase_0{idx + 1}</div>
-                    <h3 className="text-xl md:text-3xl font-black text-white tracking-tighter uppercase leading-tight">{m.title}</h3>
-                    <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">{m.subtitle}</p>
+                    <h3 className="text-xl md:text-3xl font-black text-white tracking-tighter uppercase leading-tight">{m_mod.title}</h3>
+                    <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">{m_mod.subtitle}</p>
                     <div className="flex flex-wrap gap-2 pt-2">
-                       {m.tech.map(t => (
+                       {m_mod.tech.map(t => (
                          <span key={t} className="px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] md:text-[10px] font-mono text-gray-500">{t}</span>
                        ))}
                     </div>
                  </div>
 
                  <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    {m.lessons.map((lesson, lIdx) => (
+                    {m_mod.lessons.map((lesson, lIdx) => (
                       <div key={lIdx} className="p-6 md:p-8 bg-black/40 rounded-2xl md:rounded-[32px] border border-white/5 hover:bg-black/60 transition-colors">
                         <div className="text-[8px] md:text-[10px] font-mono text-gray-600 mb-2 uppercase">LESSON_0{lIdx + 1}</div>
                         <h4 className="text-white font-bold mb-2 text-sm md:text-base">{lesson.title}</h4>
@@ -181,7 +185,7 @@ const QuantPlanet: React.FC = () => {
                     ))}
                  </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </section>

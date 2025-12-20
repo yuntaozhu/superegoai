@@ -1,8 +1,12 @@
+
 import React, { useState } from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const CodePlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -23,7 +27,7 @@ const CodePlanet: React.FC = () => {
     { 
       title: '全栈即自由', 
       subtitle: 'Freedom', 
-      desc: '通过 AI 驾驭逻辑与艺术。你是总监，也是缔造者。', 
+      desc: '通过 AI 驾驭 logic 与艺术。你是总监，也是缔造者。', 
       icon: '🔓',
       detail: '打破职能边界，一人完成从视觉设计到后端部署的所有链路，不再受限于技术栈。',
       color: 'blue'
@@ -96,7 +100,7 @@ const CodePlanet: React.FC = () => {
     }
   ];
 
-  const cardVariants: Variants = {
+  const cardVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { 
       opacity: 1, 
@@ -110,7 +114,7 @@ const CodePlanet: React.FC = () => {
       {/* Hero Intro */}
       <section className="mt-8 md:mt-20 mb-16 md:mb-32 px-4 md:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
@@ -130,19 +134,19 @@ const CodePlanet: React.FC = () => {
               不要做代码的搬运工。学习如何以 <span className="text-white font-bold">“总导演”</span> 的身份，指挥 AI 军团构建复杂的数字世界。
             </p>
             <div className="flex gap-4">
-               <motion.button 
+               <m.button 
                  whileHover={{ scale: 1.05 }}
                  whileTap={{ scale: 0.95 }}
                  className="px-8 py-4 bg-cyan-600 text-white rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-cyan-500/20"
                >
                  查看路线图
-               </motion.button>
+               </m.button>
             </div>
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4">
              {philosophy.map((p, i) => (
-               <motion.div 
+               <m.div 
                  key={i}
                  layout
                  onClick={() => setActivePhilosophy(activePhilosophy === i ? null : i)}
@@ -161,18 +165,18 @@ const CodePlanet: React.FC = () => {
                   </div>
                   <AnimatePresence>
                     {activePhilosophy === i && (
-                      <motion.div 
+                      <m.div 
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         className="mt-4 pt-4 border-t border-white/5 overflow-hidden"
                       >
                         <p className="text-gray-300 text-sm leading-relaxed">{p.detail}</p>
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                   <div className="absolute top-0 right-0 p-4 opacity-5 font-mono text-4xl">{i+1}</div>
-               </motion.div>
+               </m.div>
              ))}
           </div>
         </div>
@@ -190,7 +194,7 @@ const CodePlanet: React.FC = () => {
             {phases.map((phase, idx) => {
               const isExpanded = expandedPhase === phase.id;
               return (
-                <motion.div 
+                <m.div 
                   key={phase.id}
                   layout
                   initial="hidden"
@@ -220,18 +224,18 @@ const CodePlanet: React.FC = () => {
                       </div>
                       
                       <div className="flex items-center gap-4">
-                        <motion.div 
+                        <m.div 
                           animate={{ rotate: isExpanded ? 180 : 0 }}
                           className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:text-white"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-                        </motion.div>
+                        </m.div>
                       </div>
                     </div>
 
                     <AnimatePresence>
                       {isExpanded && (
-                        <motion.div
+                        <m.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -278,11 +282,11 @@ const CodePlanet: React.FC = () => {
                                </div>
                             </div>
                           </div>
-                        </motion.div>
+                        </m.div>
                       )}
                     </AnimatePresence>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
           </div>
@@ -291,7 +295,7 @@ const CodePlanet: React.FC = () => {
 
       {/* Bottom Terminal Section */}
       <section className="mt-20 md:mt-40 mb-20 md:mb-40 px-4 md:px-0">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           className="bg-[#0a0a0a] border border-cyan-500/20 rounded-[40px] md:rounded-[80px] p-8 md:p-24 relative overflow-hidden shadow-[0_0_100px_rgba(6,182,212,0.1)]"
@@ -307,12 +311,12 @@ const CodePlanet: React.FC = () => {
             <div className="space-y-6">
               <div className="flex items-center gap-4 text-xs md:text-lg font-mono text-cyan-500">
                 <span>$</span>
-                <motion.span 
+                <m.span 
                   animate={{ opacity: [1, 0, 1] }}
                   transition={{ repeat: Infinity, duration: 0.8 }}
                 >
                   ego-os deploy --individual
-                </motion.span>
+                </m.span>
               </div>
               <div className="font-mono text-[10px] md:text-base text-gray-500 space-y-2 md:space-y-4">
                  <p className="flex items-center gap-4"><span className="text-emerald-500">[DONE]</span> Orchestrating UI components...</p>
@@ -328,13 +332,13 @@ const CodePlanet: React.FC = () => {
                   <h4 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase mb-2">一人即是公司</h4>
                   <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.2em]">Efficiency Multiplier: 10,000x</p>
                </div>
-               <motion.div 
+               <m.div 
                  animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
                  transition={{ duration: 10, repeat: Infinity }}
                  className="text-7xl md:text-9xl grayscale opacity-40 group-hover:grayscale-0 transition-all duration-1000"
                >
                  🦄
-               </motion.div>
+               </m.div>
             </div>
           </div>
           
@@ -348,7 +352,7 @@ const CodePlanet: React.FC = () => {
                <rect width="100%" height="100%" fill="url(#grid-code-fixed)" />
              </svg>
           </div>
-        </motion.div>
+        </m.div>
       </section>
 
       <style>{`

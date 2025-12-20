@@ -1,8 +1,12 @@
+
 import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const ArtPlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -68,7 +72,7 @@ const ArtPlanet: React.FC = () => {
     }
   ];
 
-  const containerVariants: Variants = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -76,7 +80,7 @@ const ArtPlanet: React.FC = () => {
     }
   };
 
-  const itemVariants: Variants = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
     visible: { 
       opacity: 1, 
@@ -86,7 +90,7 @@ const ArtPlanet: React.FC = () => {
     }
   };
 
-  const scanLineVariants: Variants = {
+  const scanLineVariants = {
     animate: {
       top: ['0%', '100%', '0%'],
       transition: { duration: 5, repeat: Infinity, ease: 'linear' }
@@ -98,31 +102,31 @@ const ArtPlanet: React.FC = () => {
       {/* Intro Section */}
       <section className="mt-12 md:mt-24 mb-32 md:mb-48 px-4 md:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
-          <motion.div 
+          <m.div 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={containerVariants}
             className="space-y-10 text-center lg:text-left"
           >
-            <motion.div variants={itemVariants} className="flex items-center justify-center lg:justify-start gap-6">
+            <m.div variants={itemVariants} className="flex items-center justify-center lg:justify-start gap-6">
               <span className="h-px w-20 bg-gradient-to-r from-purple-500 to-transparent"></span>
               <span className="text-purple-400 font-mono text-xs uppercase tracking-[0.5em] font-black">Neural Art Pipeline</span>
-            </motion.div>
+            </m.div>
             
-            <motion.h2 variants={itemVariants} className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.95]">
+            <m.h2 variants={itemVariants} className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.95]">
               训练“超我”的 <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400 animate-gradient-x">
                 审美与抽象能力
               </span>
-            </motion.h2>
+            </m.h2>
             
-            <motion.p variants={itemVariants} className="text-lg md:text-2xl text-gray-400 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
+            <m.p variants={itemVariants} className="text-lg md:text-2xl text-gray-400 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
               AI 不再是简单的画图工具，而是将 <span className="text-white font-semibold">“艺术文脉”</span> 转化为 <span className="text-white font-semibold">“数学算力”</span> 的翻译官。
-            </motion.p>
-          </motion.div>
+            </m.p>
+          </m.div>
 
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
             whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.2 }}
@@ -135,7 +139,7 @@ const ArtPlanet: React.FC = () => {
                 <div className="text-2xl md:text-4xl font-black text-white">{stat.val}</div>
               </div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -149,7 +153,7 @@ const ArtPlanet: React.FC = () => {
               key={act.id}
               className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 md:gap-32 items-center relative`}
             >
-              <motion.div 
+              <m.div 
                 className="flex-1 space-y-8 md:space-y-16 z-10 w-full"
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -185,9 +189,9 @@ const ArtPlanet: React.FC = () => {
                            Logic Modules
                         </div>
                         <div className="flex flex-wrap gap-3">
-                          {act.math.map(m => (
-                            <span key={m} className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-[11px] md:text-sm text-gray-300 font-medium">
-                              {m}
+                          {act.math.map(m_math => (
+                            <span key={m_math} className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-[11px] md:text-sm text-gray-300 font-medium">
+                              {m_math}
                             </span>
                           ))}
                         </div>
@@ -204,9 +208,9 @@ const ArtPlanet: React.FC = () => {
                       </div>
                    </div>
                 </div>
-              </motion.div>
+              </m.div>
 
-              <motion.div 
+              <m.div 
                 className="flex-1 w-full z-10"
                 initial={{ opacity: 0, scale: 0.85, rotate: idx % 2 === 0 ? 8 : -8 }}
                 whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -226,14 +230,14 @@ const ArtPlanet: React.FC = () => {
                     </div>
 
                     <div className="relative h-full flex items-center justify-center">
-                       <motion.div 
+                       <m.div 
                          animate={{ scale: [1, 1.15, 1], rotate: [0, 10, -10, 0] }}
                          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
                          className="text-9xl md:text-[11rem] drop-shadow-[0_0_60px_rgba(255,255,255,0.15)] grayscale group-hover:grayscale-0 transition-all duration-1000"
                        >
                          {act.icon}
-                       </motion.div>
-                       <motion.div variants={scanLineVariants} animate="animate" className="absolute left-0 right-0 h-[1.5px] bg-white/80 shadow-[0_0_20px_rgba(255,255,255,0.5)] z-20" />
+                       </m.div>
+                       <m.div variants={scanLineVariants} animate="animate" className="absolute left-0 right-0 h-[1.5px] bg-white/80 shadow-[0_0_20px_rgba(255,255,255,0.5)] z-20" />
                     </div>
 
                     <div className="flex justify-between items-end opacity-30 font-mono text-[9px] text-white">
@@ -242,7 +246,7 @@ const ArtPlanet: React.FC = () => {
                     </div>
                   </div>
 
-                  <motion.div 
+                  <m.div 
                     initial={{ y: 80, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 1 }}
@@ -253,9 +257,9 @@ const ArtPlanet: React.FC = () => {
                       <div className="text-[10px] font-mono text-purple-400 uppercase font-black tracking-[0.5em]">Mission_Directive</div>
                     </div>
                     <p className="text-white font-black leading-snug text-lg md:text-2xl tracking-tight">{act.mission}</p>
-                  </motion.div>
+                  </m.div>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
           ))}
         </div>
@@ -263,7 +267,7 @@ const ArtPlanet: React.FC = () => {
 
       {/* Philosophy Callout */}
       <section className="mt-24 md:mt-56 mb-24 md:mb-56 text-center px-4 md:px-0">
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -275,7 +279,7 @@ const ArtPlanet: React.FC = () => {
               "我们不仅仅是在模拟艺术，我们是在 <span className="text-white font-normal">解构审美</span>。通过将流派的核心抽象为代码，你真正理解了什么是‘风格’。"
             </p>
           </div>
-        </motion.div>
+        </m.div>
       </section>
 
       <style>{`

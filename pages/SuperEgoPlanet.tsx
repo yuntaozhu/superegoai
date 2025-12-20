@@ -1,8 +1,12 @@
+
 import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const SuperEgoPlanet: React.FC = () => {
   const { language } = useLanguage();
@@ -65,7 +69,7 @@ const SuperEgoPlanet: React.FC = () => {
       {/* Sovereignty Section */}
       <section className="mt-8 md:mt-16 mb-16 md:mb-24 px-4 md:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="space-y-6 md:space-y-8 text-center md:text-left"
@@ -81,7 +85,7 @@ const SuperEgoPlanet: React.FC = () => {
             <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light">
               拒绝玩具级的“调包侠”教学。我们将企业级的 <span className="text-white font-bold">FTI</span> 架构翻译为个人知识系统的构建法则，实现全方位主权。
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
              {[
@@ -103,7 +107,7 @@ const SuperEgoPlanet: React.FC = () => {
       <section className="py-12 md:py-20 px-4 md:px-0">
         <div className="space-y-12 md:space-y-16">
           {stages.map((stage, idx) => (
-            <motion.div 
+            <m.div 
               key={stage.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -129,13 +133,13 @@ const SuperEgoPlanet: React.FC = () => {
                  </div>
 
                  <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                    {stage.modules.map((m, i) => (
+                    {stage.modules.map((m_mod, i) => (
                       <div key={i} className="p-6 md:p-10 bg-black/40 rounded-2xl md:rounded-[40px] border border-white/5 hover:bg-black/60 transition-colors">
                          <h4 className="text-white font-bold mb-2 md:mb-4 flex items-center gap-2 text-sm md:text-base">
                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
-                           {m.name}
+                           {m_mod.name}
                          </h4>
-                         <p className="text-gray-400 text-[10px] md:text-xs leading-relaxed">{m.detail}</p>
+                         <p className="text-gray-400 text-[10px] md:text-xs leading-relaxed">{m_mod.detail}</p>
                       </div>
                     ))}
                     <div className="md:col-span-2 p-6 md:p-8 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 text-center">
@@ -149,7 +153,7 @@ const SuperEgoPlanet: React.FC = () => {
                     </div>
                  </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </section>

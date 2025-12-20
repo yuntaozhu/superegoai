@@ -4,7 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from "@google/genai";
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
 import { ArrowLeft, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History, Search, Trash2, FileText, Sparkles } from 'lucide-react';
-import { PROMPT_REGISTRY, PromptNode } from '../constants/promptRegistry';
+import { PROMPT_REGISTRY } from '../constants/promptRegistry';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const Studio: React.FC = () => {
   const { language } = useLanguage();
@@ -129,7 +132,7 @@ const Studio: React.FC = () => {
         {/* Dynamic Registry Sidebar */}
         <AnimatePresence>
           {isSidebarOpen && (
-            <motion.aside
+            <m.aside
               initial={{ x: -350 }}
               animate={{ x: 0 }}
               exit={{ x: -350 }}
@@ -181,7 +184,7 @@ const Studio: React.FC = () => {
                   );
                 })}
               </div>
-            </motion.aside>
+            </m.aside>
           )}
         </AnimatePresence>
 
@@ -230,7 +233,7 @@ const Studio: React.FC = () => {
 
           <AnimatePresence>
             {isComparing && (
-              <motion.div 
+              <m.div 
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
@@ -261,7 +264,7 @@ const Studio: React.FC = () => {
                      </div>
                    ) : <span className="text-gray-700 font-mono opacity-20">Awaiting...</span>}
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>

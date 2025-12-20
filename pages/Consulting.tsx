@@ -11,19 +11,16 @@ import {
   Users, 
   TrendingUp, 
   Code, 
-  Search, 
   Activity, 
   ChevronRight,
   ArrowRight,
-  BarChart3,
-  Bot,
-  Briefcase,
-  CheckCircle2,
   Globe,
-  Database,
   ArrowLeft
 } from 'lucide-react';
 import { useLanguage, Link } from '../context/LanguageContext';
+
+// Using any to bypass framer-motion type mismatch in the current environment
+const m = motion as any;
 
 const Consulting: React.FC = () => {
   const { language, t } = useLanguage();
@@ -140,9 +137,9 @@ const Consulting: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0B1026] text-gray-300 font-sans overflow-hidden">
       {/* Scroll Progress Bar */}
-      <motion.div
+      <m.div
         className="fixed top-0 left-0 right-0 h-1 bg-[#E31937] z-[100] origin-left"
-        style={{ scaleX }}
+        style={{ scaleX } as any}
       />
 
       {/* Corporate Navbar */}
@@ -188,16 +185,16 @@ const Consulting: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#E31937] text-xs font-black uppercase tracking-[0.3em] mb-8"
           >
             Next Gen Consultancy
-          </motion.div>
+          </m.div>
           
-          <motion.h1
+          <m.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -205,27 +202,27 @@ const Consulting: React.FC = () => {
           >
             构建企业的可信赖<br/>
             <span className="text-[#E31937]">“第二大脑”</span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
             className="text-lg md:text-2xl text-gray-400 font-medium mb-4 tracking-tight"
           >
             From Artificial Intelligence to <span className="text-white font-black italic underline decoration-[#E31937]">Augmented Intelligence</span>
-          </motion.p>
+          </m.p>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
             className="max-w-3xl mx-auto text-gray-500 text-base md:text-lg leading-relaxed mb-12"
           >
             在 HBR 与 ICMCI 定义的AI变革时代，单纯的算力已不再稀缺。稀缺的是信任、治理与人机共创的智慧。Super Ego Agent 致力于为您构建一个“伦理与效能并重”的数字外脑。我们不只是交付代码，我们交付的是战略对齐、风险管控与组织进化。
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -237,7 +234,7 @@ const Consulting: React.FC = () => {
             <button className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white border border-white/20 rounded-xl font-black uppercase tracking-widest transition-all backdrop-blur-md flex items-center justify-center gap-3">
               检阅AI员工军团 <Activity className="w-5 h-5" />
             </button>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -253,7 +250,7 @@ const Consulting: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             {philosophy.map((p, i) => (
-              <motion.div
+              <m.div
                 key={p.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -275,7 +272,7 @@ const Consulting: React.FC = () => {
                 <p className="text-gray-400 leading-relaxed text-base font-light">
                   {p.text}
                 </p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -292,9 +289,9 @@ const Consulting: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {methodology.map((m, i) => (
-              <motion.div
-                key={m.step}
+            {methodology.map((m_item, i) => (
+              <m.div
+                key={m_item.step}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
@@ -302,18 +299,18 @@ const Consulting: React.FC = () => {
                 className="relative group"
               >
                 <div className="text-6xl font-black text-white/5 absolute -top-10 left-0 group-hover:text-[#E31937]/10 transition-colors duration-500">
-                  {m.step}
+                  {m_item.step}
                 </div>
                 <div className="relative pt-6">
                   <h3 className="text-xl font-black text-white mb-4 flex items-center gap-3">
                     <span className="w-2 h-2 rounded-full bg-[#E31937]" />
-                    {m.title}
+                    {m_item.title}
                   </h3>
                   <p className="text-gray-400 text-sm leading-relaxed mb-6 font-light">
-                    {m.desc}
+                    {m_item.desc}
                   </p>
                   <ul className="space-y-2">
-                    {m.details.map(d => (
+                    {m_item.details.map(d => (
                       <li key={d} className="flex items-center gap-2 text-xs text-gray-500">
                          <div className="w-1 h-1 bg-white/20 rounded-full" />
                          {d}
@@ -321,7 +318,7 @@ const Consulting: React.FC = () => {
                     ))}
                   </ul>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -339,7 +336,7 @@ const Consulting: React.FC = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20">
             {/* Leadership Side */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
@@ -382,10 +379,10 @@ const Consulting: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
 
             {/* Workforce Side */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
@@ -428,7 +425,7 @@ const Consulting: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -445,7 +442,7 @@ const Consulting: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {agents.map((a, i) => (
-              <motion.div
+              <m.div
                 key={a.title}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -477,7 +474,7 @@ const Consulting: React.FC = () => {
                 <div className="absolute -bottom-10 -right-10 opacity-5 group-hover:opacity-10 transition-opacity">
                    {a.icon}
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -486,7 +483,7 @@ const Consulting: React.FC = () => {
       {/* Legacy Code Section */}
       <section className="py-24 md:py-32 px-4 relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-           <motion.div 
+           <m.div 
              initial={{ opacity: 0, y: 30 }}
              whileInView={{ opacity: 1, y: 0 }}
              className="bg-gradient-to-br from-indigo-900/30 via-[#0B1026] to-[#0B1026] border border-white/10 rounded-[48px] md:rounded-[80px] p-10 md:p-24 relative overflow-hidden"
@@ -527,7 +524,7 @@ const Consulting: React.FC = () => {
                     </div>
                  </div>
               </div>
-           </motion.div>
+           </m.div>
         </div>
       </section>
 
@@ -535,7 +532,7 @@ const Consulting: React.FC = () => {
       <section id="case" className="py-24 md:py-32 px-4 bg-white/[0.01]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-32 items-center">
-             <motion.div
+             <m.div
                initial={{ opacity: 0, scale: 0.9 }}
                whileInView={{ opacity: 1, scale: 1 }}
                transition={{ duration: 0.8 }}
@@ -565,7 +562,7 @@ const Consulting: React.FC = () => {
                       </div>
                    </div>
                 </div>
-             </motion.div>
+             </m.div>
 
              <div className="space-y-10">
                 <div className="text-left">
@@ -621,7 +618,7 @@ const Consulting: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Profile 1 */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               className="group p-10 bg-white/5 border border-white/10 rounded-[48px] flex flex-col md:flex-row gap-10 items-center hover:bg-white/10 transition-all duration-500"
@@ -637,10 +634,10 @@ const Consulting: React.FC = () => {
                     资深数据专家 & AI技术顾问。香港大学金融工程研究生，上海交大MBA。前 TCL/MTK 架构师。深谙 AI 算法底层与金融科技，拥有极强的人机协作与系统编排前瞻力。
                   </p>
                </div>
-            </motion.div>
+            </m.div>
 
             {/* Profile 2 */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               className="group p-10 bg-white/5 border border-white/10 rounded-[48px] flex flex-col md:flex-row gap-10 items-center hover:bg-white/10 transition-all duration-500"
@@ -656,7 +653,7 @@ const Consulting: React.FC = () => {
                     资深技术专家。前阿里巴巴旗下公司技术总监。10+年机器学习与AIGC落地经验。带领团队研发多模态大模型，并在企业级安全智能体系统部署方面拥有丰富实操经验。
                   </p>
                </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
