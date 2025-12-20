@@ -1,7 +1,8 @@
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, BlogPost, Link } from '../context/LanguageContext';
+import { Home, ChevronRight, Search, ArrowLeft } from 'lucide-react';
 
 const POSTS_INCREMENT = 10;
 
@@ -141,6 +142,25 @@ const BlogPage: React.FC = () => {
         )}
 
         <article className="max-w-3xl mx-auto">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 mb-8 text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-500 overflow-hidden whitespace-nowrap">
+            <Link to="/" className="hover:text-white transition-colors flex items-center gap-1">
+              <Home className="w-3 h-3" />
+              <span className="hidden sm:inline">Home</span>
+            </Link>
+            <ChevronRight className="w-3 h-3 flex-shrink-0" />
+            <button 
+              onClick={() => { setSelectedPost(null); setScrollProgress(0); }}
+              className="hover:text-white transition-colors"
+            >
+              {language === 'en' ? 'Insights' : '洞察'}
+            </button>
+            <ChevronRight className="w-3 h-3 flex-shrink-0" />
+            <span className="text-gray-400 truncate max-w-[150px] sm:max-w-xs">
+              {selectedPost.title}
+            </span>
+          </nav>
+
           {/* Back Button */}
           <button 
             onClick={() => { setSelectedPost(null); setScrollProgress(0); }}
@@ -298,18 +318,5 @@ const BlogPage: React.FC = () => {
     </div>
   );
 };
-
-const Search = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-);
-
-const ChevronRight = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-);
-
-// Local definition of ArrowLeft used for consistent SVG icon styling
-const ArrowLeft = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-);
 
 export default BlogPage;

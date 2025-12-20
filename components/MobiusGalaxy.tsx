@@ -40,7 +40,6 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     mountRef.current.appendChild(renderer.domElement);
 
     // 参数配置
-    const segments = 300;
     const stripWidth = isMobile ? 2.0 : 2.8; 
     const radius = isMobile ? 3.8 : 5.8;
     
@@ -83,6 +82,62 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const nebulaMat = new THREE.PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending });
     const nebulaPoints = new THREE.Points(nebulaGeo, nebulaMat);
     scene.add(nebulaPoints);
+
+    // --- Dynamic Effects Addition ---
+    
+    // Distant Drifting Nebulae Wisps
+    const createWispTexture = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128; canvas.height = 128;
+      const ctx = canvas.getContext('2d')!;
+      const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      grad.addColorStop(0, 'rgba(139, 92, 246, 0.15)');
+      grad.addColorStop(0.5, 'rgba(59, 130, 246, 0.05)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(canvas);
+    };
+    
+    const wispsGroup = new THREE.Group();
+    scene.add(wispsGroup);
+    const wispTexture = createWispTexture();
+    const wisps: THREE.Sprite[] = [];
+    for(let i=0; i < (isMobile ? 4 : 8); i++) {
+      const wispMat = new THREE.SpriteMaterial({ map: wispTexture, transparent: true, blending: THREE.AdditiveBlending });
+      const wisp = new THREE.Sprite(wispMat);
+      const r = radius * (2 + Math.random() * 2);
+      const a = Math.random() * Math.PI * 2;
+      wisp.position.set(Math.cos(a)*r, (Math.random()-0.5)*20, Math.sin(a)*r);
+      wisp.scale.set(15 + Math.random()*25, 15 + Math.random()*25, 1);
+      wisp.userData = { speed: (Math.random() - 0.5) * 0.001, radius: r, angle: a };
+      wisps.push(wisp);
+      wispsGroup.add(wisp);
+    }
+
+    // Shooting Stars System
+    const shootingStarsGroup = new THREE.Group();
+    scene.add(shootingStarsGroup);
+    const activeShootingStars: { mesh: THREE.Line, velocity: THREE.Vector3, life: number }[] = [];
+    const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending });
+
+    const spawnShootingStar = () => {
+      const geometry = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(0, 0, -5)
+      ]);
+      const line = new THREE.Line(geometry, shootingStarMat.clone());
+      const angle = Math.random() * Math.PI * 2;
+      const dist = radius * 4 + Math.random() * 100;
+      line.position.set(Math.cos(angle) * dist, (Math.random() - 0.5) * 100, Math.sin(angle) * dist);
+      
+      const target = new THREE.Vector3((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
+      const dir = target.clone().sub(line.position).normalize();
+      line.lookAt(line.position.clone().add(dir));
+      
+      activeShootingStars.push({ mesh: line, velocity: dir.multiplyScalar(2.5 + Math.random() * 2), life: 1.0 });
+      shootingStarsGroup.add(line);
+    };
 
     // 4. 程序化星球纹理生成器
     const createPlanetTexture = (baseColor: number) => {
@@ -190,23 +245,24 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const glow = new THREE.Mesh(glowGeo, glowMat);
       sphere.add(glow);
 
-      // 文字标签绘制
-      const courseName = course.shortTitle.includes('：') 
-        ? course.shortTitle.split('：')[1] 
-        : (course.shortTitle || course.title).split('：')[0];
+      const courseName = course.title.includes('：') 
+        ? course.title.split('：')[0] 
+        : course.title;
 
       const labelCanvas = document.createElement('canvas');
       labelCanvas.width = 512; labelCanvas.height = 160;
       const lCtx = labelCanvas.getContext('2d')!;
       lCtx.shadowBlur = 15;
       lCtx.shadowColor = 'rgba(0,0,0,0.9)';
-      lCtx.font = `bold ${isMobile ? '64px' : '72px'} Inter, "Microsoft YaHei", sans-serif`;
+      
+      lCtx.font = `bold ${isMobile ? '60px' : '68px'} Inter, "Microsoft YaHei", sans-serif`;
       lCtx.textAlign = 'center';
       lCtx.fillStyle = 'white';
       lCtx.fillText(courseName.toUpperCase(), 256, 80);
+      
       lCtx.font = `bold 24px monospace`;
-      lCtx.fillStyle = `rgba(255,255,255,0.5)`;
-      lCtx.fillText(`PLANET_${course.id.toUpperCase()}`, 256, 120);
+      lCtx.fillStyle = `rgba(255,255,255,0.7)`;
+      lCtx.fillText(`MODULE_${course.id.toUpperCase()}`, 256, 120);
 
       const labelTexture = new THREE.CanvasTexture(labelCanvas);
       const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
@@ -215,7 +271,6 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       labelSprite.position.y = planetScale + (isMobile ? 0.6 : 0.85);
       sphere.add(labelSprite);
 
-      // 图标悬浮
       const iconCanvas = document.createElement('canvas');
       iconCanvas.width = 128; iconCanvas.height = 128;
       const iCtx = iconCanvas.getContext('2d')!;
@@ -288,6 +343,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const animate = () => {
       requestAnimationFrame(animate);
 
+      const now = Date.now();
       currentRotationRef.current += (rotationTargetRef.current - currentRotationRef.current) * INTERPOLATION;
       if (!isDraggingRef.current && focusedIndex === -1) {
         rotationTargetRef.current += 0.0012;
@@ -301,13 +357,38 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
         planetGroup.rotation.y = currentRotationRef.current;
       }
 
+      // Background dynamic updates
       stars.rotation.y += 0.00015;
+      starMat.opacity = 0.35 + Math.sin(now * 0.0008) * 0.1; // Twinkle
+
+      // Nebula Shimmer
+      nebulaMat.opacity = 0.55 + Math.sin(now * 0.001) * 0.1;
+
+      // Drifting Wisps Update
+      wisps.forEach(wisp => {
+        wisp.userData.angle += wisp.userData.speed;
+        wisp.position.x = Math.cos(wisp.userData.angle) * wisp.userData.radius;
+        wisp.position.z = Math.sin(wisp.userData.angle) * wisp.userData.radius;
+        wisp.material.opacity = 0.8 + Math.sin(now * 0.0005 + wisp.userData.angle) * 0.2;
+      });
+
+      // Shooting Stars Update
+      if (Math.random() < 0.005) spawnShootingStar();
+      for (let i = activeShootingStars.length - 1; i >= 0; i--) {
+        const ss = activeShootingStars[i];
+        ss.mesh.position.add(ss.velocity);
+        ss.life -= 0.015;
+        (ss.mesh.material as THREE.LineBasicMaterial).opacity = ss.life;
+        if (ss.life <= 0) {
+          shootingStarsGroup.remove(ss.mesh);
+          activeShootingStars.splice(i, 1);
+        }
+      }
 
       planetMeshes.forEach((mesh, i) => {
         mesh.rotation.y += 0.012;
-        mesh.position.y += Math.sin(Date.now() * 0.001 + i) * 0.0015;
+        mesh.position.y += Math.sin(now * 0.001 + i) * 0.0015;
         
-        // Highlight focused planet
         const isFocused = i === focusedIndex;
         const targetScale = isFocused ? 1.3 : 1.0;
         mesh.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
@@ -342,6 +423,8 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       renderer.dispose();
       starGeo.dispose();
       nebulaGeo.dispose();
+      wispTexture.dispose();
+      shootingStarMat.dispose();
     };
   }, [courses, orientation, isMobile, focusedIndex]);
 
@@ -363,12 +446,9 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [courses, focusedIndex, onSelectCourse]);
 
-  // Rotate to focused planet
   useEffect(() => {
     if (focusedIndex !== -1) {
       const u = (focusedIndex / courses.length) * Math.PI * 2;
-      // We need to rotate the group so that the planet at angle 'u' is facing the camera (angle 0)
-      // The current system rotates the group, so we set target to -u (plus some offset to align with camera start)
       rotationTargetRef.current = -u;
     }
   }, [focusedIndex, courses.length]);
