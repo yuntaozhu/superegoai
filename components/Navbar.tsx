@@ -40,6 +40,16 @@ const Navbar: React.FC = () => {
             </Link>
 
             <Link
+              to="/prompt-guide"
+              className={`px-5 py-2 rounded-lg text-base font-bold transition-all flex items-center gap-2 ${
+                location.pathname === '/prompt-guide' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              {t('nav.prompt_guide')}
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            </Link>
+
+            <Link
               to="/about"
               className={`px-5 py-2 rounded-lg text-base font-bold transition-all ${
                 location.pathname === '/about' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -127,6 +137,13 @@ const Navbar: React.FC = () => {
               className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
             >
               {t('nav.home')}
+            </Link>
+            <Link 
+              to="/prompt-guide" 
+              onClick={() => setIsOpen(false)} 
+              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/prompt-guide' ? 'bg-white/10 text-white' : 'text-gray-400 hover:text-white'}`}
+            >
+              {t('nav.prompt_guide')}
             </Link>
             <Link 
               to="/about" 

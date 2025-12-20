@@ -8,7 +8,24 @@ export const translations = {
       planets: 'Galaxy',
       studio: 'AI Studio',
       about: 'Mission',
+      prompt_guide: 'Prompt Guide',
     },
+    prompt_guide: {
+      title: 'Prompt Engineering Guide',
+      subtitle: 'Master the art of communicating with AGI.',
+      description: 'A comprehensive guide based on the latest research and industry practices, helping you evolve from a user to an orchestrator.',
+      explore: 'Explore Topics',
+      categories: {
+        introduction: 'Introduction',
+        techniques: 'Techniques',
+        applications: 'Applications',
+        prompts: 'Prompt Library',
+        models: 'LLM Collection',
+        research: 'Advanced Research',
+        risks: 'Risks & Ethics'
+      }
+    },
+    // ... rest of translations
     hero: {
       badge: 'The Modern Software Developer OS',
       title_prefix: 'AI First Course ——',
@@ -92,7 +109,24 @@ export const translations = {
       planets: '课程星球',
       studio: '灵感工坊',
       about: '愿景',
+      prompt_guide: '提示词指南',
     },
+    prompt_guide: {
+      title: '提示词工程指南',
+      subtitle: '掌握与 AGI 对话的艺术。',
+      description: '基于最新研究与行业实践的全面指南，助你从 AI 使用者进化为系统编排者。',
+      explore: '探索主题',
+      categories: {
+        introduction: '基础入门',
+        techniques: '进阶技术',
+        applications: '实战应用',
+        prompts: '提示词库',
+        models: '模型集锦',
+        research: '前沿研究',
+        risks: '风险与伦理'
+      }
+    },
+    // ... rest of translations
     hero: {
       badge: '现代软件开发者操作系统',
       title_prefix: 'AI First Course ——',

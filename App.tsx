@@ -8,6 +8,7 @@ import Consulting from './pages/Consulting';
 import PlanetsPage from './pages/PlanetsPage';
 import Studio from './pages/Studio';
 import AboutPage from './pages/AboutPage';
+import PromptGuide from './pages/PromptGuide';
 
 // Import specific planet pages
 import ArtPlanet from './pages/ArtPlanet';
@@ -35,6 +36,7 @@ const App: React.FC = () => {
               <Route path="/studio" element={<Studio />} />
               <Route path="/consulting" element={<Consulting />} />
               <Route path="/blog" element={<BlogPage />} />
+              <Route path="/prompt-guide" element={<PromptGuide />} />
               
               {/* Refactored Specific Planet Routes */}
               <Route path="/course/art" element={<ArtPlanet />} />

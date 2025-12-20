@@ -83,9 +83,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const nebulaPoints = new THREE.Points(nebulaGeo, nebulaMat);
     scene.add(nebulaPoints);
 
-    // --- Dynamic Effects Addition ---
-    
-    // Distant Drifting Nebulae Wisps
+    // --- Dynamic Effects ---
     const createWispTexture = () => {
       const canvas = document.createElement('canvas');
       canvas.width = 128; canvas.height = 128;
@@ -115,7 +113,6 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       wispsGroup.add(wisp);
     }
 
-    // Shooting Stars System
     const shootingStarsGroup = new THREE.Group();
     scene.add(shootingStarsGroup);
     const activeShootingStars: { mesh: THREE.Line, velocity: THREE.Vector3, life: number }[] = [];
@@ -139,36 +136,59 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       shootingStarsGroup.add(line);
     };
 
-    // 4. 程序化星球纹理生成器
-    const createPlanetTexture = (baseColor: number) => {
+    // 4. 程序化星球纹理生成器 - 现在包含课程名称
+    const createPlanetTexture = (baseColor: number, text: string) => {
       const canvas = document.createElement('canvas');
-      canvas.width = 512; canvas.height = 256;
+      canvas.width = 1024; canvas.height = 512;
       const ctx = canvas.getContext('2d')!;
       const color = new THREE.Color(baseColor);
       
+      // 背景色
       ctx.fillStyle = `rgb(${color.r*255},${color.g*255},${color.b*255})`;
-      ctx.fillRect(0, 0, 512, 256);
+      ctx.fillRect(0, 0, 1024, 512);
       
-      for (let i = 0; i < 2000; i++) {
-        const x = Math.random() * 512;
-        const y = Math.random() * 256;
+      // 噪点与星尘
+      for (let i = 0; i < 4000; i++) {
+        const x = Math.random() * 1024;
+        const y = Math.random() * 512;
         const size = Math.random() * 2;
-        const alpha = Math.random() * 0.2;
+        const alpha = Math.random() * 0.3;
         ctx.fillStyle = `rgba(255,255,255,${alpha})`;
         ctx.beginPath();
         ctx.arc(x, y, size, 0, Math.PI * 2);
         ctx.fill();
       }
       
-      for (let i = 0; i < 8; i++) {
-        ctx.strokeStyle = `rgba(0,0,0,0.15)`;
-        ctx.lineWidth = Math.random() * 15;
+      // 纹理条纹
+      for (let i = 0; i < 12; i++) {
+        ctx.strokeStyle = `rgba(0,0,0,0.2)`;
+        ctx.lineWidth = Math.random() * 30;
         ctx.beginPath();
-        ctx.moveTo(0, Math.random() * 256);
-        ctx.bezierCurveTo(170, Math.random() * 256, 340, Math.random() * 256, 512, Math.random() * 256);
+        ctx.moveTo(0, Math.random() * 512);
+        ctx.bezierCurveTo(340, Math.random() * 512, 680, Math.random() * 512, 1024, Math.random() * 512);
         ctx.stroke();
       }
-      return new THREE.CanvasTexture(canvas);
+
+      // 核心课程名称 - 绘制在纹理上
+      ctx.font = 'bold 120px Inter, "Microsoft YaHei", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      // 绘制两次以确保 360 度可见
+      const drawLabel = (x: number) => {
+        ctx.shadowBlur = 40;
+        ctx.shadowColor = 'rgba(0,0,0,1)';
+        ctx.fillStyle = 'white';
+        ctx.fillText(text.toUpperCase(), x, 256);
+        ctx.shadowBlur = 0;
+      };
+
+      drawLabel(256);
+      drawLabel(768);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      return texture;
     };
 
     // 5. 行星系统
@@ -197,9 +217,13 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       };
       const baseColor = getColor(course.color);
       
+      const courseName = course.title.includes('：') 
+        ? course.title.split('：')[0] 
+        : course.title;
+
       const sphereGeo = new THREE.SphereGeometry(planetScale, 64, 64);
       const sphereMat = new THREE.MeshStandardMaterial({
-        map: createPlanetTexture(baseColor),
+        map: createPlanetTexture(baseColor, courseName),
         roughness: 0.7,
         metalness: 0.3,
         emissive: baseColor,
@@ -245,32 +269,25 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const glow = new THREE.Mesh(glowGeo, glowMat);
       sphere.add(glow);
 
-      const courseName = course.title.includes('：') 
-        ? course.title.split('：')[0] 
-        : course.title;
-
+      // 悬浮标签仅保留模块编号，使视觉更干净
       const labelCanvas = document.createElement('canvas');
-      labelCanvas.width = 512; labelCanvas.height = 160;
+      labelCanvas.width = 512; labelCanvas.height = 100;
       const lCtx = labelCanvas.getContext('2d')!;
-      lCtx.shadowBlur = 15;
-      lCtx.shadowColor = 'rgba(0,0,0,0.9)';
-      
-      lCtx.font = `bold ${isMobile ? '60px' : '68px'} Inter, "Microsoft YaHei", sans-serif`;
+      lCtx.font = `bold 32px monospace`;
       lCtx.textAlign = 'center';
-      lCtx.fillStyle = 'white';
-      lCtx.fillText(courseName.toUpperCase(), 256, 80);
-      
-      lCtx.font = `bold 24px monospace`;
       lCtx.fillStyle = `rgba(255,255,255,0.7)`;
-      lCtx.fillText(`MODULE_${course.id.toUpperCase()}`, 256, 120);
+      lCtx.shadowBlur = 10;
+      lCtx.shadowColor = 'black';
+      lCtx.fillText(`NODE_${course.id.toUpperCase()}`, 256, 50);
 
       const labelTexture = new THREE.CanvasTexture(labelCanvas);
       const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
       const labelSprite = new THREE.Sprite(labelMat);
-      labelSprite.scale.set(isMobile ? 1.8 : 2.5, isMobile ? 0.55 : 0.78, 1);
+      labelSprite.scale.set(1.5, 0.3, 1);
       labelSprite.position.y = planetScale + (isMobile ? 0.6 : 0.85);
       sphere.add(labelSprite);
 
+      // 图标悬浮
       const iconCanvas = document.createElement('canvas');
       iconCanvas.width = 128; iconCanvas.height = 128;
       const iCtx = iconCanvas.getContext('2d')!;
@@ -357,14 +374,14 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
         planetGroup.rotation.y = currentRotationRef.current;
       }
 
-      // Background dynamic updates
+      // 背景动态更新
       stars.rotation.y += 0.00015;
-      starMat.opacity = 0.35 + Math.sin(now * 0.0008) * 0.1; // Twinkle
+      starMat.opacity = 0.35 + Math.sin(now * 0.0008) * 0.1;
 
-      // Nebula Shimmer
+      // 星云闪烁
       nebulaMat.opacity = 0.55 + Math.sin(now * 0.001) * 0.1;
 
-      // Drifting Wisps Update
+      // 星云碎片
       wisps.forEach(wisp => {
         wisp.userData.angle += wisp.userData.speed;
         wisp.position.x = Math.cos(wisp.userData.angle) * wisp.userData.radius;
@@ -372,7 +389,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
         wisp.material.opacity = 0.8 + Math.sin(now * 0.0005 + wisp.userData.angle) * 0.2;
       });
 
-      // Shooting Stars Update
+      // 流星
       if (Math.random() < 0.005) spawnShootingStar();
       for (let i = activeShootingStars.length - 1; i >= 0; i--) {
         const ss = activeShootingStars[i];
