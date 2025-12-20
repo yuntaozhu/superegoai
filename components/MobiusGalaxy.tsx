@@ -313,9 +313,9 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     rimLight.position.set(10, 10, 10);
     scene.add(rimLight);
 
-    // 交互逻辑
-    const SENSITIVITY = isMobile ? 0.012 : 0.008;
-    const INTERPOLATION = 0.1;
+    // 交互逻辑 - Refined for smoother control
+    const SENSITIVITY = isMobile ? 0.006 : 0.003; 
+    const INTERPOLATION = 0.05; 
 
     const onPointerDown = (e: any) => {
       isDraggingRef.current = true;
@@ -363,7 +363,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const now = Date.now();
       currentRotationRef.current += (rotationTargetRef.current - currentRotationRef.current) * INTERPOLATION;
       if (!isDraggingRef.current && focusedIndex === -1) {
-        rotationTargetRef.current += 0.0012;
+        rotationTargetRef.current += 0.0008; // Slower passive rotation
       }
 
       if (orientation === 'vertical') {
