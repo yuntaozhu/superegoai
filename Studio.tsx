@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from "@google/genai";
-import { useLanguage, Link } from '../context/LanguageContext';
+import { useLanguage, Link } from './context/LanguageContext';
 import { ArrowLeft, Sparkles, Copy, Trash2, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History } from 'lucide-react';
-import { PROMPT_GUIDE_DATA, PromptNode } from '../features/prompts/promptData';
+import { PROMPT_GUIDE_DATA, PromptNode } from './features/prompts/promptData';
 
 const Studio: React.FC = () => {
   const { language } = useLanguage();
@@ -31,23 +31,20 @@ const Studio: React.FC = () => {
     localStorage.setItem('prompt_history', JSON.stringify(newHistory));
   };
 
-  // Fixed: handleGenerate now properly initializes GoogleGenAI and uses the .text property
   const handleGenerate = async (input: string, targetSetter: (val: string) => void) => {
     if (!input.trim()) return;
     setIsLoading(true);
     addToHistory(input);
     
-    // Always create a new instance before making an API call to ensure current key is used
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     try {
       const response = await ai.models.generateContent({
         model: 'gemini-3-pro-preview',
         contents: input,
         config: {
-          thinkingConfig: { thinkingBudget: 4096 } 
+          thinkingConfig: { thinkingBudget: 4096 } // Reasonable budget for reasoning
         }
       });
-      // Correctly access the .text property (not a method)
       targetSetter(response.text || '');
     } catch (err) {
       console.error(err);
@@ -57,8 +54,6 @@ const Studio: React.FC = () => {
     }
   };
 
-  // Fixed: targetSetter was not defined here; replaced with setPrompt. 
-  // Also updated to follow Gemini SDK best practices regarding instance creation and property access.
   const optimizePrompt = async () => {
     if (!prompt.trim()) return;
     setIsOptimizing(true);
@@ -66,10 +61,9 @@ const Studio: React.FC = () => {
     try {
       const response = await ai.models.generateContent({
         model: 'gemini-3-pro-preview',
-        contents: `你是一名提示词工程专家。请根据 dair-ai 的 Prompt Engineering Guide 原则，将以下原始 Prompt 优化为具备角色 (Role)、背景 (Context)、任务 (Task)、限制 (Constraints) 和输出示例 (Examples) 的结构化格式。仅输出优化后的提示词内容。\n\n原始 Prompt: "${prompt}"`,
+        contents: `You are an expert prompt engineer. Please optimize the following prompt according to the dair-ai Prompt Engineering Guide principles. Use the structure: Role, Context, Task, Constraints, and Examples. Output ONLY the optimized prompt.\n\nOriginal Prompt: "${prompt}"`,
         config: { thinkingConfig: { thinkingBudget: 2048 } }
       });
-      // Fixed: Use setPrompt instead of targetSetter
       setPrompt(response.text || '');
     } catch (err) {
       console.error(err);

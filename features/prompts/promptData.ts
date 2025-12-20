@@ -3,7 +3,8 @@ export interface PromptNode {
   id: string;
   title: { zh: string; en: string; ar: string };
   description: { zh: string; en: string };
-  content: string; // Markdown or HTML content
+  content: string; 
+  template?: string; // 可直接使用的模板
   tags: string[];
 }
 
@@ -23,79 +24,67 @@ export const PROMPT_GUIDE_DATA: PromptCategory[] = [
       {
         id: "basics",
         title: { zh: "提示词基础", en: "Prompt Basics", ar: "أساسيات التلقين" },
-        description: { zh: "学习提示工程的基本定义与原则。", en: "Learn the core definitions and principles of prompt engineering." },
-        tags: ["Core", "Foundations"],
-        content: `<h3>提示工程 (Prompt Engineering)</h3><p>提示工程是与大语言模型（LLM）进行高效交流的艺术与科学。它涉及设计、优化和精炼输入（提示词），以引导模型产生更准确、更有用或更具创造性的输出。</p><h4>核心原则：</h4><ul><li><b>清晰性：</b> 避免模糊的表达，明确告诉模型你想要什么。</li><li><b>上下文：</b> 提供相关的背景信息，帮助模型理解任务环境。</li><li><b>约束：</b> 设定输出格式、长度或语气限制。</li></ul>`
-      },
-      {
-        id: "elements",
-        title: { zh: "提示词要素", en: "Prompt Elements", ar: "عناصر الأوامر" },
-        description: { zh: "构成一个完美提示词的四大核心组件。", en: "The four key components that make up a perfect prompt." },
-        tags: ["Architecture"],
-        content: `<p>一个高效的提示词通常包含以下要素：</p><ol><li><b>指令 (Instruction)：</b> 想要模型执行的具体任务。</li><li><b>上下文 (Context)：</b> 外部信息或补充背景。</li><li><b>输入数据 (Input Data)：</b> 我们希望模型处理的具体问题。</li><li><b>输出指示 (Output Indicator)：</b> 指定输出的类型或格式。</li></ol>`
+        description: { zh: "掌握提示工程的基本定义与原则。", en: "Master the definitions and principles of PE." },
+        tags: ["Core", "Beginner"],
+        template: "请作为一名[角色]，针对[任务]，在[背景]下提供[输出格式]。",
+        content: `<h3>提示工程 (Prompt Engineering)</h3><p>提示工程是优化大语言模型（LLM）输入以获得高质量输出的艺术。核心原则：</p><ul><li><b>明确性：</b> 不要让模型猜测你的意图。</li><li><b>情境化：</b> 提供足够的背景信息。</li><li><b>分步引导：</b> 将复杂任务拆解。</li></ul>`
       }
     ]
   },
   {
     id: "techniques",
-    title: { zh: "进阶技术", en: "Techniques" },
+    title: { zh: "核心技术", en: "Techniques" },
     icon: "Layers",
     nodes: [
       {
-        id: "zeroshot",
-        title: { zh: "零样本提示", en: "Zero-Shot Prompting", ar: "التلقين بدون أمثلة مسبقة" },
-        description: { zh: "在没有任何示例的情况下让模型执行任务。", en: "Performing tasks without any prior examples given to the model." },
-        tags: ["Logic"],
-        content: `<p>Zero-shot 依靠模型在大规模预训练中获得的先验知识。直接提出问题，模型根据其内部表示生成答案。</p><blockquote>Prompt: 判定以下文本的情感：'今天的天气真不错！'<br>Output: 正面/积极</blockquote>`
-      },
-      {
-        id: "fewshot",
-        title: { zh: "少样本提示", en: "Few-Shot Prompting", ar: "التلقين ببضع أمثلة" },
-        description: { zh: "通过提供少量示例来提高模型的任务执行能力。", en: "Improving performance by providing a few examples of the task." },
-        tags: ["Improvement"],
-        content: `<p>Few-shot 通过在提示中包含“输入-输出”对，引导模型模仿特定模式。适用于复杂格式或罕见任务。</p>`
-      },
-      {
         id: "cot",
-        title: { zh: "思维链 (CoT)", en: "Chain-of-Thought", ar: "التلقين بسلسلة من الأفكار" },
-        description: { zh: "通过引导模型解释其推理过程来解决复杂逻辑问题。", en: "Solving complex logic problems by letting the model explain its reasoning step-by-step." },
+        title: { zh: "思维链 (CoT)", en: "Chain-of-Thought", ar: "سلسلة من الأفكار" },
+        description: { zh: "引导模型展示推理过程，提升逻辑任务表现。", en: "Improve logic by showing reasoning steps." },
         tags: ["Reasoning", "Advanced"],
-        content: `<p>CoT 极大地提高了模型在数学、符号推理和常识任务上的表现。核心是让模型“一步步思考”。</p><h4>技巧：</h4><p>在提示词末尾加上：<b>"Let's think step by step."</b></p>`
+        template: "让我们一步步思考：首先分析[A]，然后推导[B]。",
+        content: `<h3>思维链 (Chain-of-Thought)</h3><p>通过让模型在输出答案前生成中间推理步骤，可以显著提高处理数学、常识推理和符号操作任务的能力。</p><h4>最佳实践：</h4><p>在 Prompt 中加入 "Let's think step by step" 或提供一个包含中间步骤的 Few-shot 示例。</p>`
+      },
+      {
+        id: "react",
+        title: { zh: "ReAct 框架", en: "ReAct", ar: "ReAct" },
+        description: { zh: "结合推理与行动，让模型使用外部工具。", en: "Synergizing reasoning and acting for tool use." },
+        tags: ["Agents", "Workflow"],
+        content: `<h3>ReAct (Reason + Act)</h3><p>ReAct 允许模型以交替的方式生成推理轨迹和特定于任务的行动。这种协同作用使模型能够动态地推理并与外部环境（如 Google 搜索或数据库）交互。</p>`
       }
     ]
   },
   {
-    id: "prompts_library",
-    title: { zh: "提示词库", en: "Prompt Library" },
-    icon: "Sparkles",
+    id: "applications",
+    title: { zh: "应用场景", en: "Applications" },
+    icon: "Code",
     nodes: [
       {
-        id: "classification",
-        title: { zh: "情感与分类", en: "Classification", ar: "التصنيف" },
-        description: { zh: "如何训练模型进行精准的文本分类。", en: "Strategies for high-accuracy text categorization." },
-        tags: ["NLP", "Industry"],
-        content: `<p>文本分类是提示词工程最常见的应用之一。从垃圾邮件识别到工单分类，利用指令设定类别标签是关键。</p>`
+        id: "function_calling",
+        title: { zh: "函数调用", en: "Function Calling", ar: "استدعاء الدوال" },
+        description: { zh: "将模型能力连接到外部 API 和工具。", en: "Connect models to external APIs and tools." },
+        tags: ["Dev", "Integration"],
+        content: `<h3>函数调用 (Function Calling)</h3><p>现代模型（如 Gemini 1.5 Pro）支持结构化输出，可以将用户意图转化为特定的函数参数。这是构建 AI 智能体的基础。</p>`
       },
       {
-        id: "coding",
-        title: { zh: "代码生成", en: "Coding Prompts", ar: "كتابة أكواد" },
-        description: { zh: "提升 AI 生成代码的质量与安全性。", en: "Elevate the quality and security of AI-generated code." },
-        tags: ["Dev", "Software"],
-        content: `<p>生成代码时，建议提供技术栈版本、性能要求以及具体的错误处理逻辑。</p>`
+        id: "synthetic_data",
+        title: { zh: "合成数据生成", en: "Data Generation", ar: "توليد البيانات" },
+        description: { zh: "利用 LLM 批量生成高质量训练数据。", en: "Generate high-quality datasets using LLMs." },
+        tags: ["MLOps", "Data"],
+        content: `<h3>数据生成</h3><p>LLM 可以根据分布描述生成大量的合成数据（Text-to-Data），用于冷启动 RAG 系统或微调小模型。</p>`
       }
     ]
   },
   {
     id: "risks",
-    title: { zh: "风险与伦理", en: "Risks & Ethics" },
+    title: { zh: "安全性与风险", en: "Risks & Ethics" },
     icon: "ShieldAlert",
     nodes: [
       {
-        id: "adversarial",
-        title: { zh: "对抗性提示词", en: "Adversarial Prompting", ar: "التلقين العكسي" },
-        description: { zh: "识别并防御提示词注入与越狱攻击。", en: "Identifying and defending against injection and jailbreak attacks." },
+        id: "jailbreaking",
+        title: { zh: "越狱防御", en: "Jailbreaking Defence", ar: "كسر الحماية" },
+        description: { zh: "防御对抗性提示，保护系统安全。", en: "Defend against adversarial prompt injections." },
         tags: ["Security", "Safety"],
-        content: `<p>对抗性提示词通过精巧设计的输入绕过模型的安全过滤。作为架构师，你需要设计多层检测机制来防御此类攻击。</p>`
+        content: `<h3>越狱防御 (Jailbreaking)</h3><p>对抗性提示旨在绕过模型的内置过滤器。防御策略包括：</p><ul><li><b>分隔符：</b> 使用独特的标记（如 ###）分隔指令和输入。</li><li><b>二次验证：</b> 使用专门的安全分类模型检查输入。</li></ul>`
       }
     ]
   }

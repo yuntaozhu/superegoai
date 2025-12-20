@@ -1,12 +1,16 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { getContent } from '../constants';
 import GalaxySection from '../components/GalaxySection';
 import { Link } from '../context/LanguageContext';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations';
+import WaitlistModal from '../components/WaitlistModal';
+import { motion } from 'framer-motion';
 
 const Home: React.FC = () => {
   const { language, t } = useLanguage();
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const content = getContent(language);
 
   const scrollToCourses = () => {
@@ -20,6 +24,8 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-brand-dark">
+      <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
+
       {/* Hero Section */}
       <section className="relative pt-32 sm:pt-40 pb-16 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
@@ -28,21 +34,41 @@ const Home: React.FC = () => {
         </div>
 
         <div className="relative z-10 max-w-5xl mx-auto text-center px-4">
-          <span className="inline-block py-1.5 md:py-2 px-3 md:px-4 rounded-full bg-white/5 text-blue-300 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 md:mb-10 border border-white/10 backdrop-blur-md animate-in fade-in slide-in-from-top-4">
+          <motion.span 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-block py-1.5 md:py-2 px-3 md:px-4 rounded-full bg-white/5 text-blue-300 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 md:mb-10 border border-white/10 backdrop-blur-md"
+          >
             {t('hero.badge')}
-          </span>
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white tracking-tight mb-6 leading-[1.1] uppercase">
+          </motion.span>
+          <motion.h1 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="text-4xl sm:text-6xl md:text-8xl font-black text-white tracking-tight mb-6 leading-[1.1] uppercase"
+          >
             {t('hero.title_prefix')} <br className="hidden sm:block"/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">
               {t('hero.title_highlight')}
             </span> <br className="hidden sm:block"/>
             {t('hero.title_suffix')}
-          </h1>
-          <p className="text-lg md:text-2xl text-blue-200/80 mb-8 md:mb-10 max-w-3xl mx-auto font-medium tracking-wide">
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg md:text-2xl text-blue-200/80 mb-8 md:mb-10 max-w-3xl mx-auto font-medium tracking-wide"
+          >
             {t('hero.sub_headline')}
-          </p>
-          <p className="text-sm md:text-lg text-gray-400 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed px-2" dangerouslySetInnerHTML={{ __html: t('hero.description').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>') }}>
-          </p>
+          </motion.p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-sm md:text-lg text-gray-400 mb-10 md:mb-12 max-w-2xl mx-auto leading-relaxed px-2" 
+            dangerouslySetInnerHTML={{ __html: t('hero.description').replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>') }}
+          >
+          </motion.p>
           <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
             <button 
               onClick={scrollToCourses} 
@@ -74,7 +100,13 @@ const Home: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {philosophyPillars.map((pillar: any, index: number) => (
-              <div key={index} className="group p-6 md:p-10 rounded-3xl md:rounded-[40px] bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all duration-500 backdrop-blur-xl relative overflow-hidden">
+              <motion.div 
+                key={index} 
+                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                viewport={{ once: true }}
+                className="group p-6 md:p-10 rounded-3xl md:rounded-[40px] bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all duration-500 backdrop-blur-xl relative overflow-hidden"
+              >
                 <div className="absolute -top-10 -right-10 w-24 md:w-40 h-24 md:h-40 bg-blue-500/5 rounded-full blur-2xl md:blur-3xl group-hover:bg-blue-500/10 transition-all" />
                 
                 <h3 className="text-lg md:text-2xl font-black text-white mb-4 md:mb-6 tracking-tight flex items-start gap-3 md:gap-4">
@@ -88,7 +120,7 @@ const Home: React.FC = () => {
                   <span className="w-6 md:w-8 h-[1px] bg-blue-500/30" />
                   {pillar.quote}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -174,7 +206,10 @@ const Home: React.FC = () => {
           <p className="text-gray-300 mb-10 md:mb-12 text-base md:text-xl font-light relative z-10 max-w-2xl mx-auto">
             {t('cta.description')}
           </p>
-          <button className="px-10 md:px-12 py-5 md:py-6 bg-white text-brand-dark rounded-xl font-black uppercase tracking-widest hover:bg-blue-50 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] relative z-10 text-xs md:text-base">
+          <button 
+            onClick={() => setIsWaitlistOpen(true)}
+            className="px-10 md:px-12 py-5 md:py-6 bg-white text-brand-dark rounded-xl font-black uppercase tracking-widest hover:bg-blue-50 transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] relative z-10 text-xs md:text-base"
+          >
             {t('cta.button')}
           </button>
         </div>

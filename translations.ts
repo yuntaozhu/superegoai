@@ -6,7 +6,7 @@ export const translations = {
       consulting: 'Consulting',
       blog: 'Insights',
       planets: 'Galaxy',
-      studio: 'AI Studio',
+      studio: 'Prompt Lab',
       about: 'Mission',
       prompt_guide: 'Prompt Guide',
     },
@@ -25,19 +25,18 @@ export const translations = {
         risks: 'Risks & Ethics'
       }
     },
-    // ... rest of translations
     hero: {
       badge: 'The Modern Software Developer OS',
       title_prefix: 'AI First Course ——',
       title_highlight: "Building Your SuperEgo's",
       title_suffix: 'Second Brain',
-      sub_headline: "Don't just Code, Orchestrate. (不仅仅是编程，而是编排。)",
+      sub_headline: "Don't just Code, Orchestrate.",
       description: 'In the AI First era, success belongs to those who build a "Second Brain". Whether through our **Courses** for individuals or **Consulting** for enterprises, we help you evolve from executing to orchestrating.',
       cta_primary: 'Explore the Galaxy',
       cta_secondary: 'Enterprise Services',
     },
     philosophy: {
-      title: 'Core Philosophy: Evolution of a "New Species" in the AI Era',
+      title: 'Core Philosophy: Evolution of a "New Species"',
       subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine.',
       pillars: [
         {
@@ -46,18 +45,18 @@ export const translations = {
           quote: '"Human defines the \'Why\', AI solves the \'How\'."'
         },
         {
-          title: '02 Asset Building: Task Division Between Biological Brain and Second Brain',
-          content: 'Solution: Acknowledge the limits of the human brain. Build an "External Brain". Biological brain for intuition/judgment, AI Second Brain for memory/execution.',
+          title: '02 Asset Building: Biological Brain and Second Brain',
+          content: 'Solution: Acknowledge the limits of the human brain. Build an "External Brain" for memory and execution.',
           quote: 'Become your unique digital twin.'
         },
         {
           title: '03 Identity Shift: From "Craftsman" to "Director"',
-          content: 'Reframing: Refuse to be a "Code Worker" repeating wheels. New roles: Commander and Director. Define Target (Prompt), Set Boundaries (Constraints), Review Results.',
+          content: 'Reframing: Refuse to be a "Code Worker". New roles: Commander and Director. Define Target, Set Boundaries, Review Results.',
           quote: 'Orchestrate rather than execute.'
         },
         {
           title: '04 Workflow Revolution: One Person as a Company',
-          content: 'Methodology: Don\'t rely on an "All-in-one" AI, rely on "Division of Labor". Build an AI team (PM, Dev, Tester). You are the CEO of your digital legion.',
+          content: 'Methodology: Build an AI team (PM, Dev, Tester). You are the CEO of your digital legion.',
           quote: 'Scale your impact infinitely.'
         }
       ],
@@ -94,11 +93,30 @@ export const translations = {
     },
     about: {
       hero_title: 'The Mission',
-      hero_subtitle: 'From Execution to Orchestration',
-      philosophy_section: 'Evolutionary Pillars',
-      brain_title: 'The SuperEgo System',
-      brain_desc: 'The SuperEgo Second Brain is not just a database; it is a personalized agentic layer that extends your cognitive boundaries.',
-      team_title: 'Meet the Architects',
+      hero_subtitle: 'Evolving Human Intelligence in the Age of AGI.',
+      philosophy_section: 'Our Pillars',
+      brain_title: 'The SuperEgo Concept',
+      brain_desc: 'We believe in augmenting human intuition with silicon-based memory and execution. Your SuperEgo is the governing layer that orchestrates these forces.',
+      team_title: 'The Architects'
+    },
+    home: {
+      consulting_preview: {
+        badge: 'Enterprise Architecture',
+        title: 'For Businesses',
+        description: 'We help corporations build their own SuperEgo Agent army to automate marketing, sales, and operations.',
+        feature_1: 'Workflow Automation',
+        feature_2: 'Private Knowledge Bases',
+        feature_3: 'AI Governance Strategy',
+        cta: 'Consultancy Details'
+      }
+    },
+    waitlist: {
+      title: 'Join the Waitlist',
+      subtitle: 'Be the first to know when the next cohort opens.',
+      name_label: 'Your Name',
+      email_label: 'Email Address',
+      submit: 'Request Invitation',
+      success: 'You are on the list. We will reach out soon.',
     }
   },
   zh: {
@@ -107,7 +125,7 @@ export const translations = {
       consulting: 'AI 咨询',
       blog: '博客',
       planets: '课程星球',
-      studio: '灵感工坊',
+      studio: '提示词实验室',
       about: '愿景',
       prompt_guide: '提示词指南',
     },
@@ -118,15 +136,14 @@ export const translations = {
       explore: '探索主题',
       categories: {
         introduction: '基础入门',
-        techniques: '进阶技术',
+        techniques: '核心技术',
         applications: '实战应用',
         prompts: '提示词库',
         models: '模型集锦',
-        research: '前沿研究',
+        research: '前انتهاء的研究',
         risks: '风险与伦理'
       }
     },
-    // ... rest of translations
     hero: {
       badge: '现代软件开发者操作系统',
       title_prefix: 'AI First Course ——',
@@ -148,128 +165,22 @@ export const translations = {
         },
         {
           title: '02 资产构建：生物脑与第二大脑的分工',
-          content: '解决方案：承认人类大脑的局限性，构建“外挂大脑”。生物脑负责直觉审判，AI 第二大脑负责记忆执行。沉淀私人知识库，成为你独一无二的数字分身。',
+          content: '解决方案：承认人类大脑的局限性，构建“外挂大脑”。生物脑负责直觉审判，AI 第二大脑负责记忆执行。',
           quote: '沉淀私人知识库，成为你独一无二的数字分身。'
         },
         {
           title: '03 Identity Shift: 从“工匠”到“总导演”',
-          content: '角色重塑：拒绝做重复造轮子的“代码工人”。新职责：指挥官 (Commander) 和总导演 (Director)。定义目标 (Prompt)，设定边界 (Constraints)，审查结果 (Review)。',
+          content: '角色重塑：拒绝做重复造轮子的“代码工人”。新职责：指挥官和总导演。定义目标，设定边界，审查结果。',
           quote: '定义目标，设定边界，审查结果。'
         },
         {
           title: '04 Workflow Revolution: 一人即一家公司',
-          content: '方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。你不再是孤独的开发者，你是这支“数字军团”的 CEO。',
+          content: '方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。',
           quote: '你不再是孤独的开发者，你是这支“数字军团”的 CEO。'
         }
       ],
       practice_label: '核心：',
       summary: '一句话总结：我们教你利用 AI，构建一个只属于你的外挂大脑，指挥 AI 组成的虚拟团队。',
-    },
-    home: {
-      consulting_preview: {
-        badge: '企业版',
-        title: 'Super Ego Agent 咨询服务',
-        description: '第二大脑不仅属于个人。我们为企业构建“伦理与效能并重”的数字皮层。',
-        feature_1: '战略对齐与伦理治理',
-        feature_2: '定制化智能体军团开发',
-        feature_3: '组织进化与员工赋能',
-        cta: '进入企业门户'
-      }
-    },
-    consulting: {
-      hero: {
-        title: 'Super Ego Agent 企业咨询',
-        subtitle: '伦理与效能并重的数字皮层',
-        description: '我们帮助组织从传统工作流转型为 AI First 运营模式。构建你的“超我”——一个指挥专业智能体的治理中心。',
-        cta_diagnose: '数字化审计',
-        cta_diagnose_tooltip: '评估组织的 AI 就绪程度与伦理对齐。',
-        cta_army: '智能体部署',
-      },
-      philosophy: {
-        title: 'AI First 组织模型',
-        id_title: '本我 (执行层)',
-        id_desc: '纯粹的专业智能体，在没有上下文的情况下以闪电般的速度执行任务。',
-        ego_title: '自我 (协调层)',
-        ego_desc: '管理层确保智能体协同工作并解决冲突。',
-        superego_title: '超我 (治理层)',
-        superego_desc: '道德与战略指南针，确保 AI 与公司价值观一致。',
-      },
-      value_dimensions: {
-        title: '战略影响',
-        leadership: {
-          title: '控制塔',
-          metaphor: '指挥官',
-          point1_title: '洞察生成',
-          point1_desc: '将原始数据转化为战略远见。',
-          point2_title: '风险缓解',
-          point2_desc: '为生成式 AI 输出提供伦理保障。',
-          point3_title: '决策支持',
-          point3_desc: '为高管决策提供实时建模。',
-        },
-        workforce: {
-          title: '智能体军团',
-          metaphor: '钢铁侠战衣',
-          point1_title: '极效办公',
-          point1_desc: '自动化高容量认知任务。',
-          point2_title: '24/7 运营',
-          point2_desc: '无需人类疲劳的全球化服务。',
-          point3_title: '按需缩放',
-          point3_desc: '为突发事件部署数千个智能体。',
-        }
-      },
-      methodology: {
-        title: '我们的部署框架',
-        stage1_title: '诊断',
-        stage1_desc: '识别高价值 AI 机会。',
-        stage1_details: ['基础设施审计', '工作流映射', '伦理差距分析'],
-        stage2_title: '编排',
-        stage2_desc: '构建核心超我控制器。',
-        stage2_details: ['RAG 管道搭建', '安全治理', 'API 集成'],
-        stage3_title: '智能体化',
-        stage3_desc: '部署专业任务智能体。',
-        stage3_details: ['提示词工程', '角色训练', '跨智能体通信'],
-        stage4_title: '进化',
-        stage4_desc: '持续学习与优化。',
-        stage4_details: ['KPI 追踪', 'RLHF 闭环', '模型升级'],
-      },
-      agents: {
-        title: '精英智能体小队',
-        marketing_title: '增长催化剂',
-        marketing_desc: '多模态内容生成与超个性化活动。',
-        marketing_features: ['品牌调性克隆', '趋势探测', '自动营销运营'],
-        marketing_stack: ['Gemini 2.5', 'SDXL', 'Vector DB'],
-        sales_title: '营收引擎',
-        sales_desc: '自主线索识别与智能外联编排。',
-        sales_features: ['意图分析', '动态定价', 'CRM 自动化'],
-        sales_stack: ['LangGraph', 'Python', 'Stripe'],
-        hr_title: '文化守护者',
-        hr_desc: '人才匹配与组织知识沉淀。',
-        hr_features: ['技能映射', '政策 RAG', '入职机器人'],
-        hr_stack: ['Private LLM', 'PostgreSQL'],
-        ops_title: '效率中心',
-        ops_desc: '供应链优化与内部流程自动化。',
-        ops_features: ['物流建模', 'Bug 自动修复', '报告生成'],
-        ops_stack: ['Go', 'TensorFlow', 'Kubernetes'],
-      },
-      special: {
-        title: '定制化工程',
-        desc: '需要为企业定制专属星球？我们构建符合垂直行业的定制智能体与主权数据结构。',
-      },
-      case: {
-        title: '案例研究：阿尔法计划',
-        desc: '通过我们的多智能体编排框架，为某财富 500 强物流公司降低了 60% 的运营成本。',
-      },
-      team: {
-        title: '架构师团队',
-        zhu_title: 'Zhu - 首席愿景官',
-        zhu_desc: '人机协作与系统编排专家。',
-        du_title: 'Du - 工程负责人',
-        du_desc: '企业级安全智能体系统专家。',
-      },
-      footer: {
-        quote: '企业的未来不是 AI 辅助，而是 AI 编排。',
-        promise: '我们构建的是指挥棒，而不仅仅是乐器。',
-      }
     },
     galaxy: {
       title: '星系模型',
@@ -300,12 +211,31 @@ export const translations = {
       goal: '目标',
     },
     about: {
-      hero_title: '愿景与使命',
-      hero_subtitle: '从执行者到编排者的跨越',
-      philosophy_section: '进化支柱',
-      brain_title: '“超我”第二大脑系统',
-      brain_desc: '超我第二大脑不仅是一个数据库，它是一个个性化的智能体层，旨在扩展你的认知边界。',
-      team_title: '创始团队',
+      hero_title: '我们的愿景',
+      hero_subtitle: '在 AGI 时代进化人类智慧。',
+      philosophy_section: '核心支柱',
+      brain_title: '“超我” 概念',
+      brain_desc: '我们相信用硅基记忆和执行力来增强人类直觉。你的“超我”是编排这些力量的治理层。',
+      team_title: '架构师团队'
+    },
+    home: {
+      consulting_preview: {
+        badge: '企业架构',
+        title: '面向企业',
+        description: '我们帮助企业构建专属的 AI Agent 军团，实现市场、销售和运营的自动化。',
+        feature_1: '工作流自动化',
+        feature_2: '私有知识库',
+        feature_3: 'AI 治理战略',
+        cta: '咨询详情'
+      }
+    },
+    waitlist: {
+      title: '加入候补名单',
+      subtitle: '第一时间获取下一期课程的报名通道。',
+      name_label: '您的姓名',
+      email_label: '电子邮箱',
+      submit: '申请邀请码',
+      success: '已加入名单，我们将尽快联系您。',
     }
   }
 };
