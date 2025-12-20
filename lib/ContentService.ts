@@ -22,6 +22,7 @@ const CATEGORY_TITLES: Record<string, Record<string, string>> = {
   en: {
     introduction: "Introduction",
     techniques: "Prompting Techniques",
+    agents: "AI Agents",
     applications: "Applications",
     research: "LLM Research Findings",
     risks: "Risks & Misuses"
@@ -29,6 +30,7 @@ const CATEGORY_TITLES: Record<string, Record<string, string>> = {
   zh: {
     introduction: "提示工程简介",
     techniques: "提示技术",
+    agents: "AI 智能体",
     applications: "提示应用",
     research: "LLM 研究发现",
     risks: "风险与误用"
@@ -49,6 +51,11 @@ const CATEGORY_MAP: Record<string, Record<string, Record<string, string>>> = {
       "cot": "Chain-of-Thought",
       "react": "ReAct Framework",
       "consistency": "Self-Consistency"
+    },
+    agents: {
+      "introduction": "Introduction to Agents",
+      "components": "Agent Components",
+      "ai-workflows-vs-ai-agents": "AI Workflows vs AI Agents"
     },
     applications: {
       "generating": "Generating Data",
@@ -74,6 +81,11 @@ const CATEGORY_MAP: Record<string, Record<string, Record<string, string>>> = {
       "cot": "链式思考 (CoT)",
       "react": "ReAct 框架",
       "consistency": "自我一致性"
+    },
+    agents: {
+      "introduction": "智能体简介",
+      "components": "智能体架构组件",
+      "ai-workflows-vs-ai-agents": "AI 工作流与智能体对比"
     },
     applications: {
       "generating": "生成数据",
@@ -110,59 +122,66 @@ The core principle is **Specificity**. Don't ask "how to cook", ask "provide a d
 3. **Input Data**: The text to process.
 4. **Output Indicator**: How you want the result.
 </Steps>
-
-\`\`\`text
-Classify the sentiment of this text: "The new UI is absolutely stunning!"
-Sentiment:
-\`\`\`
 `,
-    "techniques/zeroshot": `---
-title: Zero-shot Prompting
+    "agents/introduction": `---
+title: Introduction to Agents
 ---
-# Zero-shot Prompting
+# Introduction to Agents
 
-LLMs today are capable of performing tasks zero-shot.
+An AI Agent is an autonomous entity powered by an LLM that can perceive its environment, reason about tasks, and take actions to achieve specific goals.
 
 <Callout type="idea">
-Zero-shot means the model performs a task without any prior examples or demonstrations in the prompt.
+Think of an LLM as a "brain" and an Agent as a "brain with hands and memory".
 </Callout>
 
-### Example
-\`\`\`text
-Classify the text into neutral, negative, or positive. 
+### What makes an Agent?
+Standard LLMs are passive: they wait for input and provide output. Agents are active: they can use tools, browse the web, and correct their own mistakes in a loop.
 
-Text: I think the vacation is okay.
-Sentiment:
-\`\`\`
-
-**Output:**
-\`\`\`text
-Neutral
-\`\`\`
+<Cards>
+  <Card title="Agent Components" href="agents/components">Learn about Brain, Planning, and Memory.</Card>
+  <Card title="Agent Research" href="research/llm-agents">Deep dive into recent Agent papers.</Card>
+</Cards>
 `,
-    "techniques/fewshot": `---
-title: Few-shot Prompting
+    "agents/components": `---
+title: Agent Components
 ---
-# Few-shot Prompting
+# Agent Components
 
-Providing demonstrations in the prompt enables **In-Context Learning**.
+Based on popular research (e.g., Lilian Weng), an autonomous agent system consists of four key components.
+
+<Steps>
+1. **Brain (LLM)**: The core reasoning engine.
+2. **Planning**: Breaking down complex tasks into manageable sub-goals.
+3. **Memory**: Storing short-term context and long-term knowledge.
+4. **Tool Use**: The ability to call external APIs (Search, Calculator, Code Interpreter).
+</Steps>
 
 <Callout type="warning">
-Providing demonstrations in the prompt serves as conditioning for subsequent examples.
+The bottleneck for agents today is often "Planning" and "Reliability" rather than the LLM's raw knowledge.
 </Callout>
+`,
+    "agents/ai-workflows-vs-ai-agents": `---
+title: AI Workflows vs AI Agents
+---
+# AI Workflows vs AI Agents
 
-### Example: Learning New Concepts
+It is crucial to distinguish between a hard-coded sequence of LLM calls and a truly autonomous agent.
+
+### Comparison
+| Feature | AI Workflows | AI Agents |
+| :--- | :--- | :--- |
+| **Path** | Pre-defined, deterministic | Dynamic, probabilistic |
+| **Autonomy** | Low (Step-by-step logic) | High (Goal-oriented) |
+| **Complexity** | High reliability, lower flexibility | Lower reliability, high flexibility |
+
 \`\`\`text
-A "whatpu" is a small, furry animal native to Tanzania. An example of a sentence that uses the word whatpu is:
-We were traveling in Africa and we saw these very cute whatpus.
-
-To do a "farduddle" means to jump up and down really fast. An example of a sentence that uses the word farduddle is:
+Workflows: If A then B then C.
+Agents: Here is Goal X. Figure out if you need A, B, or C.
 \`\`\`
 
-**Output:**
-\`\`\`text
-When we won the game, we all started to farduddle in celebration.
-\`\`\`
+<Callout type="info">
+Most production "Agents" are actually complex Workflows with a bit of agentic reasoning.
+</Callout>
 `
   },
   zh: {
@@ -185,59 +204,66 @@ author: 提示词工程指南
 3. **输入数据 (Input Data)**：我们感兴趣处理的数据。
 4. **输出指示 (Output Indicator)**：指示输出的类型或格式。
 </Steps>
-
-\`\`\`text
-分类这段文本的情感：“这个新界面简直太棒了！”
-情感：
-\`\`\`
 `,
-    "techniques/zeroshot": `---
-title: 零样本提示
+    "agents/introduction": `---
+title: 智能体简介
 ---
-# 零样本提示 (Zero-shot)
+# AI 智能体 (AI Agents) 简介
 
-如今的大型语言模型经过大规模指令微调，能够直接根据指令执行任务，而无需任何示例。
+AI 智能体是由大语言模型（LLM）驱动的自主实体，能够感知环境、进行任务推理并采取行动以实现特定目标。
 
 <Callout type="idea">
-零样本意味着模型在没有任何先前示例或演示的情况下执行任务。
+如果把 LLM 比作“大脑”，那么智能体就是“拥有双手和记忆的大脑”。
 </Callout>
 
-### 示例
-\`\`\`text
-将文本分类为中性、负面或正面。
+### 智能体的核心特质
+传统的 LLM 是被动的：它们等待输入并提供输出。智能体是主动的：它们可以在循环中调用工具、浏览网页并纠正自己的错误。
 
-文本：我觉得这次度假还可以。
-情感：
-\`\`\`
-
-**输出：**
-\`\`\`text
-中性
-\`\`\`
+<Cards>
+  <Card title="架构组件" href="agents/components">了解大脑、规划和记忆。</Card>
+  <Card title="前沿研究" href="research/llm-agents">深入研究最新的智能体论文。</Card>
+</Cards>
 `,
-    "techniques/fewshot": `---
-title: 少样本提示
+    "agents/components": `---
+title: 智能体架构组件
 ---
-# 少样本提示 (Few-shot)
+# 智能体架构组件
 
-虽然 LLM 展示了卓越的零样本能力，但在处理更复杂的任务时，提供少量演示（示例）可以显著提升其性能。这被称为 **上下文学习 (In-Context Learning)**。
+根据主流研究（如 Lilian Weng 的分类），一个自主智能体系统主要由四个核心部分组成。
+
+<Steps>
+1. **大脑 (LLM)**：核心推理引擎。
+2. **规划 (Planning)**：将复杂任务分解为可管理的子目标。
+3. **记忆 (Memory)**：存储短期上下文和长期知识。
+4. **工具使用 (Tool Use)**：调用外部 API 的能力（搜索、计算器、代码解释器）。
+</Steps>
 
 <Callout type="warning">
-演示的质量和多样性直接影响模型的推理路径。
+目前智能体的瓶颈通常在于“规划能力”和“可靠性”，而非 LLM 本身的知识储备。
 </Callout>
+`,
+    "agents/ai-workflows-vs-ai-agents": `---
+title: AI 工作流与智能体对比
+---
+# AI 工作流 (Workflows) vs AI 智能体 (Agents)
 
-### 示例：学习新概念
+区分“硬编码的 LLM 调用序列”与“真正的自主智能体”至关重要。
+
+### 核心对比
+| 特性 | AI 工作流 | AI 智能体 |
+| :--- | :--- | :--- |
+| **路径** | 预定义的、确定性的 | 动态的、概率性的 |
+| **自主性** | 低（步进逻辑） | 高（目标导向） |
+| **复杂度** | 高可靠性，较低灵活性 | 较低可靠性，高灵活性 |
+
 \`\`\`text
-“whatpu”是坦桑尼亚的一种小型毛茸茸的动物。一个使用 whatpu 这个词的句子示例是：
-我们在非洲旅行时看到了这些非常可爱的 whatpus。
-
-“farduddle”的意思是跳上跳下得非常快。一个使用 farduddle 这个词的句子示例是：
+工作流：如果 A，则执行 B，然后执行 C。
+智能体：这是目标 X。请自行判断需要 A、B 还是 C。
 \`\`\`
 
-**输出：**
-\`\`\`text
-当我们赢得比赛时，我们都开始 farduddle 庆祝。
-\`\`\`
+<Callout type="info">
+目前大多数生产环境中的“智能体”实际上是带有少量智能推理的复杂“工作流”。
+</Callout>
 `
   }
 };
