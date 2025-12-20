@@ -1,11 +1,11 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
   Search, ChevronRight, BookOpen, Layers, Cpu, Code, 
   ShieldAlert, Database, Info, Terminal, Sparkles, Zap, List,
-  Book, ExternalLink, ArrowLeft, ArrowRight, Folder
+  Book, ExternalLink, ArrowLeft, ArrowRight, Folder, Hash
 } from 'lucide-react';
 import { ContentService, CategoryStructure, PageMeta } from '../lib/ContentService';
 import { MdxComponents } from '../components/MdxComponents';
@@ -18,6 +18,7 @@ const PromptGuide: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Initial Indexing
   useEffect(() => {
@@ -32,9 +33,12 @@ const PromptGuide: React.FC = () => {
   useEffect(() => {
     if (activePage) {
       setIsLoading(true);
+      if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
+      
       ContentService.getPage(activePage.path).then(res => {
         setDoc(res);
-        setTimeout(() => setIsLoading(false), 300);
+        // Artificial delay for smooth transition feel
+        setTimeout(() => setIsLoading(false), 200);
       });
     }
   }, [activePage]);
@@ -51,12 +55,14 @@ const PromptGuide: React.FC = () => {
     })).filter(cat => cat.pages.length > 0);
   }, [tree, searchQuery]);
 
+  // Enhanced regex-based "MDX" renderer for browser environment
   const renderMdx = (content: string) => {
     const parts = content.split(/(<Callout[\s\S]*?<\/Callout>|<Cards[\s\S]*?<\/Cards>|<Steps[\s\S]*?<\/Steps>|```[\s\S]*?```|#{1,3}\s.*)/g);
 
     return parts.map((part, i) => {
       if (!part || !part.trim()) return null;
 
+      // Handle custom components
       if (part.startsWith('<Callout')) {
         const type = part.match(/type="(.*?)"/)?.[1] || 'info';
         const children = part.replace(/<Callout.*?>|<\/Callout>/g, '').trim();
@@ -71,28 +77,36 @@ const PromptGuide: React.FC = () => {
       }
       if (part.startsWith('<Steps')) {
         const children = part.replace(/<Steps>|<\/Steps>/g, '').trim();
+        // Split by numeric list pattern or newline
         const steps = children.split(/\n\s*\d+\.\s+/).filter(Boolean).map((s, si) => (
-          <div key={si} className="mb-4">{s.trim()}</div>
+          <div key={si} className="mb-2">
+            <h3 className="text-base font-bold text-white mb-2 flex items-center gap-2">
+               Step {si + 1}
+            </h3>
+            <MdxComponents.p>{s.trim()}</MdxComponents.p>
+          </div>
         ));
         return <MdxComponents.Steps key={i}>{steps}</MdxComponents.Steps>;
       }
+      
+      // Handle standard markdown
       if (part.startsWith('```')) {
         const lang = part.match(/```(\w+)/)?.[1] || 'text';
         const code = part.replace(/```\w+\n|```/g, '').trim();
         return <MdxComponents.code key={i} className={`language-${lang}`}>{code}</MdxComponents.code>;
       }
       if (part.startsWith('# ')) return <MdxComponents.h1 key={i}>{part.replace('# ', '')}</MdxComponents.h1>;
-      if (part.startsWith('## ')) return <MdxComponents.h2 key={i}>{part.replace('## ', '')}</MdxComponents.h2>;
+      if (part.startsWith('## ')) return <MdxComponents.h2 key={i}><Hash className="w-5 h-5 opacity-20" /> {part.replace('## ', '')}</MdxComponents.h2>;
       if (part.startsWith('### ')) return <MdxComponents.h3 key={i}>{part.replace('### ', '')}</MdxComponents.h3>;
       
-      return <MdxComponents.p key={i} dangerouslySetInnerHTML={{ __html: part.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />;
+      return <MdxComponents.p key={i} dangerouslySetInnerHTML={{ __html: part.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>') }} />;
     });
   };
 
   return (
     <div className="min-h-screen bg-[#020308] pt-16 flex overflow-hidden">
       
-      {/* Dynamic Navigation Sidebar */}
+      {/* Sidebar: Navigation Matrix */}
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.aside
@@ -155,13 +169,14 @@ const PromptGuide: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* MDX Reader Area */}
+      {/* Main Content: Document Reader */}
       <main className="flex-grow flex flex-col h-[calc(100vh-64px)] relative bg-black/40">
         <div className="h-14 border-b border-white/5 px-6 flex items-center justify-between bg-[#020308]/60 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors"
+              title="Toggle Sidebar"
             >
               <List className="w-4 h-4" />
             </button>
@@ -173,13 +188,13 @@ const PromptGuide: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-4">
-             <Link to="/studio" className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all">
+             <Link to="/studio" className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20">
                <Zap className="w-3 h-3 fill-current" /> Studio
              </Link>
           </div>
         </div>
 
-        <div className="flex-grow overflow-y-auto custom-scrollbar bg-black/20">
+        <div ref={scrollContainerRef} className="flex-grow overflow-y-auto custom-scrollbar bg-black/20">
           <div className="max-w-4xl mx-auto py-16 px-8 md:px-12">
             <AnimatePresence mode="wait">
               {isLoading ? (
@@ -189,7 +204,7 @@ const PromptGuide: React.FC = () => {
                   className="flex flex-col items-center justify-center py-40 gap-4"
                 >
                   <div className="w-8 h-8 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
-                  <span className="text-[10px] font-mono text-gray-600 uppercase tracking-widest animate-pulse">Syncing_Nodes...</span>
+                  <span className="text-[10px] font-mono text-gray-600 uppercase tracking-[0.3em] animate-pulse">Syncing_Nodes...</span>
                 </motion.div>
               ) : (
                 <motion.article
@@ -202,16 +217,16 @@ const PromptGuide: React.FC = () => {
                   {doc && renderMdx(doc.content)}
                   
                   {/* Metadata Footer */}
-                  <div className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between gap-8">
+                  <div className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between gap-8 opacity-60">
                      <div className="space-y-2">
-                        <span className="text-[9px] text-gray-600 uppercase font-black">Author</span>
+                        <span className="text-[9px] text-gray-600 uppercase font-black tracking-widest">Author</span>
                         <div className="text-xs text-white">{doc?.frontmatter.author || 'SuperEgo Architects'}</div>
                      </div>
                      <div className="flex gap-4">
                        <button className="flex flex-col items-end gap-1 group">
-                          <span className="text-[9px] text-gray-600 uppercase font-bold">Next</span>
+                          <span className="text-[9px] text-gray-600 uppercase font-bold tracking-widest">Navigation</span>
                           <span className="text-sm text-gray-400 group-hover:text-blue-400 transition-colors flex items-center gap-1">
-                             Forward <ArrowRight className="w-4 h-4" />
+                             Forward Module <ArrowRight className="w-4 h-4" />
                           </span>
                        </button>
                      </div>
@@ -224,19 +239,20 @@ const PromptGuide: React.FC = () => {
       </main>
 
       <style>{`
-        .mdx-steps { margin-left: 2rem; border-left: 1px solid rgba(255,255,255,0.05); padding-left: 2rem; }
+        .mdx-steps { margin-left: 2.5rem; border-left: 1px solid rgba(255,255,255,0.05); padding-left: 2.5rem; }
         .mdx-steps > div { position: relative; }
         .mdx-steps > div::before {
           content: '';
           position: absolute;
-          left: -41px;
+          left: -50px;
           top: 0;
-          width: 18px;
-          height: 18px;
+          width: 20px;
+          height: 20px;
           background: #020308;
           border: 2px solid #3b82f6;
           border-radius: 50%;
           z-index: 1;
+          box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }

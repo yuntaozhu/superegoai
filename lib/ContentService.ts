@@ -20,32 +20,28 @@ export interface CategoryStructure {
 // 1. Meta Registry (Extracted from provided _meta.json files in prompt-engineering/)
 const CATEGORY_MAP: Record<string, Record<string, string>> = {
   introduction: {
-    "settings": "LLM Settings",
     "basics": "Basics of Prompting",
+    "settings": "LLM Settings",
     "elements": "Prompt Elements",
-    "tips": "General Tips",
-    "examples": "Prompt Examples"
+    "tips": "General Tips"
   },
   techniques: {
     "zeroshot": "Zero-shot Prompting",
     "fewshot": "Few-shot Prompting",
     "cot": "Chain-of-Thought",
-    "meta-prompting": "Meta Prompting",
-    "consistency": "Self-Consistency",
     "react": "ReAct Framework",
-    "rag": "RAG Systems"
+    "consistency": "Self-Consistency",
+    "knowledge": "Generated Knowledge"
   },
   applications: {
     "generating": "Generating Data",
-    "function_calling": "Function Calling",
     "coding": "Generating Code",
-    "pf": "Prompt Functions"
+    "function_calling": "Function Calling"
   },
   research: {
     "llm-agents": "LLM Agents",
-    "rag-faithfulness": "RAG Faithfulness",
-    "synthetic_data": "Synthetic Data",
-    "groq": "Hardware & Groq"
+    "rag": "RAG for LLMs",
+    "synthetic_data": "Synthetic Data"
   }
 };
 
@@ -57,26 +53,30 @@ const CATEGORY_TITLES: Record<string, string> = {
   risks: "Risks & Misuses"
 };
 
-// 2. Content Store (Simulating the filesystem contents from prompt-engineering/guides)
-// In a production env, this would be a glob import or API call.
+// 2. Comprehensive Content Store
 const SOURCE_CONTENT: Record<string, string> = {
   "introduction/basics": `---
 title: Basics of Prompting
-author: dair-ai
-description: Introduction to the basic elements of prompts.
 ---
 # Basics of Prompting
 
-Prompt engineering is about crafting inputs to LLMs to get better results.
+Prompt engineering is the art of crafting inputs to LLMs to get better results.
 
 <Callout type="info">
-The core components are Instructions, Context, Input Data, and Output Indicators.
+The core principle is **Specificity**. Don't ask "how to cook", ask "provide a detailed recipe for vegan lasagna".
 </Callout>
 
-### Example of a simple prompt:
+### Key Elements
+<Steps>
+1. **Instruction**: What you want the model to do.
+2. **Context**: Background info for the task.
+3. **Input Data**: The text to process.
+4. **Output Indicator**: How you want the result.
+</Steps>
+
 \`\`\`text
-Complete the sentence:
-The sky is
+Classify the sentiment of this text: "The new UI is absolutely stunning!"
+Sentiment:
 \`\`\`
 `,
   "techniques/zeroshot": `---
@@ -84,58 +84,97 @@ title: Zero-shot Prompting
 ---
 # Zero-shot Prompting
 
-LLMs today are capable of performing tasks without any prior examples.
+LLMs today, trained on large amounts of data and tuned to follow instructions, are capable of performing tasks zero-shot.
 
 <Callout type="idea">
-Use Zero-shot to test the model's base instruction-following capabilities.
+Zero-shot means the model performs a task without any prior examples or demonstrations in the prompt.
 </Callout>
 
+### Example
 \`\`\`text
-Classify the sentiment: "This UI is incredible!"
+Classify the text into neutral, negative, or positive. 
+
+Text: I think the vacation is okay.
 Sentiment:
 \`\`\`
+
+**Output:**
+\`\`\`text
+Neutral
+\`\`\`
+
+Note that in the prompt above we didn't provide the model with any examples -- that's the zero-shot capabilities at work.
 `,
   "techniques/fewshot": `---
 title: Few-shot Prompting
 ---
 # Few-shot Prompting
 
-Providing demonstrations enables In-Context Learning.
+While LLMs demonstrate remarkable zero-shot capabilities, they still fall short on more complex tasks. Few-shot prompting enables **In-Context Learning**.
 
-<Steps>
-1. Define the task.
-2. Provide 2-5 diverse examples.
-3. Provide the new input.
-</Steps>
+<Callout type="warning">
+Providing demonstrations in the prompt serves as conditioning for subsequent examples.
+</Callout>
 
-<Cards>
-  <Card title="Example: New Words" href="/techniques/zeroshot">Learning "whatpu" through demonstrations.</Card>
-  <Card title="Format Consistency" href="/techniques/cot">Ensuring JSON output via few-shot.</Card>
-</Cards>
+### Example: Learning New Concepts
+\`\`\`text
+A "whatpu" is a small, furry animal native to Tanzania. An example of a sentence that uses the word whatpu is:
+We were traveling in Africa and we saw these very cute whatpus.
+
+To do a "farduddle" means to jump up and down really fast. An example of a sentence that uses the word farduddle is:
+\`\`\`
+
+**Output:**
+\`\`\`text
+When we won the game, we all started to farduddle in celebration.
+\`\`\`
 `,
   "techniques/cot": `---
 title: Chain-of-Thought
 ---
 # Chain-of-Thought (CoT)
 
-CoT allows models to exhibit complex reasoning through intermediate steps.
+Introduced in Wei et al. (2022), CoT prompting enables complex reasoning capabilities through intermediate reasoning steps.
 
-<Callout type="warning">
-Smaller models often require "Let's think step by step" to trigger reasoning.
+<Callout type="idea">
+Simply adding "Let's think step by step" to a prompt can trigger Zero-shot CoT.
 </Callout>
 
-### Implementation
+### Reasoning Example
 \`\`\`text
-The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?
-Let's think step by step:
+The odd numbers in this group add up to an even number: 4, 8, 9, 15, 12, 2, 1.
+A: Adding all the odd numbers (9, 15, 1) gives 25. The answer is False.
+
+The odd numbers in this group add up to an even number: 15, 32, 5, 13, 82, 7, 1. 
+A:
 \`\`\`
+
+<Cards>
+  <Card title="Self-Consistency" href="techniques/consistency">Sampling multiple reasoning paths.</Card>
+  <Card title="Zero-shot CoT" href="techniques/zeroshot">Triggering logic without examples.</Card>
+</Cards>
+`,
+  "techniques/react": `---
+title: ReAct Framework
+---
+# ReAct Framework
+
+ReAct (Reason + Act) combines reasoning traces and task-specific actions in an interleaved manner.
+
+<Steps>
+1. **Thought**: The model plans what to do.
+2. **Action**: The model selects a tool (e.g., Search).
+3. **Observation**: The model reads the tool's output.
+4. **Loop**: The model updates its thinking based on results.
+</Steps>
+
+<Callout type="error">
+Without ReAct, LLMs are limited to their training data. ReAct connects them to the real world.
+</Callout>
 `
 };
 
 export const ContentService = {
-  /**
-   * Replicates Nextra's directory scanning using the Meta Registry
-   */
   getTree: (): CategoryStructure[] => {
     return Object.entries(CATEGORY_MAP).map(([catId, pages]) => ({
       id: catId,
@@ -149,13 +188,12 @@ export const ContentService = {
     }));
   },
 
-  /**
-   * Fetches content and parses Frontmatter using regex (lightweight gray-matter)
-   */
   getPage: async (path: string) => {
-    const raw = SOURCE_CONTENT[path] || `# ${path.split('/')[1]}\n\nContent is being indexed from the core guides...`;
+    // Normalize path (ensure no leading slash)
+    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    const raw = SOURCE_CONTENT[cleanPath] || `# ${cleanPath.split('/').pop()}\n\nContent for this module (**${cleanPath}**) is being processed from the prompt-engineering directory...`;
     
-    // Simple Frontmatter Parser
+    // Frontmatter Parser
     const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n/);
     const frontmatter: Record<string, string> = {};
     let content = raw;
@@ -172,7 +210,7 @@ export const ContentService = {
     return {
       content,
       frontmatter,
-      title: frontmatter.title || path.split('/')[1]
+      title: frontmatter.title || cleanPath.split('/').pop() || 'Untitled'
     };
   }
 };
