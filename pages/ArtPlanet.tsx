@@ -65,7 +65,7 @@ const ArtPlanet: React.FC = () => {
       philosophy: '“艺术是与自然平行的和谐”，意味着模仿还是创造“第二自然”？',
       dialogue: '用几何眼光看世界，解构为几何平面。',
       math: ['泰森多边形 (Voronoi)', '三角剖分 (Delaunay)'],
-      mission: '引入 d3-delaunay 库，编写着色算法根据块面朝向应用冷暖色调。',
+      mission: '引入 d3-delaunay库，编写着色算法根据块面朝向应用冷暖色调。',
       gradient: 'from-orange-500 to-red-600',
       icon: '📐',
       glow: 'rgba(239, 68, 68, 0.3)'
@@ -114,14 +114,14 @@ const ArtPlanet: React.FC = () => {
               <span className="text-purple-400 font-mono text-xs uppercase tracking-[0.5em] font-black">Neural Art Pipeline</span>
             </m.div>
             
-            <m.h2 variants={itemVariants} className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.95]">
+            <m.h2 variants={itemVariants} className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-[1.1]">
               训练“超我”的 <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400 animate-gradient-x">
                 审美与抽象能力
               </span>
             </m.h2>
             
-            <m.p variants={itemVariants} className="text-lg md:text-2xl text-gray-400 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
+            <m.p variants={itemVariants} className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
               AI 不再是简单的画图工具，而是将 <span className="text-white font-semibold">“艺术文脉”</span> 转化为 <span className="text-white font-semibold">“数学算力”</span> 的翻译官。
             </m.p>
           </m.div>
@@ -134,9 +134,9 @@ const ArtPlanet: React.FC = () => {
           >
             {[{ label: 'Style Fusion', val: 'Active', icon: '🎨' }, { label: 'Historical Logic', val: 'Deep', icon: '🏛️' }].map((stat, i) => (
               <div key={i} className="bg-brand-surface/60 border border-white/10 rounded-[32px] p-6 md:p-10 backdrop-blur-2xl relative overflow-hidden group shadow-2xl">
-                <div className="absolute -right-4 -bottom-4 text-5xl opacity-5 group-hover:opacity-10 transition-opacity">{stat.icon}</div>
+                <div className="absolute -right-4 -bottom-4 text-3xl opacity-5 group-hover:opacity-10 transition-opacity">{stat.icon}</div>
                 <div className="text-[9px] font-mono text-gray-500 uppercase mb-4 tracking-widest">{stat.label}</div>
-                <div className="text-2xl md:text-4xl font-black text-white">{stat.val}</div>
+                <div className="text-xl md:text-3xl font-black text-white">{stat.val}</div>
               </div>
             ))}
           </m.div>
@@ -161,7 +161,7 @@ const ArtPlanet: React.FC = () => {
                 transition={{ duration: 1, ease: "easeOut" }}
               >
                 <div className="flex items-center justify-center lg:justify-start gap-8">
-                  <div className={`w-16 h-16 md:w-24 md:h-24 rounded-[32px] bg-gradient-to-br ${act.gradient} flex items-center justify-center text-4xl md:text-5xl shadow-2xl border border-white/20`}>
+                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-[32px] bg-gradient-to-br ${act.gradient} flex items-center justify-center text-3xl md:text-4xl shadow-2xl border border-white/20`}>
                     {act.icon}
                   </div>
                   <div className="space-y-1">
@@ -170,7 +170,7 @@ const ArtPlanet: React.FC = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-3xl md:text-6xl font-black text-white tracking-tighter uppercase leading-none text-center lg:text-left">
+                <h3 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none text-center lg:text-left">
                   {act.title}
                 </h3>
                 
@@ -179,7 +179,7 @@ const ArtPlanet: React.FC = () => {
                    
                    <div className="space-y-6">
                      <div className="text-[9px] font-mono text-gray-500 uppercase tracking-[0.6em] mb-4">Aesthetic_Input_Log</div>
-                     <p className="text-gray-100 text-xl md:text-4xl leading-snug italic font-extralight">"{act.dialogue}"</p>
+                     <p className="text-gray-100 text-xl md:text-3xl leading-snug italic font-extralight">"{act.dialogue}"</p>
                    </div>
                    
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-12 border-t border-white/5">
@@ -202,7 +202,7 @@ const ArtPlanet: React.FC = () => {
                            Master Reference
                         </div>
                         <div className="space-y-2">
-                          <div className="text-white font-black text-lg md:text-2xl tracking-tight uppercase">{act.artists}</div>
+                          <div className="text-white font-black text-lg md:text-xl tracking-tight uppercase">{act.artists}</div>
                           <div className="text-[11px] md:text-sm text-gray-500 font-light italic leading-relaxed">{act.works}</div>
                         </div>
                       </div>
@@ -233,7 +233,7 @@ const ArtPlanet: React.FC = () => {
                        <m.div 
                          animate={{ scale: [1, 1.15, 1], rotate: [0, 10, -10, 0] }}
                          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                         className="text-9xl md:text-[11rem] drop-shadow-[0_0_60px_rgba(255,255,255,0.15)] grayscale group-hover:grayscale-0 transition-all duration-1000"
+                         className="text-7xl md:text-9xl drop-shadow-[0_0_60px_rgba(255,255,255,0.15)] grayscale group-hover:grayscale-0 transition-all duration-1000"
                        >
                          {act.icon}
                        </m.div>
@@ -250,13 +250,13 @@ const ArtPlanet: React.FC = () => {
                     initial={{ y: 80, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 1 }}
-                    className="absolute bottom-8 left-8 right-8 p-8 md:p-14 bg-white/[0.03] backdrop-blur-3xl rounded-[40px] border border-white/10 border-t-white/20 shadow-2xl"
+                    className="absolute bottom-8 left-8 right-8 p-8 md:p-10 bg-white/[0.03] backdrop-blur-3xl rounded-[40px] border border-white/10 border-t-white/20 shadow-2xl"
                   >
                     <div className="flex items-center gap-4 mb-6">
                       <div className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
                       <div className="text-[10px] font-mono text-purple-400 uppercase font-black tracking-[0.5em]">Mission_Directive</div>
                     </div>
-                    <p className="text-white font-black leading-snug text-lg md:text-2xl tracking-tight">{act.mission}</p>
+                    <p className="text-white font-black leading-snug text-base md:text-xl tracking-tight">{act.mission}</p>
                   </m.div>
                 </div>
               </m.div>
@@ -271,11 +271,11 @@ const ArtPlanet: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-7xl mx-auto p-12 md:p-40 bg-gradient-to-br from-purple-950/30 to-brand-dark border border-purple-500/10 rounded-[64px] md:rounded-[120px] backdrop-blur-3xl relative overflow-hidden group shadow-2xl"
+          className="max-w-7xl mx-auto p-12 md:p-32 bg-gradient-to-br from-purple-950/30 to-brand-dark border border-purple-500/10 rounded-[64px] md:rounded-[120px] backdrop-blur-3xl relative overflow-hidden group shadow-2xl"
         >
           <div className="relative z-10 space-y-12">
-            <h3 className="text-3xl md:text-7xl font-black text-white uppercase tracking-tighter">费曼学习法与艺术抽象</h3>
-            <p className="text-gray-400 text-lg md:text-4xl leading-relaxed font-extralight max-w-5xl mx-auto italic">
+            <h3 className="text-2xl md:text-5xl font-black text-white uppercase tracking-tighter">费曼学习法与艺术抽象</h3>
+            <p className="text-gray-400 text-lg md:text-3xl leading-relaxed font-extralight max-w-5xl mx-auto italic">
               "我们不仅仅是在模拟艺术，我们是在 <span className="text-white font-normal">解构审美</span>。通过将流派的核心抽象为代码，你真正理解了什么是‘风格’。"
             </p>
           </div>

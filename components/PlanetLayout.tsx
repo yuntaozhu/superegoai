@@ -47,7 +47,7 @@ const PlanetLayout: React.FC<PlanetLayoutProps> = ({ course, children }) => {
             <div className={`inline-block px-3 md:px-4 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] md:text-[10px] font-mono font-bold text-gray-400 uppercase tracking-widest mb-4 md:mb-6`}>
               PLANET_ID: {course.id.toUpperCase()}
             </div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white mb-4 md:mb-6 leading-tight tracking-tighter uppercase break-words">
+            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white mb-4 md:mb-6 leading-tight tracking-tighter uppercase break-words">
               {course.title}
             </h1>
             <p className="text-sm sm:text-base md:text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300 font-bold mb-6 md:mb-8 italic">
@@ -68,7 +68,7 @@ const PlanetLayout: React.FC<PlanetLayoutProps> = ({ course, children }) => {
           </div>
 
           <div className="flex justify-center animate-in fade-in zoom-in duration-1000">
-            <div className={`relative w-20 h-20 sm:w-32 sm:h-32 md:w-44 md:h-44 rounded-full bg-gradient-to-br ${course.color} shadow-[0_0_40px_rgba(255,255,255,0.05)] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl animate-float-planet border border-white/10`}>
+            <div className={`relative w-16 h-16 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-br ${course.color} shadow-[0_0_40px_rgba(255,255,255,0.05)] flex items-center justify-center text-xl sm:text-2xl md:text-3xl animate-float-planet border border-white/10`}>
               <div className="absolute inset-0 rounded-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 mix-blend-overlay"></div>
               <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-black/40 via-transparent to-white/20"></div>
               <span className="drop-shadow-2xl">{course.icon}</span>

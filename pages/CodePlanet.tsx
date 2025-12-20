@@ -124,13 +124,13 @@ const CodePlanet: React.FC = () => {
               <div className="h-0.5 w-10 bg-cyan-500" />
               <span className="text-cyan-400 font-mono text-[10px] md:text-xs uppercase tracking-[0.6em] font-bold">Unicorn_System_v2</span>
             </div>
-            <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-[0.9]">
               进化为 <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
                 超级个体程序员
               </span>
             </h2>
-            <p className="text-base md:text-2xl text-gray-400 leading-relaxed font-light max-w-xl">
+            <p className="text-base md:text-lg text-gray-400 leading-relaxed font-light max-w-xl">
               不要做代码的搬运工。学习如何以 <span className="text-white font-bold">“总导演”</span> 的身份，指挥 AI 军团构建复杂的数字世界。
             </p>
             <div className="flex gap-4">
@@ -150,17 +150,17 @@ const CodePlanet: React.FC = () => {
                  key={i}
                  layout
                  onClick={() => setActivePhilosophy(activePhilosophy === i ? null : i)}
-                 className={`cursor-pointer p-6 md:p-8 rounded-[32px] border transition-all duration-300 relative overflow-hidden group ${
+                 className={`cursor-pointer p-6 md:p-6 rounded-[32px] border transition-all duration-300 relative overflow-hidden group ${
                    activePhilosophy === i 
                    ? 'bg-cyan-500/10 border-cyan-500/50 shadow-[0_0_30px_rgba(34,211,238,0.15)]' 
                    : 'bg-white/5 border-white/10 hover:border-white/30'
                  }`}
                >
                   <div className="flex items-center gap-6">
-                    <div className="text-3xl md:text-4xl">{p.icon}</div>
+                    <div className="text-2xl md:text-3xl">{p.icon}</div>
                     <div>
-                      <h4 className="text-white font-black text-lg md:text-xl tracking-tight">{p.title}</h4>
-                      <p className="text-cyan-500/60 font-mono text-[10px] uppercase tracking-widest">{p.subtitle}</p>
+                      <h4 className="text-white font-black text-base md:text-lg tracking-tight">{p.title}</h4>
+                      <p className="text-cyan-500/60 font-mono text-[9px] uppercase tracking-widest">{p.subtitle}</p>
                     </div>
                   </div>
                   <AnimatePresence>
@@ -175,7 +175,7 @@ const CodePlanet: React.FC = () => {
                       </m.div>
                     )}
                   </AnimatePresence>
-                  <div className="absolute top-0 right-0 p-4 opacity-5 font-mono text-4xl">{i+1}</div>
+                  <div className="absolute top-0 right-0 p-4 opacity-5 font-mono text-3xl">{i+1}</div>
                </m.div>
              ))}
           </div>
@@ -186,7 +186,7 @@ const CodePlanet: React.FC = () => {
       <section className="py-20 md:py-40 relative px-4 md:px-0">
         <div className="max-w-4xl mx-auto space-y-12">
           <div className="text-center mb-16">
-             <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">进化轨迹 // Trajectory</h3>
+             <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">进化轨迹 // Trajectory</h3>
              <p className="text-gray-500 font-mono text-xs tracking-widest">TAP_PHASE_TO_EXPAND_CORE_LOGIC</p>
           </div>
 
@@ -208,10 +208,10 @@ const CodePlanet: React.FC = () => {
                 >
                   <div className={`absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-cyan-500 transition-opacity ${isExpanded ? 'opacity-100' : 'opacity-40'}`} />
 
-                  <div className="p-8 md:p-12">
+                  <div className="p-8 md:p-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                       <div className="flex items-center gap-6">
-                        <div className={`w-14 h-14 md:w-20 md:h-20 rounded-2xl md:rounded-3xl flex items-center justify-center text-3xl md:text-5xl border border-white/5 bg-white/5 transition-transform duration-500 ${isExpanded ? 'scale-110 rotate-3' : ''}`}>
+                        <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl flex items-center justify-center text-2xl md:text-3xl border border-white/5 bg-white/5 transition-transform duration-500 ${isExpanded ? 'scale-110 rotate-3' : ''}`}>
                           {phase.icon}
                         </div>
                         <div>
@@ -219,7 +219,7 @@ const CodePlanet: React.FC = () => {
                             <span className="text-[10px] font-mono text-cyan-400 font-bold uppercase tracking-widest">Phase 0{idx}</span>
                             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest bg-white/5 px-2 py-0.5 rounded">{phase.period}</span>
                           </div>
-                          <h3 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none">{phase.title}</h3>
+                          <h3 className="text-xl md:text-3xl font-black text-white tracking-tighter uppercase leading-none">{phase.title}</h3>
                         </div>
                       </div>
                       
@@ -261,7 +261,7 @@ const CodePlanet: React.FC = () => {
                               </div>
                               <div className="p-6 bg-cyan-500/10 rounded-3xl border border-cyan-500/20">
                                 <span className="text-[9px] font-mono text-cyan-400 uppercase tracking-widest">阶段交付物 // Output</span>
-                                <div className="text-white font-black mt-2 text-xl md:text-2xl tracking-tighter uppercase">{phase.outcome}</div>
+                                <div className="text-white font-black mt-2 text-lg md:text-xl tracking-tighter uppercase">{phase.outcome}</div>
                               </div>
                             </div>
 
@@ -329,13 +329,13 @@ const CodePlanet: React.FC = () => {
 
             <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-10">
                <div className="text-center md:text-left">
-                  <h4 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase mb-2">一人即是公司</h4>
+                  <h4 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase mb-2">一人即是公司</h4>
                   <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.2em]">Efficiency Multiplier: 10,000x</p>
                </div>
                <m.div 
                  animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
                  transition={{ duration: 10, repeat: Infinity }}
-                 className="text-7xl md:text-9xl grayscale opacity-40 group-hover:grayscale-0 transition-all duration-1000"
+                 className="text-5xl md:text-7xl grayscale opacity-40 group-hover:grayscale-0 transition-all duration-1000"
                >
                  🦄
                </m.div>

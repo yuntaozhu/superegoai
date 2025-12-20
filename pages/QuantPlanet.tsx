@@ -91,18 +91,18 @@ const QuantPlanet: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               className="space-y-6 md:space-y-8"
             >
-              <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-tight">
+              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-tight">
                 量化投研工厂 <br/>
                 <span className="text-emerald-400">全进化系统</span>
               </h2>
-              <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light">
+              <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
                 不只是编写算法，而是构建一个能够自我进化的 <span className="text-emerald-400 font-bold">Multi-Agent</span> 系统。从 Arxiv 论文到部署，全流程智能驱动。
               </p>
               <div className="flex gap-4 md:gap-6">
                 {['⚡', '🧬', '🏗️'].map((ico, i) => (
-                  <div key={i} className="p-3 md:p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl md:rounded-2xl flex flex-col items-center gap-2">
-                     <span className="text-xl md:text-2xl">{ico}</span>
-                     <span className="text-[8px] md:text-[10px] font-mono text-emerald-300 uppercase">{['Context', 'Evolve', 'Swarm'][i]}</span>
+                  <div key={i} className="p-3 md:p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl md:rounded-2xl flex flex-col items-center gap-2">
+                     <span className="text-lg md:text-xl">{ico}</span>
+                     <span className="text-[7px] md:text-[9px] font-mono text-emerald-300 uppercase">{['Context', 'Evolve', 'Swarm'][i]}</span>
                   </div>
                 ))}
               </div>
@@ -110,7 +110,7 @@ const QuantPlanet: React.FC = () => {
 
             <div className="relative aspect-video bg-emerald-950/20 rounded-3xl md:rounded-[48px] border border-emerald-500/10 p-6 md:p-8 flex flex-col justify-between overflow-hidden group">
                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none" />
-               <div className="font-mono text-[8px] md:text-[10px] space-y-1 md:space-y-2 text-emerald-400/80 z-10">
+               <div className="font-mono text-[7px] md:text-[9px] space-y-1 md:space-y-1.5 text-emerald-400/80 z-10">
                   <div className="flex justify-between border-b border-emerald-500/10 pb-1">
                     <span>[RESEARCH]</span>
                     <span className="text-white">ALPHA_EXTRACT... [92%]</span>
@@ -129,8 +129,8 @@ const QuantPlanet: React.FC = () => {
                   </div>
                </div>
                
-               <div className="flex justify-center my-4">
-                  <svg className="w-32 h-32 md:w-48 md:h-48 text-emerald-500/30 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 100 100">
+               <div className="flex justify-center my-2">
+                  <svg className="w-24 h-24 md:w-36 md:h-36 text-emerald-500/30 group-hover:scale-105 transition-transform duration-1000" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="5 5" />
                     <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" strokeWidth="1" />
                     <m.path 
@@ -144,7 +144,7 @@ const QuantPlanet: React.FC = () => {
                </div>
                
                <div className="text-right z-10">
-                  <span className="text-[8px] md:text-[10px] font-mono text-emerald-500/40 uppercase">AutoQuant_v3 // online</span>
+                  <span className="text-[7px] md:text-[9px] font-mono text-emerald-500/40 uppercase">AutoQuant_v3 // online</span>
                </div>
             </div>
           </div>
@@ -166,7 +166,7 @@ const QuantPlanet: React.FC = () => {
               <div className="p-8 md:p-16 flex flex-col lg:flex-row gap-8 md:gap-12">
                  <div className="lg:w-1/3 space-y-4 md:space-y-6">
                     <div className="text-[10px] font-mono text-gray-600 uppercase tracking-widest">Phase_0{idx + 1}</div>
-                    <h3 className="text-xl md:text-3xl font-black text-white tracking-tighter uppercase leading-tight">{m_mod.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-black text-white tracking-tighter uppercase leading-tight">{m_mod.title}</h3>
                     <p className="text-emerald-400 text-xs font-bold uppercase tracking-widest">{m_mod.subtitle}</p>
                     <div className="flex flex-wrap gap-2 pt-2">
                        {m_mod.tech.map(t => (

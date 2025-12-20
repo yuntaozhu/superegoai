@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
@@ -98,19 +97,19 @@ const ResearchPlanet: React.FC = () => {
               <span className="h-0.5 w-10 bg-indigo-500"></span>
               <span className="text-indigo-400 font-mono text-[10px] md:text-xs uppercase tracking-[0.5em]">ExtBrain_Research_OS</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-tight">
               构建你的 <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-600">AI “外脑” (ExtBrain)</span>
             </h2>
-            <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
               不仅仅是编程课，而是构建“私人科研中台”。通过 <span className="text-indigo-400 font-bold">建模</span> 辅助高阶学术研究，取得跨代竞赛优势。
             </p>
           </m.div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
             {coreAbilities.map((a, i) => (
-              <div key={i} className={`p-4 md:p-6 bg-white/5 border border-white/10 rounded-2xl md:rounded-[32px] text-center hover:bg-white/10 transition-colors ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}>
-                 <div className="text-2xl md:text-3xl mb-2 md:mb-4">{a.icon}</div>
+              <div key={i} className={`p-4 md:p-5 bg-white/5 border border-white/10 rounded-2xl md:rounded-[32px] text-center hover:bg-white/10 transition-colors ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}>
+                 <div className="text-xl md:text-2xl mb-2 md:mb-3">{a.icon}</div>
                  <h4 className="text-white font-bold text-xs md:text-sm mb-1">{a.name}</h4>
                  <p className="text-gray-500 text-[8px] md:text-[9px] uppercase font-mono">{a.desc.substring(0, 20)}...</p>
               </div>
@@ -134,12 +133,13 @@ const ResearchPlanet: React.FC = () => {
               <div className="p-8 md:p-20 flex flex-col lg:flex-row gap-8 md:gap-12">
                  <div className="lg:w-1/3 space-y-4 md:space-y-8">
                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl md:text-4xl shadow-inner">
+                       {/* Fix: closed template literal and brace correctly */}
+                       <div className={`w-10 h-10 md:w-14 md:h-14 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-3xl shadow-inner`}>
                           {m_mod.icon}
                        </div>
                        <div className="text-[10px] font-mono text-gray-600">LEVEL_0{idx + 1}</div>
                     </div>
-                    <h3 className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter leading-tight">{m_mod.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">{m_mod.title}</h3>
                     <p className="text-gray-400 text-[10px] md:text-sm italic">{m_mod.goal}</p>
                     <div className="flex flex-wrap gap-2 pt-2 md:pt-4">
                        {m_mod.tech.map(t => (
@@ -151,7 +151,7 @@ const ResearchPlanet: React.FC = () => {
                  <div className="lg:w-2/3 flex flex-col gap-6 md:gap-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                       {m_mod.content.map((item, i) => (
-                        <div key={i} className="p-5 md:p-8 bg-black/40 rounded-2xl md:rounded-[32px] border border-white/5 flex gap-3 md:gap-4 items-start hover:bg-black/60 transition-colors">
+                        <div key={i} className="p-5 md:p-6 bg-black/40 rounded-2xl md:rounded-[32px] border border-white/5 flex gap-3 md:gap-4 items-start hover:bg-black/60 transition-colors">
                            <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-mono text-[9px] md:text-[10px] flex-shrink-0">
                              {i + 1}
                            </div>
@@ -162,8 +162,8 @@ const ResearchPlanet: React.FC = () => {
                     
                     <div className={`p-6 md:p-8 bg-gradient-to-br ${m_mod.gradient} rounded-2xl md:rounded-3xl text-center relative overflow-hidden group-hover:scale-[1.01] transition-transform duration-500 shadow-xl`}>
                        <span className="text-[9px] md:text-[10px] font-mono text-white/60 uppercase tracking-widest">Stage Deliverable</span>
-                       <div className="text-white font-black mt-1 md:mt-2 text-base md:text-xl tracking-tight uppercase">{m_mod.outcome}</div>
-                       <div className="absolute top-0 right-0 p-4 opacity-10 text-5xl md:text-6xl">{m_mod.icon}</div>
+                       <div className="text-white font-black mt-1 md:mt-2 text-sm md:text-lg tracking-tight uppercase">{m_mod.outcome}</div>
+                       <div className="absolute top-0 right-0 p-4 opacity-10 text-4xl md:text-5xl">{m_mod.icon}</div>
                     </div>
                  </div>
               </div>
@@ -176,7 +176,7 @@ const ResearchPlanet: React.FC = () => {
       <section className="mt-20 md:mt-40 mb-10 md:mb-20 px-4 md:px-0">
         <div className="max-w-4xl mx-auto p-8 md:p-20 bg-indigo-900/10 border border-indigo-500/20 rounded-[40px] md:rounded-[64px] backdrop-blur-xl relative overflow-hidden text-center">
           <div className="relative z-10">
-            <h3 className="text-xl md:text-3xl font-black text-white mb-6 md:mb-8 uppercase tracking-tighter">费曼学习法：深度进化的灵魂</h3>
+            <h3 className="text-lg md:text-2xl font-black text-white mb-6 md:mb-8 uppercase tracking-tighter">费曼学习法：深度进化的灵魂</h3>
             <p className="text-gray-300 text-sm md:text-lg leading-relaxed font-light mb-8 md:mb-12">
               不仅是完成代码，还需通过 <span className="text-indigo-400 font-bold">“费曼时刻”</span> 总结 AI 逻辑。如果你不能用最简单的语言向小孩解释清楚，说明你还没真正掌握它。
             </p>

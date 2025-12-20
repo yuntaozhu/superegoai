@@ -78,11 +78,11 @@ const SuperEgoPlanet: React.FC = () => {
               <span className="w-10 h-0.5 bg-yellow-400 rounded-full" />
               <span className="text-yellow-400 font-mono text-[10px] md:text-xs uppercase tracking-widest">Sovereign OS</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-tight">
               构建你的“主权” <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">第二大脑</span>
             </h2>
-            <p className="text-base md:text-xl text-gray-300 leading-relaxed font-light">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
               拒绝玩具级的“调包侠”教学。我们将企业级的 <span className="text-white font-bold">FTI</span> 架构翻译为个人知识系统的构建法则，实现全方位主权。
             </p>
           </m.div>
@@ -93,10 +93,10 @@ const SuperEgoPlanet: React.FC = () => {
                { title: '模型主权', desc: '多模型协同', icon: '🛡️' },
                { title: '创造主权', desc: '多模态通感', icon: '🎨' },
              ].map((p, i) => (
-               <div key={i} className={`p-4 md:p-6 bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl text-center hover:bg-white/10 transition-colors ${i === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
-                  <div className="text-2xl md:text-3xl mb-2 md:mb-4">{p.icon}</div>
+               <div key={i} className={`p-4 md:p-5 bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl text-center hover:bg-white/10 transition-colors ${i === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
+                  <div className="text-xl md:text-2xl mb-2 md:mb-3">{p.icon}</div>
                   <h4 className="text-white font-bold text-xs md:text-sm mb-1">{p.title}</h4>
-                  <p className="text-gray-500 text-[8px] md:text-[10px] uppercase font-mono">{p.desc}</p>
+                  <p className="text-gray-500 text-[7px] md:text-[9px] uppercase font-mono">{p.desc}</p>
                </div>
              ))}
           </div>
@@ -118,12 +118,12 @@ const SuperEgoPlanet: React.FC = () => {
               <div className="p-8 md:p-16 flex flex-col lg:flex-row gap-8 md:gap-12">
                  <div className="lg:w-1/3 space-y-4 md:space-y-8">
                     <div className="flex items-center gap-4">
-                       <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl md:text-4xl shadow-inner`}>
+                       <div className={`w-10 h-10 md:w-14 md:h-14 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-3xl shadow-inner`}>
                           {stage.icon}
                        </div>
                        <div className="text-[10px] font-mono text-gray-600">PHASE_{stage.id}</div>
                     </div>
-                    <h3 className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter leading-tight">{stage.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">{stage.title}</h3>
                     <p className="text-gray-400 text-xs md:text-sm italic">{stage.subtitle}</p>
                     <div className="flex flex-wrap gap-2 pt-2 md:pt-4">
                        {stage.tech.map(t => (
@@ -134,8 +134,8 @@ const SuperEgoPlanet: React.FC = () => {
 
                  <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                     {stage.modules.map((m_mod, i) => (
-                      <div key={i} className="p-6 md:p-10 bg-black/40 rounded-2xl md:rounded-[40px] border border-white/5 hover:bg-black/60 transition-colors">
-                         <h4 className="text-white font-bold mb-2 md:mb-4 flex items-center gap-2 text-sm md:text-base">
+                      <div key={i} className="p-6 md:p-8 bg-black/40 rounded-2xl md:rounded-[40px] border border-white/5 hover:bg-black/60 transition-colors">
+                         <h4 className="text-white font-bold mb-2 md:mb-3 flex items-center gap-2 text-xs md:text-sm">
                            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
                            {m_mod.name}
                          </h4>
@@ -144,7 +144,7 @@ const SuperEgoPlanet: React.FC = () => {
                     ))}
                     <div className="md:col-span-2 p-6 md:p-8 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 text-center">
                        <span className="text-[9px] md:text-[10px] font-mono text-yellow-500/60 uppercase tracking-[0.2em]">Stage Deliverable</span>
-                       <div className="text-white font-black mt-2 text-base md:text-lg">
+                       <div className="text-white font-black mt-2 text-sm md:text-lg">
                           {idx === 0 && '私有 FTI 数据管道'}
                           {idx === 1 && 'SQL 财务智能助理'}
                           {idx === 2 && '多模态灵感电影'}
@@ -163,7 +163,7 @@ const SuperEgoPlanet: React.FC = () => {
         <div className="absolute top-2 right-2 md:top-6 md:right-6 font-mono text-[8px] md:text-[10px] text-gray-700">EXPERIENCE_V1</div>
         <div className="max-w-3xl mx-auto space-y-8 md:space-y-12">
           <div className="text-center">
-            <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-4">什么是“SuperEgo”体验？</h3>
+            <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4">什么是“SuperEgo”体验？</h3>
             <p className="text-gray-500 text-[10px] md:text-sm">不仅是回复，而是编排全媒体资产。</p>
           </div>
           
