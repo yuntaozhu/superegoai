@@ -5,74 +5,62 @@ import { useLanguage, Link } from '../context/LanguageContext';
 import { 
   Search, ChevronRight, BookOpen, Layers, Cpu, Code, 
   ShieldAlert, Database, Info, Terminal, Sparkles, Zap, List,
-  Book, ExternalLink
+  Book, ExternalLink, ArrowLeft, ArrowRight, Folder
 } from 'lucide-react';
-import { ContentService, CategoryGroup, DocNode } from '../lib/ContentService';
+import { ContentService, CategoryStructure, PageMeta } from '../lib/ContentService';
 import { MdxComponents } from '../components/MdxComponents';
 
 const PromptGuide: React.FC = () => {
   const { language } = useLanguage();
-  const [index, setIndex] = useState<CategoryGroup[]>([]);
-  const [activeDoc, setActiveDoc] = useState<DocNode | null>(null);
-  const [docContent, setDocContent] = useState('');
+  const [tree, setTree] = useState<CategoryStructure[]>([]);
+  const [activePage, setActivePage] = useState<PageMeta | null>(null);
+  const [doc, setDoc] = useState<{ content: string; frontmatter: any; title: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize Index
+  // Initial Indexing
   useEffect(() => {
-    const groups = ContentService.getIndex(language);
-    setIndex(groups);
-    if (!activeDoc && groups.length > 0) {
-      setActiveDoc(groups[0].items[0]);
+    const dataTree = ContentService.getTree();
+    setTree(dataTree);
+    if (!activePage && dataTree.length > 0) {
+      setActivePage(dataTree[0].pages[0]);
     }
-  }, [language]);
+  }, []);
 
-  // Load Doc Content
+  // Load Metadata-driven content
   useEffect(() => {
-    if (activeDoc) {
+    if (activePage) {
       setIsLoading(true);
-      ContentService.loadContent(activeDoc.path, language).then(content => {
-        setDocContent(content);
-        setIsLoading(false);
+      ContentService.getPage(activePage.path).then(res => {
+        setDoc(res);
+        setTimeout(() => setIsLoading(false), 300);
       });
     }
-  }, [activeDoc, language]);
+  }, [activePage]);
 
-  const filteredIndex = useMemo(() => {
-    if (!searchQuery) return index;
+  const filteredTree = useMemo(() => {
+    if (!searchQuery) return tree;
     const q = searchQuery.toLowerCase();
-    return index.map(group => ({
-      ...group,
-      items: group.items.filter(item => 
-        item.title.toLowerCase().includes(q) || 
-        group.title.toLowerCase().includes(q)
+    return tree.map(cat => ({
+      ...cat,
+      pages: cat.pages.filter(p => 
+        p.title.toLowerCase().includes(q) || 
+        cat.title.toLowerCase().includes(q)
       )
-    })).filter(group => group.items.length > 0);
-  }, [index, searchQuery]);
-
-  const getIcon = (id: string) => {
-    switch (id) {
-      case 'introduction': return <Info className="w-4 h-4" />;
-      case 'techniques': return <Layers className="w-4 h-4" />;
-      case 'applications': return <Code className="w-4 h-4" />;
-      case 'research': return <Database className="w-4 h-4" />;
-      case 'risks': return <ShieldAlert className="w-4 h-4" />;
-      default: return <BookOpen className="w-4 h-4" />;
-    }
-  };
+    })).filter(cat => cat.pages.length > 0);
+  }, [tree, searchQuery]);
 
   const renderMdx = (content: string) => {
-    // Enhanced regex-based component renderer
-    // In a real app, we'd use mdx-remote or similar
     const parts = content.split(/(<Callout[\s\S]*?<\/Callout>|<Cards[\s\S]*?<\/Cards>|<Steps[\s\S]*?<\/Steps>|```[\s\S]*?```|#{1,3}\s.*)/g);
 
     return parts.map((part, i) => {
+      if (!part || !part.trim()) return null;
+
       if (part.startsWith('<Callout')) {
-        const typeMatch = part.match(/type="(.*?)"/);
-        const type = (typeMatch?.[1] as any) || 'info';
+        const type = part.match(/type="(.*?)"/)?.[1] || 'info';
         const children = part.replace(/<Callout.*?>|<\/Callout>/g, '').trim();
-        return <MdxComponents.Callout key={i} type={type}>{children}</MdxComponents.Callout>;
+        return <MdxComponents.Callout key={i} type={type as any}>{children}</MdxComponents.Callout>;
       }
       if (part.startsWith('<Cards')) {
         const cardMatches = part.matchAll(/<Card title="(.*?)" href="(.*?)">(.*?)<\/Card>/g);
@@ -83,7 +71,10 @@ const PromptGuide: React.FC = () => {
       }
       if (part.startsWith('<Steps')) {
         const children = part.replace(/<Steps>|<\/Steps>/g, '').trim();
-        return <MdxComponents.Steps key={i}><MdxComponents.p>{children}</MdxComponents.p></MdxComponents.Steps>;
+        const steps = children.split(/\n\s*\d+\.\s+/).filter(Boolean).map((s, si) => (
+          <div key={si} className="mb-4">{s.trim()}</div>
+        ));
+        return <MdxComponents.Steps key={i}>{steps}</MdxComponents.Steps>;
       }
       if (part.startsWith('```')) {
         const lang = part.match(/```(\w+)/)?.[1] || 'text';
@@ -94,7 +85,6 @@ const PromptGuide: React.FC = () => {
       if (part.startsWith('## ')) return <MdxComponents.h2 key={i}>{part.replace('## ', '')}</MdxComponents.h2>;
       if (part.startsWith('### ')) return <MdxComponents.h3 key={i}>{part.replace('### ', '')}</MdxComponents.h3>;
       
-      if (!part.trim()) return null;
       return <MdxComponents.p key={i} dangerouslySetInnerHTML={{ __html: part.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />;
     });
   };
@@ -102,27 +92,27 @@ const PromptGuide: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#020308] pt-16 flex overflow-hidden">
       
-      {/* Sidebar: Indexing Matrix */}
+      {/* Dynamic Navigation Sidebar */}
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.aside
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
-            className="w-72 border-r border-white/5 bg-[#05060f]/80 backdrop-blur-3xl flex flex-col h-[calc(100vh-64px)] z-20"
+            className="w-72 border-r border-white/5 bg-[#05060f]/90 backdrop-blur-3xl flex flex-col h-[calc(100vh-64px)] z-20"
           >
             <div className="p-6 border-b border-white/5">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
-                  <Book className="w-4 h-4 text-blue-500" />
+                  <Terminal className="w-4 h-4 text-blue-500" />
                 </div>
-                <h2 className="text-xs font-black text-white uppercase tracking-widest">Knowledge Base</h2>
+                <h2 className="text-xs font-black text-white uppercase tracking-widest">Metadata Index</h2>
               </div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
                 <input 
                   type="text"
-                  placeholder="Search documentation..."
+                  placeholder="Filter knowledge..."
                   className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-[11px] text-white focus:outline-none focus:border-blue-500 transition-all font-mono"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -131,24 +121,24 @@ const PromptGuide: React.FC = () => {
             </div>
 
             <nav className="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-8">
-              {filteredIndex.map(group => (
-                <div key={group.id} className="space-y-1">
+              {filteredTree.map(cat => (
+                <div key={cat.id} className="space-y-1">
                   <h4 className="px-3 text-[10px] font-black text-gray-500 uppercase tracking-widest flex items-center gap-2 mb-3">
-                    {getIcon(group.id)}
-                    {group.title}
+                    <Folder className="w-3 h-3" />
+                    {cat.title}
                   </h4>
-                  {group.items.map(item => (
+                  {cat.pages.map(page => (
                     <button
-                      key={item.path}
-                      onClick={() => setActiveDoc(item)}
+                      key={page.path}
+                      onClick={() => setActivePage(page)}
                       className={`w-full text-left px-3 py-2.5 rounded-xl text-[11px] transition-all flex items-center justify-between group ${
-                        activeDoc?.path === item.path 
-                        ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5' 
+                        activePage?.path === page.path 
+                        ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5' 
                         : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
                       }`}
                     >
-                      <span className="truncate">{item.title}</span>
-                      {activeDoc?.path === item.path && <Zap className="w-3 h-3 fill-current animate-pulse" />}
+                      <span className="truncate">{page.title}</span>
+                      {activePage?.path === page.path && <Zap className="w-3 h-3 fill-current animate-pulse" />}
                     </button>
                   ))}
                 </div>
@@ -157,7 +147,7 @@ const PromptGuide: React.FC = () => {
             
             <div className="p-4 border-t border-white/5">
               <a href="https://github.com/dair-ai/Prompt-Engineering-Guide" target="_blank" className="flex items-center justify-between p-3 rounded-xl bg-white/5 text-[10px] text-gray-400 hover:text-white transition-colors">
-                <span>Original Source</span>
+                <span>Core Research</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             </div>
@@ -165,8 +155,8 @@ const PromptGuide: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Main Content: MDX Reader */}
-      <main className="flex-grow flex flex-col h-[calc(100vh-64px)] relative bg-black/20">
+      {/* MDX Reader Area */}
+      <main className="flex-grow flex flex-col h-[calc(100vh-64px)] relative bg-black/40">
         <div className="h-14 border-b border-white/5 px-6 flex items-center justify-between bg-[#020308]/60 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <button 
@@ -176,54 +166,55 @@ const PromptGuide: React.FC = () => {
               <List className="w-4 h-4" />
             </button>
             <div className="flex items-center gap-2 text-[10px] font-mono text-gray-600 uppercase tracking-widest">
-              <span>{activeDoc?.category}</span>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-blue-500">{activeDoc?.title}</span>
+              <span className="hidden sm:inline">{activePage?.category}</span>
+              <ChevronRight className="w-3 h-3 hidden sm:inline" />
+              <span className="text-blue-500">{doc?.title}</span>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
              <Link to="/studio" className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all">
-               <Sparkles className="w-3 h-3" /> Lab
+               <Zap className="w-3 h-3 fill-current" /> Studio
              </Link>
           </div>
         </div>
 
-        <div className="flex-grow overflow-y-auto custom-scrollbar">
+        <div className="flex-grow overflow-y-auto custom-scrollbar bg-black/20">
           <div className="max-w-4xl mx-auto py-16 px-8 md:px-12">
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <motion.div 
+                  key="loader"
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="flex flex-col items-center justify-center py-20 gap-4"
+                  className="flex flex-col items-center justify-center py-40 gap-4"
                 >
                   <div className="w-8 h-8 border-2 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
-                  <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Decrypting_Matrix...</span>
+                  <span className="text-[10px] font-mono text-gray-600 uppercase tracking-widest animate-pulse">Syncing_Nodes...</span>
                 </motion.div>
               ) : (
                 <motion.article
-                  key={activeDoc?.path}
+                  key={activePage?.path}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {renderMdx(docContent)}
+                  {doc && renderMdx(doc.content)}
                   
-                  {/* Bottom Navigation */}
-                  <div className="mt-20 pt-12 border-t border-white/5 flex justify-between">
-                     <button className="flex flex-col items-start gap-2 group">
-                        <span className="text-[9px] text-gray-600 uppercase font-bold">Previous</span>
-                        <span className="text-sm text-gray-400 group-hover:text-blue-400 flex items-center gap-1 transition-colors">
-                           <ChevronRight className="w-4 h-4 rotate-180" /> Intro Basics
-                        </span>
-                     </button>
-                     <button className="flex flex-col items-end gap-2 group">
-                        <span className="text-[9px] text-gray-600 uppercase font-bold">Next</span>
-                        <span className="text-sm text-gray-400 group-hover:text-blue-400 flex items-center gap-1 transition-colors">
-                           Few-shot Prompting <ChevronRight className="w-4 h-4" />
-                        </span>
-                     </button>
+                  {/* Metadata Footer */}
+                  <div className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between gap-8">
+                     <div className="space-y-2">
+                        <span className="text-[9px] text-gray-600 uppercase font-black">Author</span>
+                        <div className="text-xs text-white">{doc?.frontmatter.author || 'SuperEgo Architects'}</div>
+                     </div>
+                     <div className="flex gap-4">
+                       <button className="flex flex-col items-end gap-1 group">
+                          <span className="text-[9px] text-gray-600 uppercase font-bold">Next</span>
+                          <span className="text-sm text-gray-400 group-hover:text-blue-400 transition-colors flex items-center gap-1">
+                             Forward <ArrowRight className="w-4 h-4" />
+                          </span>
+                       </button>
+                     </div>
                   </div>
                 </motion.article>
               )}
@@ -233,16 +224,17 @@ const PromptGuide: React.FC = () => {
       </main>
 
       <style>{`
-        .mdx-steps > * { position: relative; }
-        .mdx-steps > *::before {
+        .mdx-steps { margin-left: 2rem; border-left: 1px solid rgba(255,255,255,0.05); padding-left: 2rem; }
+        .mdx-steps > div { position: relative; }
+        .mdx-steps > div::before {
           content: '';
           position: absolute;
           left: -41px;
           top: 0;
-          width: 25px;
-          height: 25px;
-          background: #1e293b;
-          border: 1px solid rgba(255,255,255,0.1);
+          width: 18px;
+          height: 18px;
+          background: #020308;
+          border: 2px solid #3b82f6;
           border-radius: 50%;
           z-index: 1;
         }

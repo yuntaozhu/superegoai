@@ -1,162 +1,178 @@
 
 /**
- * ContentService: Advanced Indexing & Retrieval for Prompt Engineering Guide
+ * ContentService: Metadata-Driven Knowledge Indexer
+ * Replicates Nextra/dair-ai logic for structured documentation.
  */
 
-export interface DocNode {
+export interface PageMeta {
   id: string;
   title: string;
-  slug: string;
-  path: string;
   category: string;
-  order?: number;
-  content: string;
-  lang: 'en' | 'zh' | 'ar';
+  path: string;
 }
 
-export interface CategoryGroup {
+export interface CategoryStructure {
   id: string;
   title: string;
-  items: DocNode[];
+  pages: PageMeta[];
 }
 
-// Pre-defined registry of available files to simulate FS scanning in browser env
-const FILE_REGISTRY = [
-  { path: 'introduction/basics', lang: 'en', cat: 'introduction' },
-  { path: 'introduction/settings', lang: 'en', cat: 'introduction' },
-  { path: 'techniques/zeroshot', lang: 'en', cat: 'techniques' },
-  { path: 'techniques/fewshot', lang: 'en', cat: 'techniques' },
-  { path: 'techniques/cot', lang: 'en', cat: 'techniques' },
-  { path: 'techniques/react', lang: 'en', cat: 'techniques' },
-  { path: 'applications/generating', lang: 'en', cat: 'applications' },
-  { path: 'applications/coding', lang: 'en', cat: 'applications' },
-  { path: 'research/rag', lang: 'en', cat: 'research' },
-  { path: 'research/llm-agents', lang: 'en', cat: 'research' },
-  { path: 'risks/adversarial', lang: 'en', cat: 'risks' }
-];
-
-const LOCALIZED_TITLES: Record<string, any> = {
-  en: {
-    introduction: "Introduction",
-    techniques: "Techniques",
-    applications: "Applications",
-    research: "Advanced Research",
-    risks: "Risks & Ethics",
-    basics: "Prompt Basics",
-    settings: "LLM Settings",
-    zeroshot: "Zero-shot Prompting",
-    fewshot: "Few-shot Prompting",
-    cot: "Chain-of-Thought",
-    react: "ReAct Framework",
-    generating: "Data Generation",
-    coding: "Generating Code",
-    rag: "RAG for LLMs",
-    "llm-agents": "LLM Agents",
-    adversarial: "Adversarial Prompting"
+// 1. Meta Registry (Extracted from provided _meta.json files in prompt-engineering/)
+const CATEGORY_MAP: Record<string, Record<string, string>> = {
+  introduction: {
+    "settings": "LLM Settings",
+    "basics": "Basics of Prompting",
+    "elements": "Prompt Elements",
+    "tips": "General Tips",
+    "examples": "Prompt Examples"
   },
-  zh: {
-    introduction: "基础入门",
-    techniques: "核心技术",
-    applications: "实战应用",
-    research: "前沿研究",
-    risks: "风险与伦理",
-    basics: "提示词基础",
-    settings: "模型设置",
-    zeroshot: "零样本提示",
-    fewshot: "少样本提示",
-    cot: "思维链 (CoT)",
-    react: "ReAct 框架",
-    generating: "数据生成",
-    coding: "代码生成",
-    rag: "检索增强生成 (RAG)",
-    "llm-agents": "智能体 Agent",
-    adversarial: "对抗性提示"
+  techniques: {
+    "zeroshot": "Zero-shot Prompting",
+    "fewshot": "Few-shot Prompting",
+    "cot": "Chain-of-Thought",
+    "meta-prompting": "Meta Prompting",
+    "consistency": "Self-Consistency",
+    "react": "ReAct Framework",
+    "rag": "RAG Systems"
+  },
+  applications: {
+    "generating": "Generating Data",
+    "function_calling": "Function Calling",
+    "coding": "Generating Code",
+    "pf": "Prompt Functions"
+  },
+  research: {
+    "llm-agents": "LLM Agents",
+    "rag-faithfulness": "RAG Faithfulness",
+    "synthetic_data": "Synthetic Data",
+    "groq": "Hardware & Groq"
   }
 };
 
-export const ContentService = {
-  getIndex: (lang: 'en' | 'zh' | 'ar' = 'en'): CategoryGroup[] => {
-    const categories: Record<string, DocNode[]> = {};
-    const effectiveLang = lang === 'ar' ? 'en' : lang; // Fallback strategy
+const CATEGORY_TITLES: Record<string, string> = {
+  introduction: "Introduction",
+  techniques: "Prompting Techniques",
+  applications: "Applications",
+  research: "LLM Research",
+  risks: "Risks & Misuses"
+};
 
-    FILE_REGISTRY.forEach(file => {
-      const catId = file.cat;
-      const docId = file.path.split('/')[1];
-      
-      if (!categories[catId]) categories[catId] = [];
-      
-      categories[catId].push({
-        id: docId,
-        slug: docId,
-        path: file.path,
-        category: catId,
-        title: LOCALIZED_TITLES[effectiveLang]?.[docId] || docId,
-        content: '', // Loaded on demand
-        lang: lang
-      });
-    });
+// 2. Content Store (Simulating the filesystem contents from prompt-engineering/guides)
+// In a production env, this would be a glob import or API call.
+const SOURCE_CONTENT: Record<string, string> = {
+  "introduction/basics": `---
+title: Basics of Prompting
+author: dair-ai
+description: Introduction to the basic elements of prompts.
+---
+# Basics of Prompting
 
-    return Object.entries(categories).map(([id, items]) => ({
-      id,
-      title: LOCALIZED_TITLES[effectiveLang]?.[id] || id.toUpperCase(),
-      items
-    }));
-  },
-
-  loadContent: async (path: string, lang: string): Promise<string> => {
-    // In a real build, we'd fetch the MDX file from the server
-    // For now, return high-quality simulation content based on the guide
-    const docId = path.split('/')[1];
-    
-    // Simulate real MDX content with custom components
-    if (docId === 'basics') {
-      return `
-# Prompt Basics
-
-Prompt engineering is the art of crafting inputs to LLMs.
+Prompt engineering is about crafting inputs to LLMs to get better results.
 
 <Callout type="info">
-  The core principle is specificity. Don't ask "how to cook", ask "provide a recipe for vegan lasagna".
+The core components are Instructions, Context, Input Data, and Output Indicators.
 </Callout>
 
-### Key Elements
-<Steps>
-  1. **Instruction**: What you want the model to do.
-  2. **Context**: Background info for the task.
-  3. **Input Data**: The actual text to process.
-  4. **Output Indicator**: How you want the result.
-</Steps>
-
+### Example of a simple prompt:
 \`\`\`text
-Classify the sentiment of this text: "I love the new UI!"
-Sentiment:
+Complete the sentence:
+The sky is
 \`\`\`
-      `;
-    }
+`,
+  "techniques/zeroshot": `---
+title: Zero-shot Prompting
+---
+# Zero-shot Prompting
 
-    if (docId === 'cot') {
-      return `
-# Chain-of-Thought (CoT)
-
-CoT prompting enables complex reasoning.
+LLMs today are capable of performing tasks without any prior examples.
 
 <Callout type="idea">
-  Use "Let's think step by step" to trigger reasoning.
+Use Zero-shot to test the model's base instruction-following capabilities.
 </Callout>
 
-### Example
+\`\`\`text
+Classify the sentiment: "This UI is incredible!"
+Sentiment:
+\`\`\`
+`,
+  "techniques/fewshot": `---
+title: Few-shot Prompting
+---
+# Few-shot Prompting
+
+Providing demonstrations enables In-Context Learning.
+
+<Steps>
+1. Define the task.
+2. Provide 2-5 diverse examples.
+3. Provide the new input.
+</Steps>
+
+<Cards>
+  <Card title="Example: New Words" href="/techniques/zeroshot">Learning "whatpu" through demonstrations.</Card>
+  <Card title="Format Consistency" href="/techniques/cot">Ensuring JSON output via few-shot.</Card>
+</Cards>
+`,
+  "techniques/cot": `---
+title: Chain-of-Thought
+---
+# Chain-of-Thought (CoT)
+
+CoT allows models to exhibit complex reasoning through intermediate steps.
+
+<Callout type="warning">
+Smaller models often require "Let's think step by step" to trigger reasoning.
+</Callout>
+
+### Implementation
 \`\`\`text
 The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?
 Let's think step by step:
 \`\`\`
+`
+};
 
-<Cards>
-  <Card title="Few-shot CoT" href="techniques/fewshot">Providing examples of reasoning steps.</Card>
-  <Card title="Zero-shot CoT" href="techniques/zeroshot">Just asking the model to think.</Card>
-</Cards>
-      `;
+export const ContentService = {
+  /**
+   * Replicates Nextra's directory scanning using the Meta Registry
+   */
+  getTree: (): CategoryStructure[] => {
+    return Object.entries(CATEGORY_MAP).map(([catId, pages]) => ({
+      id: catId,
+      title: CATEGORY_TITLES[catId] || catId.toUpperCase(),
+      pages: Object.entries(pages).map(([pageId, title]) => ({
+        id: pageId,
+        title,
+        category: catId,
+        path: `${catId}/${pageId}`
+      }))
+    }));
+  },
+
+  /**
+   * Fetches content and parses Frontmatter using regex (lightweight gray-matter)
+   */
+  getPage: async (path: string) => {
+    const raw = SOURCE_CONTENT[path] || `# ${path.split('/')[1]}\n\nContent is being indexed from the core guides...`;
+    
+    // Simple Frontmatter Parser
+    const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n/);
+    const frontmatter: Record<string, string> = {};
+    let content = raw;
+
+    if (fmMatch) {
+      const fmContent = fmMatch[1];
+      fmContent.split('\n').forEach(line => {
+        const [key, ...val] = line.split(':');
+        if (key && val.length) frontmatter[key.trim()] = val.join(':').trim();
+      });
+      content = raw.replace(fmMatch[0], '');
     }
 
-    return `# ${docId}\n\nContent for this module is being processed from the prompt-engineering directory...`;
+    return {
+      content,
+      frontmatter,
+      title: frontmatter.title || path.split('/')[1]
+    };
   }
 };
