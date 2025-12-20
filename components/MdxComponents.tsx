@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Info, AlertTriangle, CheckCircle, Lightbulb, 
@@ -114,7 +115,47 @@ export const CodeBlock: React.FC<{ children: string; language?: string }> = ({ c
 };
 
 /**
- * 5. MDX Component Map
+ * 5. PromptAnatomy Component
+ * Visual breakdown of a prompt's structure.
+ */
+export const PromptAnatomy: React.FC<{ instruction?: string; context?: string; data?: string; indicator?: string }> = ({ 
+  instruction, context, data, indicator 
+}) => (
+  <div className="my-8 rounded-2xl border border-white/10 bg-white/5 overflow-hidden font-mono text-xs">
+    <div className="px-4 py-2 border-b border-white/10 bg-white/5 text-[9px] font-black uppercase tracking-widest text-gray-500">
+      Prompt Structure Analysis
+    </div>
+    <div className="p-6 space-y-4">
+      {instruction && (
+        <div className="flex gap-4">
+          <div className="w-20 flex-shrink-0 text-blue-500 font-bold uppercase tracking-tighter">Instruction</div>
+          <div className="text-gray-300">{instruction}</div>
+        </div>
+      )}
+      {context && (
+        <div className="flex gap-4">
+          <div className="w-20 flex-shrink-0 text-purple-500 font-bold uppercase tracking-tighter">Context</div>
+          <div className="text-gray-300">{context}</div>
+        </div>
+      )}
+      {data && (
+        <div className="flex gap-4">
+          <div className="w-20 flex-shrink-0 text-cyan-500 font-bold uppercase tracking-tighter">Data</div>
+          <div className="text-gray-300">{data}</div>
+        </div>
+      )}
+      {indicator && (
+        <div className="flex gap-4">
+          <div className="w-20 flex-shrink-0 text-amber-500 font-bold uppercase tracking-tighter">Indicator</div>
+          <div className="text-gray-300">{indicator}</div>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+/**
+ * 6. MDX Component Map
  * The glue that connects standard markdown to enhanced React components.
  */
 export const MdxComponents = {
@@ -138,5 +179,6 @@ export const MdxComponents = {
   Callout,
   Card,
   Cards,
-  Steps
+  Steps,
+  PromptAnatomy
 };
