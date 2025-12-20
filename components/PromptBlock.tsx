@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Copy, Play, Check, Terminal, Zap } from 'lucide-react';
 
 interface PromptBlockProps {
@@ -9,6 +8,13 @@ interface PromptBlockProps {
 
 const PromptBlock: React.FC<PromptBlockProps> = ({ code, language = 'text' }) => {
   const [copied, setCopied] = useState(false);
+  const codeRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (codeRef.current && (window as any).Prism) {
+      (window as any).Prism.highlightElement(codeRef.current);
+    }
+  }, [code, language]);
   
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -47,8 +53,10 @@ const PromptBlock: React.FC<PromptBlockProps> = ({ code, language = 'text' }) =>
         </div>
       </div>
       <div className="p-6 overflow-x-auto custom-scrollbar bg-black/40">
-        <pre className="font-mono text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
-          {code}
+        <pre className={`language-${language} !m-0 !p-0 !bg-transparent`}>
+          <code ref={codeRef} className={`language-${language} font-mono text-sm text-gray-300 leading-relaxed whitespace-pre`}>
+            {code}
+          </code>
         </pre>
       </div>
       <div className="px-4 py-2 border-t border-white/5 flex items-center justify-between opacity-40">

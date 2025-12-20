@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Info, AlertTriangle, CheckCircle, Lightbulb, 
   ChevronRight, Copy, Check, Terminal 
@@ -70,11 +69,18 @@ export const Steps: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 );
 
 /**
- * 4. CopyButton & Code Integration
+ * 4. CopyButton & Code Integration with Syntax Highlighting
  */
 export const CodeBlock: React.FC<{ children: string; language?: string }> = ({ children, language = 'text' }) => {
   const [copied, setCopied] = useState(false);
+  const codeRef = useRef<HTMLElement>(null);
   
+  useEffect(() => {
+    if (codeRef.current && (window as any).Prism) {
+      (window as any).Prism.highlightElement(codeRef.current);
+    }
+  }, [children, language]);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(children);
     setCopied(true);
@@ -97,8 +103,10 @@ export const CodeBlock: React.FC<{ children: string; language?: string }> = ({ c
         </button>
       </div>
       <div className="p-6 overflow-x-auto custom-scrollbar bg-black/40">
-        <pre className="font-mono text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">
-          {children}
+        <pre className={`language-${language} !m-0 !p-0 !bg-transparent`}>
+          <code ref={codeRef} className={`language-${language} font-mono text-sm leading-relaxed whitespace-pre`}>
+            {children}
+          </code>
         </pre>
       </div>
     </div>
