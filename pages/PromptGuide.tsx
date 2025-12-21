@@ -1,23 +1,26 @@
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
-  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft
+  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft, Languages, AlertCircle, FileText, Database
 } from 'lucide-react';
-import { ContentService, CategoryStructure, PageMeta } from '../lib/ContentService';
+import { ContentService, CategoryStructure, PageMeta, PageContent, SyncStatus } from '../lib/ContentService';
 import MdxRenderer from '../components/MdxRenderer';
 
 // Using any to bypass framer-motion type mismatch
 const m = motion as any;
 
 const PromptGuide: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [tree, setTree] = useState<CategoryStructure[]>([]);
   const [activePage, setActivePage] = useState<PageMeta | null>(null);
-  const [doc, setDoc] = useState<{ content: string; frontmatter: any; title: string } | null>(null);
+  const [doc, setDoc] = useState<PageContent | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [showAudit, setShowAudit] = useState(false); // Audit Modal State
+  const [auditReport, setAuditReport] = useState<SyncStatus[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Sync tree on language change
@@ -39,15 +42,19 @@ const PromptGuide: React.FC = () => {
   useEffect(() => {
     if (activePage) {
       setIsLoading(true);
-      // Reset scroll
       if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
       
       ContentService.getPage(activePage.path, language).then(res => {
         setDoc(res);
-        setTimeout(() => setIsLoading(false), 250); // slight delay for smooth transition
+        setTimeout(() => setIsLoading(false), 250); 
       });
     }
   }, [activePage, language]);
+
+  // Generate Audit Report on mount
+  useEffect(() => {
+    setAuditReport(ContentService.getSyncReport());
+  }, []);
 
   const filteredTree = useMemo(() => {
     if (!searchQuery) return tree;
@@ -61,14 +68,64 @@ const PromptGuide: React.FC = () => {
     })).filter(cat => cat.pages.length > 0);
   }, [tree, searchQuery]);
 
-  // Determine Prev/Next Links
+  // Prev/Next Logic
   const flattenPages = useMemo(() => tree.flatMap(cat => cat.pages), [tree]);
   const activeIndex = flattenPages.findIndex(p => p.path === activePage?.path);
   const prevPage = activeIndex > 0 ? flattenPages[activeIndex - 1] : null;
   const nextPage = activeIndex >= 0 && activeIndex < flattenPages.length - 1 ? flattenPages[activeIndex + 1] : null;
 
   return (
-    <div className="min-h-screen bg-[#020308] pt-16 flex overflow-hidden">
+    <div className="min-h-screen bg-[#020308] pt-16 flex overflow-hidden font-sans">
+      
+      {/* Audit Modal */}
+      <AnimatePresence>
+        {showAudit && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-10">
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowAudit(false)} />
+            <m.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-5xl bg-[#0B1026] border border-white/20 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-full"
+            >
+              <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+                <h3 className="text-xl font-black text-white flex items-center gap-3">
+                  <Database className="w-5 h-5 text-blue-500" />
+                  Knowledge Base Audit Protocol
+                </h3>
+                <button onClick={() => setShowAudit(false)} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold text-white transition-colors">CLOSE</button>
+              </div>
+              <div className="flex-grow overflow-auto custom-scrollbar p-0">
+                <table className="w-full text-left border-collapse">
+                  <thead className="bg-black/40 sticky top-0 z-10">
+                    <tr>
+                      <th className="p-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest border-b border-white/10">Module ID</th>
+                      <th className="p-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest border-b border-white/10">EN Node</th>
+                      <th className="p-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest border-b border-white/10">ZH Node</th>
+                      <th className="p-4 text-[10px] font-mono text-gray-500 uppercase tracking-widest border-b border-white/10">Sync Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5 text-xs text-gray-300">
+                    {auditReport.map((row) => (
+                      <tr key={row.id} className="hover:bg-white/5 transition-colors">
+                        <td className="p-4 font-mono text-blue-400">{row.id}</td>
+                        <td className="p-4">{row.enTitle}</td>
+                        <td className="p-4 opacity-80">{row.zhTitle}</td>
+                        <td className="p-4">
+                          {row.status === 'synced' && <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] font-bold uppercase"><div className="w-1.5 h-1.5 rounded-full bg-green-500" /> Synced</span>}
+                          {row.status === 'missing_zh' && <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 text-[10px] font-bold uppercase"><div className="w-1.5 h-1.5 rounded-full bg-yellow-500" /> ZH Missing</span>}
+                          {row.status === 'orphan' && <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-bold uppercase"><div className="w-1.5 h-1.5 rounded-full bg-red-500" /> Empty</span>}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </m.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {isSidebarOpen && (
           <m.aside
@@ -125,7 +182,13 @@ const PromptGuide: React.FC = () => {
               ))}
             </nav>
 
-            <div className="p-4 border-t border-white/5 bg-black/20">
+            <div className="p-4 border-t border-white/5 bg-black/20 flex flex-col gap-2">
+               <button 
+                 onClick={() => setShowAudit(true)}
+                 className="flex items-center justify-center gap-2 p-3 rounded-xl bg-white/5 hover:bg-blue-500/10 text-[9px] text-gray-400 hover:text-blue-400 border border-white/5 hover:border-blue-500/30 transition-all font-bold uppercase tracking-widest"
+               >
+                 <Database className="w-3 h-3" /> Run Knowledge Audit
+               </button>
                <a href="https://github.com/dair-ai/Prompt-Engineering-Guide" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl bg-white/5 text-[9px] text-gray-500 hover:text-white transition-colors">
                 <span>Core Research Repo</span>
                 <ExternalLink className="w-3 h-3" />
@@ -136,6 +199,7 @@ const PromptGuide: React.FC = () => {
       </AnimatePresence>
 
       <main className="flex-grow flex flex-col relative min-w-0 bg-black/40 h-[calc(100vh-64px)]">
+        {/* Navigation Bar */}
         <div className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#020308]/60 backdrop-blur-md sticky top-0 z-10">
            <div className="flex items-center gap-4">
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors">
@@ -148,17 +212,22 @@ const PromptGuide: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-             <div className="text-[9px] font-bold text-gray-600 mr-2 flex items-center gap-1.5">
-                <Globe className="w-3 h-3" /> {language.toUpperCase()}
-             </div>
+             <button 
+                onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
+                className="text-[9px] font-bold text-gray-500 hover:text-white transition-colors mr-2 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-transparent hover:border-white/10"
+             >
+                <Languages className="w-3 h-3" /> 
+                {language === 'en' ? 'ENGLISH' : '中文'}
+             </button>
              <Link to="/studio" className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
                <Zap className="w-3 h-3 fill-current" /> <span className="hidden sm:inline">{language === 'zh' ? '实验室' : 'Studio'}</span>
              </Link>
           </div>
         </div>
 
+        {/* Content Area */}
         <div ref={scrollContainerRef} className="flex-grow overflow-y-auto custom-scrollbar bg-black/10">
-          <div className="max-w-4xl mx-auto py-16 px-6 md:px-12 min-h-full">
+          <div className="max-w-4xl mx-auto py-12 px-6 md:px-12 min-h-full">
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <m.div key="loader" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-40 gap-4">
@@ -167,6 +236,53 @@ const PromptGuide: React.FC = () => {
                 </m.div>
               ) : (
                 <m.article key={`${activePage?.path}-${language}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+                  
+                  {/* File Source Header (Structured Block) */}
+                  {doc && (
+                    <div className="mb-10 p-4 rounded-xl border border-white/10 bg-white/5 font-mono text-xs">
+                       <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
+                             <FileText className="w-3 h-3" /> Source File
+                          </span>
+                          <span className={`text-[9px] font-bold uppercase tracking-widest ${doc.isFallback ? 'text-yellow-500' : 'text-green-500'}`}>
+                             {doc.isFallback ? '⚠️ FALLBACK MODE' : '✅ SYNCED'}
+                          </span>
+                       </div>
+                       <div className="flex flex-col sm:flex-row gap-4 text-gray-400">
+                          <div className="flex-1">
+                             <span className="text-gray-600 mr-2">PATH:</span> 
+                             <span className="text-blue-300">{doc.filePath}</span>
+                          </div>
+                          {doc.availableLanguages.length > 1 && (
+                             <div className="flex gap-2">
+                                {doc.availableLanguages.includes('en') && (
+                                   <button 
+                                     onClick={() => setLanguage('en')} 
+                                     className={`px-2 py-0.5 rounded text-[9px] border ${language === 'en' ? 'bg-blue-500 text-white border-blue-500' : 'border-white/20 hover:border-white/50'}`}
+                                   >
+                                     EN
+                                   </button>
+                                )}
+                                {doc.availableLanguages.includes('zh') && (
+                                   <button 
+                                     onClick={() => setLanguage('zh')} 
+                                     className={`px-2 py-0.5 rounded text-[9px] border ${language === 'zh' ? 'bg-blue-500 text-white border-blue-500' : 'border-white/20 hover:border-white/50'}`}
+                                   >
+                                     ZH
+                                   </button>
+                                )}
+                             </div>
+                          )}
+                       </div>
+                       {doc.isFallback && (
+                          <div className="mt-3 text-yellow-500/80 italic flex items-center gap-2">
+                             <AlertCircle className="w-3 h-3" />
+                             {language === 'zh' ? '中文版本暂缺，正在显示英文原版内容。' : 'Requested language missing, showing fallback.'}
+                          </div>
+                       )}
+                    </div>
+                  )}
+
                   <nav className="flex items-center gap-2 mb-10 text-[9px] font-mono uppercase tracking-[0.2em] text-gray-600">
                     <Link to="/" className="hover:text-white transition-colors flex items-center gap-1.5">
                       <Home className="w-3 h-3" /> Guide
@@ -177,7 +293,7 @@ const PromptGuide: React.FC = () => {
                     <span className="text-blue-500 font-black">{doc?.title}</span>
                   </nav>
 
-                  {/* Render Content using the new MdxRenderer */}
+                  {/* Render Content */}
                   {doc && <MdxRenderer content={doc.content} />}
                   
                   {/* Prev/Next Navigation */}
@@ -205,19 +321,6 @@ const PromptGuide: React.FC = () => {
                         <span className="text-sm font-bold text-white">{nextPage.title}</span>
                       </button>
                     ) : <div className="flex-1" />}
-                  </div>
-
-                  <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-8 opacity-40 hover:opacity-100 transition-opacity">
-                     <div className="space-y-1">
-                        <span className="text-[9px] text-gray-700 uppercase font-black tracking-widest">Metadata Source</span>
-                        <div className="text-[10px] text-white">prompt-engineering/pages/{activePage?.path}</div>
-                     </div>
-                     <Link to="/studio" className="flex items-center gap-2 group text-right">
-                        <div className="flex flex-col items-end">
-                           <span className="text-[9px] text-gray-700 uppercase font-bold tracking-widest">Execute in Lab</span>
-                        </div>
-                        <Zap className="w-4 h-4 text-blue-500 group-hover:fill-current transition-colors" />
-                     </Link>
                   </div>
                 </m.article>
               )}
