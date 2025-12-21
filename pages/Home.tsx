@@ -52,7 +52,11 @@ const Home: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-4xl sm:text-6xl md:text-8xl font-black text-slate-900 dark:text-white tracking-tight mb-6 leading-[1.1] uppercase"
           >
-            {t('hero.title_prefix')} <br className="hidden sm:block"/>
+            {t('hero.title_prefix') && (
+              <>
+              {t('hero.title_prefix')} <br className="hidden sm:block"/>
+              </>
+            )}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400">
               {t('hero.title_highlight')}
             </span> <br className="hidden sm:block"/>

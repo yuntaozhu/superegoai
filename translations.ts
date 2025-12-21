@@ -140,22 +140,22 @@ export const translations = {
         applications: '实战应用',
         prompts: '提示词库',
         models: '模型集锦',
-        research: '前انتهاء的研究',
+        research: '前沿研究',
         risks: '风险与伦理'
       }
     },
     hero: {
-      badge: '现代软件开发者操作系统',
-      title_prefix: 'AI First Course ——',
+      badge: '超级个体操作系统',
+      title_prefix: '',
       title_highlight: '构建你的“超我”',
       title_suffix: '第二大脑',
-      sub_headline: '不仅仅是编程，而是编排。(Don\'t just Code, Orchestrate.)',
+      sub_headline: '通过AI构建的第二外脑，发挥超我的能力，成为超级个体',
       description: '在 AI First 时代，成功属于那些构建了“第二大脑”的人。无论是通过我们的**个人课程**还是**企业咨询**，我们都致力于帮助你从“执行者”进化为“指挥官”。',
       cta_primary: '探索星系',
       cta_secondary: '企业服务',
     },
     philosophy: {
-      title: '课程核心理念：AI 时代的“新物种”进化论',
+      title: '核心理念：AI 时代的“新物种”进化论',
       subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。',
       pillars: [
         {
