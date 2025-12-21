@@ -1,20 +1,21 @@
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
-  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft
+  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft, Languages, AlertCircle
 } from 'lucide-react';
-import { ContentService, CategoryStructure, PageMeta } from '../lib/ContentService';
+import { ContentService, CategoryStructure, PageMeta, PageContent } from '../lib/ContentService';
 import MdxRenderer from '../components/MdxRenderer';
 
 // Using any to bypass framer-motion type mismatch
 const m = motion as any;
 
 const PromptGuide: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [tree, setTree] = useState<CategoryStructure[]>([]);
   const [activePage, setActivePage] = useState<PageMeta | null>(null);
-  const [doc, setDoc] = useState<{ content: string; frontmatter: any; title: string } | null>(null);
+  const [doc, setDoc] = useState<PageContent | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +28,7 @@ const PromptGuide: React.FC = () => {
     
     // Restore or Default Position
     if (activePage) {
+      // Try to find the same page in the new language tree
       const match = dataTree.flatMap(c => c.pages).find(p => p.id === activePage.id);
       if (match) setActivePage(match);
       else if (dataTree[0]?.pages[0]) setActivePage(dataTree[0].pages[0]);
@@ -136,6 +138,7 @@ const PromptGuide: React.FC = () => {
       </AnimatePresence>
 
       <main className="flex-grow flex flex-col relative min-w-0 bg-black/40 h-[calc(100vh-64px)]">
+        {/* Navigation Bar */}
         <div className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#020308]/60 backdrop-blur-md sticky top-0 z-10">
            <div className="flex items-center gap-4">
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors">
@@ -148,17 +151,22 @@ const PromptGuide: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-             <div className="text-[9px] font-bold text-gray-600 mr-2 flex items-center gap-1.5">
-                <Globe className="w-3 h-3" /> {language.toUpperCase()}
-             </div>
+             <button 
+                onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
+                className="text-[9px] font-bold text-gray-500 hover:text-white transition-colors mr-2 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-transparent hover:border-white/10"
+             >
+                <Languages className="w-3 h-3" /> 
+                {language === 'en' ? 'ENGLISH' : '中文'}
+             </button>
              <Link to="/studio" className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
                <Zap className="w-3 h-3 fill-current" /> <span className="hidden sm:inline">{language === 'zh' ? '实验室' : 'Studio'}</span>
              </Link>
           </div>
         </div>
 
+        {/* Content Area */}
         <div ref={scrollContainerRef} className="flex-grow overflow-y-auto custom-scrollbar bg-black/10">
-          <div className="max-w-4xl mx-auto py-16 px-6 md:px-12 min-h-full">
+          <div className="max-w-4xl mx-auto py-12 px-6 md:px-12 min-h-full">
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <m.div key="loader" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-40 gap-4">
@@ -167,6 +175,32 @@ const PromptGuide: React.FC = () => {
                 </m.div>
               ) : (
                 <m.article key={`${activePage?.path}-${language}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+                  
+                  {/* Bilingual Status Bar */}
+                  {doc && (doc.isFallback || doc.availableLanguages.length > 1) && (
+                    <div className={`mb-8 p-3 rounded-lg border flex items-center justify-between text-xs ${doc.isFallback ? 'bg-yellow-500/10 border-yellow-500/20' : 'bg-blue-500/5 border-blue-500/10'}`}>
+                       <div className="flex items-center gap-2">
+                          {doc.isFallback ? <AlertCircle className="w-4 h-4 text-yellow-500" /> : <Globe className="w-4 h-4 text-blue-500" />}
+                          <span className={doc.isFallback ? 'text-yellow-200' : 'text-blue-200'}>
+                            {doc.isFallback 
+                              ? (language === 'zh' ? '中文内容暂缺，显示英文原版。' : 'Content not available in requested language, showing fallback.')
+                              : (language === 'zh' ? '当前显示：中文版' : 'Viewing: English Version')
+                            }
+                          </span>
+                       </div>
+                       {!doc.isFallback && (
+                         <div className="flex gap-2">
+                            {doc.availableLanguages.includes('en') && language !== 'en' && (
+                               <button onClick={() => setLanguage('en')} className="text-[10px] bg-black/20 px-2 py-1 rounded hover:bg-black/40 text-gray-400 hover:text-white transition-colors">Switch to EN</button>
+                            )}
+                            {doc.availableLanguages.includes('zh') && language !== 'zh' && (
+                               <button onClick={() => setLanguage('zh')} className="text-[10px] bg-black/20 px-2 py-1 rounded hover:bg-black/40 text-gray-400 hover:text-white transition-colors">切换至中文</button>
+                            )}
+                         </div>
+                       )}
+                    </div>
+                  )}
+
                   <nav className="flex items-center gap-2 mb-10 text-[9px] font-mono uppercase tracking-[0.2em] text-gray-600">
                     <Link to="/" className="hover:text-white transition-colors flex items-center gap-1.5">
                       <Home className="w-3 h-3" /> Guide
@@ -177,7 +211,7 @@ const PromptGuide: React.FC = () => {
                     <span className="text-blue-500 font-black">{doc?.title}</span>
                   </nav>
 
-                  {/* Render Content using the new MdxRenderer */}
+                  {/* Render Content */}
                   {doc && <MdxRenderer content={doc.content} />}
                   
                   {/* Prev/Next Navigation */}

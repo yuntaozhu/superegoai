@@ -50,7 +50,7 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
   const parts = content.split(/(<PromptAnatomy[\s\S]*?\/>|<Callout[\s\S]*?>[\s\S]*?<\/Callout>|<Cards[\s\S]*?>[\s\S]*?<\/Cards>|<Steps>[\s\S]*?<\/Steps>|```[\s\S]*?```|#{1,3}\s.*)/g);
 
   return (
-    <div className="mdx-content space-y-6 text-gray-300 leading-relaxed">
+    <div className={`mdx-content space-y-6 text-gray-300 ${language === 'zh' ? 'leading-loose' : 'leading-relaxed'}`}>
       {parts.map((part, i) => {
         if (!part || !part.trim()) return null;
 
