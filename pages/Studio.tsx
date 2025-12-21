@@ -47,6 +47,12 @@ const Studio: React.FC = () => {
 
   const handleGenerate = async (input: string, targetSetter: (val: string) => void) => {
     if (!input.trim()) return;
+
+    if (!process.env.API_KEY) {
+      targetSetter(language === 'zh' ? "⚠️ 系统错误：未配置 API Key。请在根目录创建 .env 文件并设置 API_KEY。" : "⚠️ System Error: API Key not configured. Please create a .env file with API_KEY.");
+      return;
+    }
+
     setIsLoading(true);
     addToHistory(input);
     
@@ -70,6 +76,12 @@ const Studio: React.FC = () => {
 
   const optimizePrompt = async () => {
     if (!prompt.trim()) return;
+    
+    if (!process.env.API_KEY) {
+      setResult(language === 'zh' ? "⚠️ 系统错误：未配置 API Key。" : "⚠️ System Error: API Key not configured.");
+      return;
+    }
+
     setIsOptimizing(true);
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     try {

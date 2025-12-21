@@ -1,5 +1,5 @@
 
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -32,18 +32,24 @@ const contentWatcher = () => ({
 });
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    contentWatcher()
-  ],
-  resolve: {
-    alias: [
-      { find: '@', replacement: path.resolve(__dirname) }
+export default defineConfig(({ mode }) => {
+  // Load env file based on `mode` in the current working directory.
+  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  const env = loadEnv(mode, process.cwd(), '');
+
+  return {
+    plugins: [
+      react(),
+      contentWatcher()
     ],
-  },
-  define: {
-    // Inject API_KEY specifically to avoid overwriting the entire process.env object
-    'process.env.API_KEY': JSON.stringify(process.env.API_KEY)
-  }
+    resolve: {
+      alias: [
+        { find: '@', replacement: path.resolve(__dirname) }
+      ],
+    },
+    define: {
+      // Inject API_KEY specifically to avoid overwriting the entire process.env object
+      'process.env.API_KEY': JSON.stringify(env.API_KEY)
+    }
+  };
 });
