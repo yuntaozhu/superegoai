@@ -1,4 +1,3 @@
-
 /**
  * ContentService: Knowledge Indexer & Audit Manager
  * 
@@ -8,8 +7,8 @@
  * 2. Serve content to React components
  */
 
-// Import the generated JSON. 
-// Note: In a real environment, you might fetch this if it's external, but here we import directly.
+// Import the generated JSON.
+// @ts-ignore
 import knowledgeBase from '../generated/knowledge_base.json';
 
 export interface PageMeta {
@@ -53,7 +52,10 @@ export const ContentService = {
     const categories: Record<string, PageMeta[]> = {};
     const categoryOrder = ['introduction', 'techniques', 'agents', 'guides', 'applications', 'prompts', 'models', 'risks', 'research'];
 
-    knowledgeBase.entries.forEach((entry: any) => {
+    // Handle case where JSON might not exist yet during initial dev
+    const entries = (knowledgeBase as any)?.entries || [];
+
+    entries.forEach((entry: any) => {
       if (!categories[entry.category]) {
         categories[entry.category] = [];
       }
@@ -65,14 +67,12 @@ export const ContentService = {
       });
     });
 
-    // Map to structure and sort based on meta_order if available, otherwise default
+    // Map to structure 
     return categoryOrder.map(catId => {
         const pages = categories[catId] || [];
-        // Sort pages if they have meta_order in the JSON, otherwise keep native order
-        // (The generation script already pushes them in meta order, so mostly we just return)
         return {
             id: catId,
-            title: capitalize(catId), // In a real app, you might want a map for localized category titles
+            title: capitalize(catId), 
             pages: pages
         };
     }).filter(c => c.pages.length > 0);
@@ -81,9 +81,10 @@ export const ContentService = {
   // Deep Drill: Get Page Content with Strict File Resolution
   getPage: async (path: string, lang: 'en' | 'zh' = 'zh'): Promise<PageContent> => {
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    const entries = (knowledgeBase as any)?.entries || [];
     
     // Find entry in knowledge base
-    const entry = knowledgeBase.entries.find((e: any) => e.path === cleanPath);
+    const entry = entries.find((e: any) => e.path === cleanPath);
 
     if (!entry) {
         return {
@@ -106,21 +107,21 @@ export const ContentService = {
         lang: entry.language as 'en' | 'zh',
         filePath: `prompt-engineering/pages/${cleanPath}.${entry.language}.mdx`,
         isFallback: entry.source_type === 'en_fallback',
-        availableLanguages: ['zh', 'en'], // In this simplified view, we assume both exist or fallbacks handle it
+        availableLanguages: ['zh', 'en'], // Simplified
         headers: entry.headers
     };
   },
 
   // Audit Tool: Generate Sync Report based on the JSON analysis
   getSyncReport: (): SyncStatus[] => {
-    return knowledgeBase.entries.map((entry: any) => {
+    const entries = (knowledgeBase as any)?.entries || [];
+    return entries.map((entry: any) => {
         let status: SyncStatus['status'] = 'synced';
         if (entry.source_type === 'en_fallback') status = 'missing_zh';
-        if (entry.source_type === 'en_native') status = 'missing_zh'; // Assuming target is ZH
-
+        
         return {
             id: entry.path,
-            enTitle: entry.source_type === 'en_fallback' ? entry.title : '---', // Simplified for report
+            enTitle: entry.source_type === 'en_fallback' ? entry.title : '---',
             zhTitle: entry.language === 'zh' ? entry.title : '---',
             status: status
         };
