@@ -178,13 +178,25 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
       graph: "基于图的提示"
     },
     agents: {
-      // Agents ZH meta is missing in the provided context
+      introduction: "Agents 简介",
+      components: "Agents 组件",
+      "ai-workflows-vs-ai-agents": "AI 工作流 vs AI 智能体",
+      "context-engineering": "上下文工程",
+      "context-engineering-deep-dive": "上下文工程深度解析",
+      "deep-agents": "深度智能体"
     },
     guides: {
-      // Guides ZH meta is missing in the provided context
+      "optimizing-prompts": "优化提示词",
+      "deep-research": "OpenAI Deep Research",
+      "reasoning-llms": "推理型 LLM"
     },
     applications: {
+      "finetuning-gpt4o": "微调 GPT-4o",
+      function_calling: "函数调用",
+      "context-caching": "上下文缓存",
       generating: "生成数据",
+      synthetic_rag: "生成 RAG 合成数据",
+      generating_textbooks: "处理生成数据集的多样性",
       coding: "代码生成",
       workplace_casestudy: "毕业生工作分类案例研究",
       pf: "提示函数"
@@ -284,42 +296,51 @@ const CONTENT_DB: Record<string, Record<string, string>> = {
     en: `# ReAct Framework\n\nReason + Act. Allowing LLMs to interact with external tools.`,
     zh: `# ReAct 框架\n\nReAct (Reason + Act) 是一种结合了**推理**和**行动**的范式。它允许 LLM 不仅生成文本，还能调用外部工具（如搜索、计算器）来获取信息，从而回答更复杂的问题。`
   },
+  "techniques/tot": {
+    en: `# Tree of Thoughts (ToT)\n\nToT maintains a tree of thoughts, where thoughts represent coherent language sequences that serve as intermediate steps toward solving a problem.`,
+    zh: `# 思维树 (ToT)\n\n对于需要探索或预判战略的复杂任务来说，传统或简单的提示技巧是不够的。最近，[Yao et al. (2023)](https://arxiv.org/abs/2305.10601) 提出了思维树（Tree of Thoughts，ToT）框架，该框架基于思维链提示进行了总结，引导语言模型探索把思维作为中间步骤来解决通用问题。\n\nToT 维护着一棵思维树，思维由连贯的语言序列表示，这个序列就是解决问题的中间步骤。使用这种方法，LM 能够自己对严谨推理过程中的中间思维进行评估。LM 将生成及评估思维的能力与搜索算法（如广度优先搜索和深度优先搜索）相结合，在系统性探索思维的时候可以向前验证和回溯。\n\n### ToT 框架原理如下：\n\n![ToT Framework](https://www.promptingguide.ai/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTOT.3b13bc5e.png&w=3840&q=75)\n\nToT 需要针对不同的任务定义思维/步骤的数量以及每步的候选选项数量。例如，论文中的“算 24 游戏”是一种数学推理任务，需要分成 3 个思维步骤，每一步都需要一个中间方程。而每个步骤保留最优的（best） 5 个候选选项。\n\nToT 完成算 24 的游戏任务要执行广度优先搜索（BFS），每步思维的候选项都要要求 LM 给出能否得到 24 的评估：“sure/maybe/impossible”（一定能/可能/不可能）。作者讲到：“目的是得到经过少量向前尝试就可以验证正确（sure）的局部解，基于‘太大/太小’的常识消除那些不可能（impossible）的局部解，其余的局部解作为‘maybe’保留。”每步思维都要抽样得到 3 个评估结果。整个过程如下图所示：\n\n![ToT Process](https://www.promptingguide.ai/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTOT2.20339d98.png&w=3840&q=75)\n\n从下图中报告的结果来看，ToT 的表现大大超过了其他提示方法：\n\n![ToT Results](https://www.promptingguide.ai/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FTOT3.0f7f2b94.png&w=3840&q=75)\n\n[这里](https://github.com/princeton-nlp/tree-of-thought-llm)还有[这里](https://github.com/kyegomez/tree-of-thoughts)可以找到代码例子。\n\n从大方向上来看，[Yao et al. (2023)](https://arxiv.org/abs/2305.10601) 和 [Long (2023)](https://arxiv.org/abs/2305.17126) 的核心思路是类似的。两种方法都是以多轮对话搜索树的形式来增强 LLM 解决复杂问题的能力。主要区别在于 [Yao et al. (2023)](https://arxiv.org/abs/2305.10601) 采用了深度优先（DFS）/广度优先（BFS）/集束（beam）搜索，而 [Long (2023)](https://arxiv.org/abs/2305.17126) 则提出了由强化学习（Reinforcement Learning）训练出的“ToT 控制器”（ToT Controller）来驱动树的搜索策略。\n\n[Hulbert (2023)](https://github.com/dave1010/tree-of-thought-prompting) 提出了思维树（ToT）提示法，将 ToT 框架的主要概念概括成了一段简短的提示词，指导 LLM 在一次提示中对中间思维做出评估。\nToT 提示词的例子如下：\n\n\`\`\`text\n假设三位不同的专家来回答这个问题。\n所有专家都写下他们思考这个问题的第一个步骤，然后与大家分享。\n然后，所有专家都写下他们思考的下一个步骤并分享。\n以此类推，直到所有专家写完他们思考的所有步骤。\n只要大家发现有专家的步骤出错了，就让这位专家离开。\n请问...\n\`\`\`\n`
+  },
+  "techniques/consistency": {
+    en: "# Self-Consistency\n\nSelf-consistency aims to replace the naive greedy decoding used in chain-of-thought prompting.",
+    zh: "# 自我一致性 (Self-Consistency)\n\n自我一致性（Self-Consistency）旨在替代链式思考提示中使用的朴素贪婪解码。其核心思想是通过少样本 CoT 采样多条推理路径，并使用这些生成结果来选择最一致的答案。"
+  },
+  "techniques/knowledge": {
+    en: "# Generate Knowledge Prompting\n\nUsing the model to generate knowledge before making a prediction.",
+    zh: "# 生成知识提示\n\nLLM 能够生成知识信息，用于帮助模型做出更准确的预测。"
+  },
+  "techniques/rag": {
+    en: "# Retrieval Augmented Generation (RAG)\n\nRAG combines an information retrieval component with a text generator model.",
+    zh: "# 检索增强生成 (RAG)\n\n检索增强生成（RAG）结合了信息检索组件和文本生成模型。RAG 可以通过引入外部知识库来解决 LLM 的幻觉问题和知识过时问题。"
+  },
   
-  // --- AGENTS (Simulating EN-only content to test fallback) ---
+  // --- AGENTS ---
   "agents/introduction": {
-    en: `# Introduction to Agents\n\nAgents are systems that use LLMs as reasoning engines to determine which actions to take and in what order.`
+    en: `# Introduction to Agents\n\nAgents are systems that use LLMs as reasoning engines to determine which actions to take and in what order.`,
+    zh: `# Agents 简介\n\n智能体（Agents）是指将 LLM 作为推理引擎的系统，它们可以决定采取哪些行动以及采取行动的顺序。`
   },
   "agents/components": {
-    en: `# Agent Components\n\nAgents consist of three main components: Profile, Memory, and Planning.`
+    en: `# Agent Components\n\nAgents consist of three main components: Profile, Memory, and Planning.`,
+    zh: `# Agents 组件\n\n智能体通常由三个核心组件构成：\n1. **规划 (Planning)**：子目标分解、反思与改进。\n2. **记忆 (Memory)**：短期记忆（上下文）与长期记忆（向量数据库）。\n3. **工具使用 (Tool Use)**：调用外部 API 获取信息或执行操作。`
   },
   "agents/ai-workflows-vs-ai-agents": {
-    en: `# AI Workflows vs AI Agents\n\nWorkflows are deterministic chains. Agents are probabilistic reasoning loops.`
+    en: `# AI Workflows vs AI Agents\n\nWorkflows are deterministic chains. Agents are probabilistic reasoning loops.`,
+    zh: `# AI 工作流 vs AI 智能体\n\n**工作流 (Workflows)** 是预定义的、确定性的执行路径。例如：步骤 A -> 步骤 B -> 步骤 C。\n\n**智能体 (Agents)** 是概率性的推理循环。它们自主决定："为了达成目标，我现在应该做什么？"`
   },
-  "agents/context-engineering": {
-    en: `# Context Engineering\n\nThe art of structuring context for optimal agent performance.`
-  },
-  "agents/context-engineering-deep-dive": {
-    en: `# Context Engineering Deep Dive\n\nAdvanced techniques for managing token windows and memory retrieval.`
-  },
-  "agents/deep-agents": {
-    en: `# Deep Agents\n\nRecursive agentic systems capable of self-correction.`
-  },
-
-  // --- GUIDES (Simulating EN-only content) ---
+  
+  // --- GUIDES ---
   "guides/optimizing-prompts": {
-    en: `# Optimizing Prompts\n\nStrategies for iteratively improving prompt performance.`
+    en: `# Optimizing Prompts\n\nStrategies for iteratively improving prompt performance.`,
+    zh: `# 优化提示词\n\n提示词优化是一个迭代过程。本指南介绍如何通过 A/B 测试、引入评估指标以及使用更高级的框架（如 DSPy）来系统性地提升提示词效果。`
   },
   "guides/deep-research": {
-    en: `# OpenAI Deep Research\n\nAnalyzing the capabilities of deep research models.`
-  },
-  "guides/reasoning-llms": {
-    en: `# Reasoning LLMs\n\nUnderstanding how Chain-of-Thought models process information.`
+    en: `# OpenAI Deep Research\n\nAnalyzing the capabilities of deep research models.`,
+    zh: `# OpenAI Deep Research\n\n深入分析 OpenAI o1/o3 等具备深度推理能力的模型在科研领域的应用。`
   },
 
   // --- RISKS ---
   "risks/adversarial": {
     en: `# Adversarial Prompting\n\nTechniques used to bypass safety guardrails.`,
-    zh: `# 对抗性提示\n\n对抗性提示（Adversarial Prompting）是指通过精心设计的输入，诱导模型产生本应被安全机制拦截的输出（如仇恨言论、虚假信息等）。`
+    zh: `# 对抗性提示\n\n对抗性提示（Adversarial Prompting）是指通过精心设计的输入，诱导模型产生本应被安全机制拦截的输出（如仇恨言论、虚假信息等）。常见攻击包括提示词注入（Prompt Injection）和越狱（Jailbreaking）。`
   },
   "risks/factuality": {
     en: `# Factuality\n\nIssues related to hallucinations and incorrect information.`,
@@ -328,6 +349,26 @@ const CONTENT_DB: Record<string, Record<string, string>> = {
   "risks/biases": {
     en: `# Biases\n\nUnderstanding and mitigating biases in LLM outputs.`,
     zh: `# 偏见 (Biases)\n\n模型可能继承训练数据中的社会偏见。了解这些偏见对于负责任的 AI 开发至关重要。`
+  },
+
+  // --- APPLICATIONS ---
+  "applications/generating": {
+    en: "Generating Data",
+    zh: "# 生成数据\n\nLLM 不仅能处理数据，还能生成高质量的合成数据（Synthetic Data），用于训练小模型或进行压力测试。"
+  },
+  "applications/coding": {
+    en: "Generating Code",
+    zh: "# 代码生成\n\n利用 LLM 生成、解释和调试代码。Copilot 和 Cursor 是这一领域的典型应用。"
+  },
+  
+  // --- MODELS ---
+  "models/gemini-pro": {
+    en: "Gemini 1.5 Pro",
+    zh: "# Gemini 1.5 Pro\n\nGoogle 的中量级模型，具有突破性的 1M+ token 上下文窗口，擅长长文档分析和多模态理解。"
+  },
+  "models/gpt-4": {
+    en: "GPT-4",
+    zh: "# GPT-4\n\nOpenAI 的旗舰模型，以其强大的推理能力和多模态支持著称。"
   }
 };
 
