@@ -37,6 +37,12 @@ export default defineConfig(({ mode }) => {
   // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
   const env = loadEnv(mode, process.cwd(), '');
 
+  // Aggressively sanitize the API key
+  // 1. Trim whitespace
+  // 2. Remove any non-printable ASCII characters (fixes issues with ^M, hidden chars, copy-paste artifacts)
+  const rawApiKey = env.API_KEY || '';
+  const sanitizedApiKey = rawApiKey.replace(/[^\x20-\x7E]/g, '').trim();
+
   return {
     plugins: [
       react(),
@@ -49,8 +55,7 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       // Inject API_KEY specifically to avoid overwriting the entire process.env object
-      // Trim to remove potential \r or spaces causing issues
-      'process.env.API_KEY': JSON.stringify(env.API_KEY ? env.API_KEY.trim() : '')
+      'process.env.API_KEY': JSON.stringify(sanitizedApiKey)
     }
   };
 });
