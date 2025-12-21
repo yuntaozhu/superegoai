@@ -39,7 +39,7 @@ export interface PageContent {
   availableLanguages: ('en' | 'zh')[];
 }
 
-// 1. FULL META REGISTRY (Hardcoded from provided _meta.json files)
+// 1. FULL META REGISTRY (Updated based on provided file context)
 const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
   en: {
     introduction: {
@@ -74,13 +74,23 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
       components: "Agent Components",
       "ai-workflows-vs-ai-agents": "AI Workflows vs AI Agents",
       "context-engineering": "Context Engineering for AI Agents",
+      "context-engineering-deep-dive": "Context Engineering Deep Dive",
       "deep-agents": "Deep Agents"
     },
+    guides: {
+      "optimizing-prompts": "Optimizing Prompts",
+      "deep-research": "OpenAI Deep Research",
+      "reasoning-llms": "Reasoning LLMs"
+    },
     applications: {
-      generating: "Generating Data",
-      coding: "Generating Code",
+      "finetuning-gpt4o": "Fine-tuning GPT-4o",
       function_calling: "Function Calling",
-      "workplace_casestudy": "Graduate Job Classification Case Study",
+      "context-caching": "Context Caching with LLMs",
+      generating: "Generating Data",
+      synthetic_rag: "Generating Synthetic Dataset for RAG",
+      generating_textbooks: "Tackling Generated Datasets Diversity",
+      coding: "Generating Code",
+      workplace_casestudy: "Graduate Job Classification Case Study",
       pf: "Prompt Function"
     },
     prompts: {
@@ -98,15 +108,24 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
       "adversarial-prompting": "Adversarial Prompting"
     },
     models: {
-      flan: "Flan",
       chatgpt: "ChatGPT",
-      llama: "LLaMA",
-      "gpt-4": "GPT-4",
-      "mistral-7b": "Mistral 7B",
+      "claude-3": "Claude 3",
+      "code-llama": "Code Llama",
+      flan: "Flan",
       gemini: "Gemini",
+      "gemini-advanced": "Gemini Advanced",
       "gemini-pro": "Gemini 1.5 Pro",
-      "phi-2": "Phi-2",
+      gemma: "Gemma",
+      "gpt-4": "GPT-4",
+      "grok-1": "Grok-1",
+      llama: "LLaMA",
+      "llama-3": "Llama 3",
+      "mistral-7b": "Mistral 7B",
+      "mistral-large": "Mistral Large",
       mixtral: "Mixtral",
+      "mixtral-8x22b": "Mixtral 8x22B",
+      olmo: "OLMo",
+      "phi-2": "Phi-2",
       sora: "Sora",
       collection: "LLM Collection"
     },
@@ -118,9 +137,17 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
     research: {
       "llm-agents": "LLM Agents",
       rag: "RAG for LLMs",
+      "llm-reasoning": "LLM Reasoning",
       "rag-faithfulness": "RAG Faithfulness",
+      "llm-recall": "LLM In-Context Recall",
+      "rag_hallucinations": "RAG Reduces Hallucination",
       "synthetic_data": "Synthetic Data",
-      "llm-tokenization": "LLM Tokenization"
+      thoughtsculpt: "ThoughtSculpt",
+      "infini-attention": "Infini-Attention",
+      "guided-cot": "LM-Guided CoT",
+      "trustworthiness-in-llms": "Trustworthiness in LLMs",
+      "llm-tokenization": "LLM Tokenization",
+      groq: "What is Groq?"
     }
   },
   zh: {
@@ -151,14 +178,15 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
       graph: "基于图的提示"
     },
     agents: {
-      introduction: "智能体简介",
-      components: "智能体组件",
-      // Missing some ZH translations intentionally to test audit
+      // Agents ZH meta is missing in the provided context
+    },
+    guides: {
+      // Guides ZH meta is missing in the provided context
     },
     applications: {
       generating: "生成数据",
       coding: "代码生成",
-      "workplace_casestudy": "毕业生工作分类案例研究",
+      workplace_casestudy: "毕业生工作分类案例研究",
       pf: "提示函数"
     },
     prompts: {
@@ -182,11 +210,14 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
       "gpt-4": "GPT-4",
       "mistral-7b": "Mistral 7B",
       gemini: "Gemini",
+      "gemini-advanced": "Gemini Advanced",
       "gemini-pro": "Gemini 1.5 Pro",
       "phi-2": "Phi-2",
       mixtral: "Mixtral",
+      "code-llama": "Code Llama",
+      olmo: "OLMo",
       sora: "Sora",
-      collection: "模型集锦"
+      collection: "Model Collection"
     },
     risks: {
       adversarial: "对抗性提示",
@@ -195,10 +226,18 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
     },
     research: {
       "llm-agents": "LLM 智能体",
-      rag: "LLM 的 RAG",
-      "rag-faithfulness": "RAG 忠实度",
-      "synthetic_data": "合成数据",
-      "llm-tokenization": "Tokenization"
+      rag: "RAG for LLMs",
+      "llm-reasoning": "LLM Reasoning",
+      "rag-faithfulness": "RAG Faithfulness",
+      "llm-recall": "LLM In-Context Recall",
+      "rag_hallucinations": "RAG Reduces Hallucination",
+      "synthetic_data": "Synthetic Data",
+      thoughtsculpt: "ThoughtSculpt",
+      "infini-attention": "Infini-Attention",
+      "guided-cot": "LM-Guided CoT",
+      "trustworthiness-in-llms": "Trustworthiness in LLMs",
+      "llm-tokenization": "LLM Tokenization",
+      groq: "Groq 是什么？"
     }
   }
 };
@@ -223,8 +262,8 @@ const CONTENT_DB: Record<string, Record<string, string>> = {
     zh: `# 提示词基础\n\n提示工程是一门与 AI 交流的艺术。`
   },
   // Example of missing ZH content to test fallback/audit
-  "techniques/meta-prompting": {
-    en: `# Meta Prompting\n\nMeta prompting involves prompting the model to generate prompts for itself.`
+  "agents/introduction": {
+    en: `# Introduction to Agents\n\nAgents are systems that use LLMs as reasoning engines to determine which actions to take and in what order.`
     // zh intentionally missing
   }
 };
@@ -327,8 +366,10 @@ export const ContentService = {
         const hasEnContent = entry && entry['en'];
         const hasZhContent = entry && entry['zh'];
 
-        if (hasEnContent && !hasZhContent) status = 'missing_zh';
-        else if (!hasEnContent && !hasZhContent) status = 'orphan'; // Exists in meta but no content
+        // Strict meta check + content check
+        if (!zhTitle) status = 'missing_zh';
+        else if (hasEnContent && !hasZhContent) status = 'missing_zh';
+        else if (!hasEnContent && !hasZhContent) status = 'orphan';
         else if (!hasEnContent && hasZhContent) status = 'missing_en';
 
         report.push({
