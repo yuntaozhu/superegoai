@@ -133,8 +133,8 @@ async function processDirectory(dirPath: string, categoryId: string) {
     // If no meta, read directory
     const files = fs.readdirSync(dirPath);
     files.forEach(f => {
-      if (f.endsWith('.zh.mdx') || f.endsWith('.en.mdx')) {
-        const id = f.replace(/\.(zh|en)\.mdx$/, '');
+      if (f.endsWith('.zh.mdx') || f.endsWith('.en.mdx') || f.endsWith('.mdx')) {
+        const id = f.replace(/\.(zh|en)?\.mdx$/, '');
         metaStructure[id] = id; 
       }
     });
@@ -148,7 +148,12 @@ async function processDirectory(dirPath: string, categoryId: string) {
     // Skip separators or menus
     if (typeof titleFromMeta !== 'string') continue;
 
-    const zhPath = path.join(dirPath, `${id}.zh.mdx`);
+    // Support standard .zh.mdx and .mdx as default
+    let zhPath = path.join(dirPath, `${id}.zh.mdx`);
+    if (!fs.existsSync(zhPath)) {
+        zhPath = path.join(dirPath, `${id}.mdx`);
+    }
+    
     const enPath = path.join(dirPath, `${id}.en.mdx`);
     const virtualPath = `${categoryId}/${id}`;
 
@@ -156,12 +161,12 @@ async function processDirectory(dirPath: string, categoryId: string) {
     let enEntry: LocaleEntry | undefined;
     let images: string[] = [];
 
-    // 1. Load Chinese
+    // 1. Load Chinese (or default)
     const zhData = parseMDX(zhPath);
     if (zhData) {
         const cleanContent = zhData.content.trim();
-        // Validation: Simple heuristic for "empty" files
-        if (cleanContent.length > 50 && !cleanContent.includes("同步中") && !cleanContent.includes("Content pending")) {
+        // Validation: Simple heuristic for "empty" files (relaxed threshold to 10 chars)
+        if (cleanContent.length > 10 && !cleanContent.includes("同步中") && !cleanContent.includes("Content pending")) {
             zhEntry = {
                 title: zhData.frontmatter.title || titleFromMeta,
                 description: zhData.frontmatter.description,
@@ -175,13 +180,17 @@ async function processDirectory(dirPath: string, categoryId: string) {
     // 2. Load English
     const enData = parseMDX(enPath);
     if (enData) {
-        enEntry = {
-            title: enData.frontmatter.title || titleFromMeta, // Heuristic: Use meta title if frontmatter missing
-            description: enData.frontmatter.description,
-            content: enData.content,
-            headers: extractHeaders(enData.content)
-        };
-        images.push(...extractAndValidateImages(enData.content, enPath));
+        const cleanContent = enData.content.trim();
+        // Validation for English as well
+        if (cleanContent.length > 10) {
+            enEntry = {
+                title: enData.frontmatter.title || titleFromMeta, 
+                description: enData.frontmatter.description,
+                content: enData.content,
+                headers: extractHeaders(enData.content)
+            };
+            images.push(...extractAndValidateImages(enData.content, enPath));
+        }
     }
 
     // Skip if both are missing
@@ -218,7 +227,6 @@ async function main() {
   }
 
   // Write Output using Atomic Write Pattern
-  // This prevents the frontend from reading a partial file during the write process
   const outputData = {
     generated_at: new Date().toISOString(),
     total_entries: entries.length,

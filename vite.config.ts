@@ -49,7 +49,8 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       // Inject API_KEY specifically to avoid overwriting the entire process.env object
-      'process.env.API_KEY': JSON.stringify(env.API_KEY)
+      // Trim to remove potential \r or spaces causing issues
+      'process.env.API_KEY': JSON.stringify(env.API_KEY ? env.API_KEY.trim() : '')
     }
   };
 });

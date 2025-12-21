@@ -1,3 +1,4 @@
+
 {
   "name": "ai-first-course",
   "version": "0.1.0",
@@ -25,13 +26,13 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
     "gray-matter": "^4.0.3",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.7.1"
   },
   "scripts": {
     "dev": "npm run index-content && vite",
     "build": "npm run index-content && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "index-content": "node --loader ts-node/esm scripts/generate-knowledge-base.ts"
+    "index-content": "tsx scripts/generate-knowledge-base.ts"
   }
 }

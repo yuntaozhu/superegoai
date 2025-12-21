@@ -8,7 +8,7 @@
  * 2. Serve content to React components
  */
 
-// Import the generated JSON using a relative path to avoid alias resolution issues.
+// Import the generated JSON using a relative path to avoid alias resolution issues in some environments.
 // @ts-ignore
 import knowledgeBase from '../generated/knowledge_base.json';
 
@@ -58,8 +58,10 @@ export const ContentService = {
     const entries = (knowledgeBase as any)?.entries || [];
 
     entries.forEach((entry: any) => {
+      // Ensure locales object exists before accessing
+      const locales = entry.locales || {};
       // Resolve title based on requested language, with fallback
-      const localeData = entry.locales[lang] || entry.locales.en || entry.locales.zh;
+      const localeData = locales[lang] || locales.en || locales.zh;
       
       if (!categories[entry.category]) {
         categories[entry.category] = [];
@@ -104,23 +106,24 @@ export const ContentService = {
     }
 
     // Determine available languages
+    const locales = entry.locales || {};
     const availableLanguages: ('en' | 'zh')[] = [];
-    if (entry.locales.zh) availableLanguages.push('zh');
-    if (entry.locales.en) availableLanguages.push('en');
+    if (locales.zh) availableLanguages.push('zh');
+    if (locales.en) availableLanguages.push('en');
 
     // Select content based on language preference
-    let selectedData = entry.locales[lang];
+    let selectedData = locales[lang];
     let isFallback = false;
     let actualLang = lang;
 
-    // Fallback logic
+    // Fallback logic: If requested language is missing, try the other one
     if (!selectedData) {
-        if (lang === 'zh' && entry.locales.en) {
-            selectedData = entry.locales.en;
+        if (lang === 'zh' && locales.en) {
+            selectedData = locales.en;
             actualLang = 'en';
             isFallback = true;
-        } else if (lang === 'en' && entry.locales.zh) {
-            selectedData = entry.locales.zh;
+        } else if (lang === 'en' && locales.zh) {
+            selectedData = locales.zh;
             actualLang = 'zh';
             isFallback = true;
         }
@@ -128,7 +131,7 @@ export const ContentService = {
 
     if (!selectedData) {
          return {
-            content: `# Content Unavailable\n\nThis module is indexed but has no content.`,
+            content: `# Content Unavailable\n\nThis module is indexed but has no content in either language.`,
             frontmatter: { title: 'Empty' },
             title: entry.id,
             lang: lang,
@@ -156,8 +159,9 @@ export const ContentService = {
   getSyncReport: (): SyncStatus[] => {
     const entries = (knowledgeBase as any)?.entries || [];
     return entries.map((entry: any) => {
-        const hasZh = !!entry.locales.zh;
-        const hasEn = !!entry.locales.en;
+        const locales = entry.locales || {};
+        const hasZh = !!locales.zh;
+        const hasEn = !!locales.en;
         
         let status: SyncStatus['status'] = 'synced';
         if (hasZh && !hasEn) status = 'missing_en';
@@ -166,8 +170,8 @@ export const ContentService = {
         
         return {
             id: entry.path,
-            enTitle: hasEn ? entry.locales.en.title : '---',
-            zhTitle: hasZh ? entry.locales.zh.title : '---',
+            enTitle: hasEn ? locales.en.title : '---',
+            zhTitle: hasZh ? locales.zh.title : '---',
             status: status
         };
     });
