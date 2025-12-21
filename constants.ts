@@ -16,6 +16,34 @@ const CONTENT_ZH: ContentData = {
   ],
   blogPosts: [
     {
+      id: "2",
+      title: "构建外脑：从“第二大脑”到“AI 超我”的进化",
+      excerpt: "人类大脑的算力是有限的，但外脑不是。本文探讨如何利用 RAG 和 AI Agent 将静态的笔记库升级为主动思考的“超我”系统。",
+      content: `
+        <h2>生物脑的瓶颈与“外脑”的必要性</h2>
+        <p>人类大脑存在一个著名的认知瓶颈：工作记忆仅能容纳 7±2 个单位的信息（米勒定律）。在信息爆炸的 AGI 时代，仅靠生物脑进行记忆和计算，无异于用算盘去处理大数据。</p>
+        <p>Indigox 在其关于“Exobrain”的论述中提到，构建外脑的核心在于承认人类的局限性。我们需要将记忆、逻辑甚至部分决策过程“外包”给硅基系统。</p>
+        
+        <h2>Exobrain v1.0 vs v2.0</h2>
+        <p><strong>v1.0 时代（静态存储）：</strong> 我们使用 Evernote、Notion 或 Obsidian。这解决了“记忆”问题，但它们是死的。如果你不主动去检索，这些数据就是数字坟墓。</p>
+        <p><strong>v2.0 时代（AI 超我）：</strong> 这是 SuperEgoAI 倡导的形态。通过引入向量数据库（Vector DB）和 LLM，外脑不再是被动的仓库，而是主动的参谋。</p>
+        
+        <blockquote>“生物脑负责直觉与审美，硅基外脑负责记忆与逻辑执行。”</blockquote>
+
+        <h2>如何构建你的 SuperEgo 外脑？</h2>
+        <p>构建外脑不仅仅是下载一个软件，它是一套 FTI 架构（Foundation, Tooling, Integration）：</p>
+        <ul>
+          <li><strong>采集层 (Capture)：</strong> 不仅是文字，还包括语音、会议记录、代码片段。利用 Whisper 等模型实现全模态吞吐。</li>
+          <li><strong>向量层 (Embedding)：</strong> 将所有碎片化信息转化为机器可理解的向量（Vectors），存入 Pinecone 或 ChromaDB。</li>
+          <li><strong>编排层 (Orchestration)：</strong> 这是最关键的一步。你需要配置专门的 AI Agent（如“每日回顾 Agent”），让它定期读取你的笔记，自动生成洞察，甚至主动向你提问。</li>
+        </ul>
+        <p>当你不再需要回忆“我上周读了什么”，而是由 AI 主动提醒你“上周的观点可以解决当下的问题”时，你就真正拥有了一个“超我”。</p>
+      `,
+      date: "2024-05-25",
+      author: "SuperEgo Team",
+      tags: ["第二大脑", "RAG", "架构", "思维模型"]
+    },
+    {
       id: "1",
       title: "从执行到编排：AI 时代的认知跨越",
       excerpt: "在这个 AGI 的前夜，最核心的竞争力不再是你会多少门编程语言，而是你如何构建一个能够理解并执行复杂逻辑的系统。",
@@ -287,6 +315,33 @@ const CONTENT_EN: ContentData = {
     { title: 'Workflow Revolution', concept: 'Solopreneur', practice: 'Multi-Agent Collaboration' }
   ],
   blogPosts: [
+    {
+      id: "2",
+      title: "Building an Exobrain: Evolution from \"Second Brain\" to \"AI SuperEgo\"",
+      excerpt: "The biological brain has limits; the Exobrain does not. We explore how to use RAG and AI Agents to upgrade static notes into an active SuperEgo system.",
+      content: `
+        <h2>The Bottleneck of the Bio-Brain</h2>
+        <p>The human brain has a famous cognitive bottleneck: working memory can only hold 7±2 items (Miller's Law). In the age of AGI, relying solely on the biological brain is like using an abacus for big data.</p>
+        <p>As discussed in concepts like "Exobrain", the core lies in acknowledging human limitations. We need to "outsource" memory, logic, and even decision-making to silicon-based systems.</p>
+        
+        <h2>Exobrain v1.0 vs v2.0</h2>
+        <p><strong>v1.0 (Static Storage):</strong> Tools like Evernote or Obsidian solve the "memory" problem, but they are passive. Without active retrieval, they become digital graveyards.</p>
+        <p><strong>v2.0 (AI SuperEgo):</strong> This is the SuperEgoAI approach. By introducing Vector DBs and LLMs, the external brain becomes an active consultant, not just a warehouse.</p>
+        
+        <blockquote>“The biological brain is for intuition; the silicon Exobrain is for execution.”</blockquote>
+
+        <h2>Building Your SuperEgo</h2>
+        <p>Building an Exobrain is an FTI architecture (Foundation, Tooling, Integration):</p>
+        <ul>
+          <li><strong>Capture:</strong> Not just text, but voice, meetings, code.</li>
+          <li><strong>Embedding:</strong> Converting fragmented info into machine-readable vectors.</li>
+          <li><strong>Orchestration:</strong> Configuring AI Agents to actively review notes and generate insights.</li>
+        </ul>
+      `,
+      date: "2024-05-25",
+      author: "SuperEgo Team",
+      tags: ["Second Brain", "RAG", "Architecture"]
+    },
     {
       id: "1",
       title: "From Execution to Orchestration",

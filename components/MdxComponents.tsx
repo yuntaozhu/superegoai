@@ -1,10 +1,11 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { 
   Info, AlertTriangle, CheckCircle, Lightbulb, 
-  ChevronRight, Copy, Check, Terminal 
+  ChevronRight, Terminal 
 } from 'lucide-react';
 import { Link } from '../context/LanguageContext';
+import PromptBlock from './PromptBlock';
 
 /**
  * 1. Callout Component
@@ -70,52 +71,7 @@ export const Steps: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 );
 
 /**
- * 4. CopyButton & Code Integration with Syntax Highlighting
- */
-export const CodeBlock: React.FC<{ children: string; language?: string }> = ({ children, language = 'text' }) => {
-  const [copied, setCopied] = useState(false);
-  const codeRef = useRef<HTMLElement>(null);
-  
-  useEffect(() => {
-    if (codeRef.current && (window as any).Prism) {
-      (window as any).Prism.highlightElement(codeRef.current);
-    }
-  }, [children, language]);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(children);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="my-8 rounded-2xl overflow-hidden border border-white/10 bg-[#05060f] group shadow-2xl transition-all hover:border-blue-500/30">
-      <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
-        <div className="flex items-center gap-2">
-          <Terminal className="w-3.5 h-3.5 text-blue-500" />
-          <span className="text-[9px] font-black font-mono text-gray-500 uppercase tracking-widest">{language}</span>
-        </div>
-        <button 
-          onClick={handleCopy}
-          className="flex items-center gap-2 px-2.5 py-1 hover:bg-white/10 rounded-lg text-gray-500 hover:text-white transition-all text-[10px] font-bold uppercase tracking-wider"
-        >
-          {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-          {copied ? 'Copied' : 'Copy'}
-        </button>
-      </div>
-      <div className="p-6 overflow-x-auto custom-scrollbar bg-black/40">
-        <pre className={`language-${language} !m-0 !p-0 !bg-transparent`}>
-          <code ref={codeRef} className={`language-${language} font-mono text-sm leading-relaxed whitespace-pre`}>
-            {children}
-          </code>
-        </pre>
-      </div>
-    </div>
-  );
-};
-
-/**
- * 5. PromptAnatomy Component
+ * 4. PromptAnatomy Component
  * Visual breakdown of a prompt's structure.
  */
 export const PromptAnatomy: React.FC<{ instruction?: string; context?: string; data?: string; indicator?: string }> = ({ 
@@ -155,7 +111,7 @@ export const PromptAnatomy: React.FC<{ instruction?: string; context?: string; d
 );
 
 /**
- * 6. MDX Component Map
+ * 5. MDX Component Map
  * The glue that connects standard markdown to enhanced React components.
  */
 export const MdxComponents = {
@@ -172,7 +128,7 @@ export const MdxComponents = {
     const isBlock = props.className?.includes('language-');
     if (isBlock) {
       const lang = props.className.replace('language-', '');
-      return <CodeBlock language={lang}>{props.children}</CodeBlock>;
+      return <PromptBlock language={lang} code={props.children} />;
     }
     return <code className="bg-white/10 text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono" {...props} />;
   },
