@@ -11,12 +11,45 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
 
   if (!content) return null;
 
+  // Helper to process markdown text (images, links, bold, code)
+  const processMarkdown = (text: string) => {
+    let processed = text;
+
+    // 1. Images: ![](url) -> <img src="url" />
+    // Fix relative paths for dair-ai guide to point to raw GitHub content
+    processed = processed.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, src) => {
+        let finalSrc = src;
+        // Map relative paths to the Dair AI GitHub repo
+        if (src.startsWith('../img/')) {
+            finalSrc = `https://raw.githubusercontent.com/dair-ai/Prompt-Engineering-Guide/main/img/${src.replace('../img/', '')}`;
+        } else if (src.startsWith('./img/')) {
+             finalSrc = `https://raw.githubusercontent.com/dair-ai/Prompt-Engineering-Guide/main/img/${src.replace('./img/', '')}`;
+        } else if (src.startsWith('img/')) {
+             finalSrc = `https://raw.githubusercontent.com/dair-ai/Prompt-Engineering-Guide/main/img/${src.replace('img/', '')}`;
+        }
+        
+        return `<img src="${finalSrc}" alt="${alt}" class="rounded-xl border border-white/10 my-8 w-full shadow-2xl" loading="lazy" />`;
+    });
+
+    // 2. Links: [text](url) - Negative lookbehind to exclude images (![...])
+    // Using a simpler approach compatible with all regex engines: match brackets not preceded by !
+    processed = processed.replace(/([^!]|^)\[(.*?)\]\((.*?)\)/g, '$1<a href="$3" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 transition-colors">$2</a>');
+
+    // 3. Bold: **text**
+    processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
+
+    // 4. Inline Code: `text`
+    processed = processed.replace(/`([^`]+)`/g, '<code class="bg-white/10 text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>');
+
+    return processed;
+  };
+
   // Split content by custom component tags and markdown elements.
   // Use [\s\S] for dotAll matching to handle multiline components.
   const parts = content.split(/(<PromptAnatomy[\s\S]*?\/>|<Callout[\s\S]*?>[\s\S]*?<\/Callout>|<Cards[\s\S]*?>[\s\S]*?<\/Cards>|<Steps>[\s\S]*?<\/Steps>|```[\s\S]*?```|#{1,3}\s.*)/g);
 
   return (
-    <div className="mdx-content space-y-6">
+    <div className="mdx-content space-y-6 text-gray-300 leading-relaxed">
       {parts.map((part, i) => {
         if (!part || !part.trim()) return null;
 
@@ -28,18 +61,13 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
             return match ? match[1] : '';
           };
 
-          const instruction = getAttr('instruction');
-          const context = getAttr('context');
-          const data = getAttr('data');
-          const indicator = getAttr('indicator');
-          
           return (
             <MdxComponents.PromptAnatomy 
               key={i} 
-              instruction={instruction} 
-              context={context} 
-              data={data} 
-              indicator={indicator} 
+              instruction={getAttr('instruction')} 
+              context={getAttr('context')} 
+              data={getAttr('data')} 
+              indicator={getAttr('indicator')} 
             />
           );
         }
@@ -48,9 +76,13 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
         if (part.startsWith('<Callout')) {
           const typeMatch = part.match(/type="(.*?)"/);
           const type = (typeMatch ? typeMatch[1] : 'info') as any;
-          // Extract content between tags, supporting multiline
           const children = part.replace(/<Callout.*?>|<\/Callout>/g, '').trim();
-          return <MdxComponents.Callout key={i} type={type}>{children}</MdxComponents.Callout>;
+          
+          return (
+            <MdxComponents.Callout key={i} type={type}>
+               <div dangerouslySetInnerHTML={{ __html: processMarkdown(children) }} />
+            </MdxComponents.Callout>
+          );
         }
         
         // 3. Cards
@@ -67,23 +99,20 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
         if (part.startsWith('<Steps>')) {
           const children = part.replace(/<Steps>|<\/Steps>/g, '').trim();
           // Split steps by number list pattern "1. ", handling potential newlines
-          // We look for a newline followed by a digit and a dot, or the start of the string
           const items = children.split(/\n+(?=\d+\.\s)/).filter(s => s.trim().length > 0);
           
           const steps = items.map((s, si) => {
-            // Remove the leading "1. " part for cleaner display if we want to use our own numbering
             const cleanText = s.replace(/^\d+\.\s/, '').trim();
             return (
               <div key={si} className="mb-4">
-                <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
-                   <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] flex items-center justify-center border border-blue-500/20">{si + 1}</span>
+                <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-3">
+                   <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center border border-blue-500/20 font-mono">{si + 1}</span>
                    {language === 'zh' ? '步骤' : 'Step'}
                 </h4>
-                <MdxComponents.p dangerouslySetInnerHTML={{ 
-                  __html: cleanText
-                    .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>')
-                    .replace(/`([^`]+)`/g, '<code class="bg-white/10 text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
-                }} />
+                <div 
+                    className="text-gray-400 pl-9"
+                    dangerouslySetInnerHTML={{ __html: processMarkdown(cleanText) }} 
+                />
               </div>
             );
           });
@@ -106,15 +135,22 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
         if (part.startsWith('### ')) return <MdxComponents.h3 key={i}>{part.replace('### ', '')}</MdxComponents.h3>;
         
         // 7. Paragraphs / Standard Text
+        // Split by double newlines to render distinct paragraphs
+        const paragraphs = part.split(/\n\s*\n/);
+        
         return (
-          <MdxComponents.p 
-            key={i} 
-            dangerouslySetInnerHTML={{ 
-              __html: part
-                .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>') 
-                .replace(/`([^`]+)`/g, '<code class="bg-white/10 text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
-            }} 
-          />
+          <React.Fragment key={i}>
+            {paragraphs.map((para, pi) => (
+                para.trim() && (
+                  <MdxComponents.p 
+                    key={`${i}-${pi}`} 
+                    dangerouslySetInnerHTML={{ 
+                      __html: processMarkdown(para)
+                    }} 
+                  />
+                )
+            ))}
+          </React.Fragment>
         );
       })}
     </div>
