@@ -1,3 +1,4 @@
+
 # Basic Prompting
 
 In the previous guide, we introduced and gave a basic example of a prompt. 
@@ -25,9 +26,7 @@ Let's say I am interested to learn about antibiotics, I could try a prompt like 
 
 *Prompt:*
 ```
-Explain antibiotics
-
-A:
+Explain the concept of antibiotics
 ```
 
 *Output:*
@@ -35,13 +34,13 @@ A:
 Antibiotics are a type of medication used to treat bacterial infections. They work by either killing the bacteria or preventing them from reproducing, allowing the body’s immune system to fight off the infection. Antibiotics are usually taken orally in the form of pills, capsules, or liquid solutions, or sometimes administered intravenously. They are not effective against viral infections, and using them inappropriately can lead to antibiotic resistance.
 ```
 
-The "A:" is an explicit prompt format that's used in question answering. I used it here to tell the model that there is an expected further. In this example, it's not clear how this is useful vs not using it but we will leave it that for later examples. Let's just assume that this is too much information and want to summarize it further. We can instruct the model to summarize into one sentence like so:
+The model generated a paragraph explaining antibiotics. In this example, it's not clear how this is useful vs not using it but we will leave it that for later examples. Let's just assume that this is too much information and want to summarize it further. We can instruct the model to summarize into one sentence like so:
 
 *Prompt:*
 ```
 Antibiotics are a type of medication used to treat bacterial infections. They work by either killing the bacteria or preventing them from reproducing, allowing the body’s immune system to fight off the infection. Antibiotics are usually taken orally in the form of pills, capsules, or liquid solutions, or sometimes administered intravenously. They are not effective against viral infections, and using them inappropriately can lead to antibiotic resistance.
 
-Explain the above in one sentence:
+Summarize the above text into a single sentence:
 ```
 
 *Output:*
@@ -59,14 +58,14 @@ Here is an example of a prompt that extracts information from a given paragraph.
 
 *Prompt:*
 ```
-Author-contribution statements and acknowledgements in research papers should state clearly and specifically whether, and to what extent, the authors used AI technologies such as ChatGPT in the preparation of their manuscript and analysis. They should also indicate which LLMs were used. This will alert editors and reviewers to scrutinize manuscripts more carefully for potential biases, inaccuracies and improper source crediting. Likewise, scientific journals should be transparent about their use of LLMs, for example when selecting submitted manuscripts.
+Article: Author-contribution statements and acknowledgements in research papers should state clearly and specifically whether, and to what extent, the authors used AI technologies such as ChatGPT in the preparation of their manuscript and analysis. They should also indicate which LLMs were used. This will alert editors and reviewers to scrutinize manuscripts more carefully for potential biases, inaccuracies and improper source crediting. Likewise, scientific journals should be transparent about their use of LLMs, for example when selecting submitted manuscripts.
 
-Mention the large language model based product mentioned in the paragraph above:
+Task: Extract the large language model based product mentioned in the article above.
 ```
 
 *Output:*
 ```
-The large language model based product mentioned in the paragraph above is ChatGPT.
+ChatGPT
 ```
 
 There are many ways we can improve the results above, but this is already very useful. 
@@ -108,7 +107,7 @@ Let's try to demonstrate this by providing an example of text classification.
 
 *Prompt:*
 ```
-Classify the text into neutral, negative or positive. 
+Classify the text into one of the following sentiments: neutral, negative, or positive. 
 
 Text: I think the food was okay. 
 Sentiment:
@@ -123,7 +122,7 @@ We gave the instruction to classify the text and the model responded with `'Neut
 
 *Prompt:*
 ```
-Classify the text into neutral, negative or positive. 
+Classify the text into one of the following sentiments: neutral, negative, or positive. 
 
 Text: I think the vacation is okay.
 Sentiment: neutral 
@@ -167,7 +166,7 @@ The following is a conversation with an AI research assistant. The assistant ton
 
 Human: Hello, who are you?
 AI: Greeting! I am an AI research assistant. How can I help you today?
-Human: Can you tell me about the creation of blackholes?
+Human: Can you tell me about the creation of black holes?
 AI:
 ```
 
