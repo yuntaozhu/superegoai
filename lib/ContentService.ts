@@ -245,6 +245,28 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
 // 2. CONTENT DATABASE (Simulating File System)
 // We populate this with sample content. In a real Nextra app, this would be MDX files.
 const CONTENT_DB: Record<string, Record<string, string>> = {
+  // --- INTRODUCTION ---
+  "introduction/basics": {
+    en: `# Basics of Prompting\n\nPrompt engineering is the art of communicating with AI to achieve desired results.`,
+    zh: `# 提示词基础\n\n提示工程（Prompt Engineering）是一门通过优化输入（Prompt）来与 AI 交流，从而获得理想输出的艺术。\n\n> 核心理念：**Garbage In, Garbage Out (垃圾进，垃圾出)**。`
+  },
+  "introduction/elements": {
+    en: `# Prompt Elements\n\nA prompt can contain the following elements:\n\n**Instruction** - a specific task or instruction you want the model to perform\n\n**Context** - can involve external information or additional context that can steer the model to better responses\n\n**Input Data** - is the input or question that we are interested to find a response for\n\n**Output Indicator** - indicates the type or format of the output.`,
+    zh: `# 提示词要素\n\n一个完善的提示词通常包含以下四个要素：\n\n1. **指令 (Instruction)**\n   - 您希望模型执行的具体任务。\n   - 例如："请翻译"、"请分类"、"请总结"。\n\n2. **上下文 (Context)**\n   - 涉及外部信息或额外的背景，引导模型做出更好的响应。\n   - 例如："作为一名资深软件工程师..."。\n\n3. **输入数据 (Input Data)**\n   - 我们感兴趣的输入或问题。\n   - 例如：需要被翻译的具体文本。\n\n4. **输出指示符 (Output Indicator)**\n   - 指示输出的类型或格式。\n   - 例如："请以 JSON 格式输出"、"请生成 Python 代码"。`
+  },
+  "introduction/tips": {
+    en: `# General Tips for Designing Prompts\n\n1. Start Simple\n2. Be Specific\n3. Avoid Impreciseness`,
+    zh: `# 设计提示的通用技巧\n\n### 1. 从简单开始 (Start Simple)\n在开始设计提示时，这是一个迭代的过程。建议从简单的 Prompt 开始，观察结果，然后逐步添加更多上下文或约束。\n\n### 2. 具体明确 (Be Specific)\n对模型下达的指令越具体，结果通常越好。避免模棱两可的描述。\n\n### 3. 避免否定句\n告诉模型**要做什么**，而不是**不要做什么**。`
+  },
+  "introduction/examples": {
+    en: `# Examples of Prompts\n\nHere are some examples of effective prompts for various tasks.`,
+    zh: `# 提示词示例\n\n本节将展示一些用于文本摘要、信息提取、问答等任务的标准提示词示例。`
+  },
+  "introduction/settings": {
+    en: `# LLM Settings\n\nTemperature, Top P, and other hyperparameters allow you to control the randomness and determinism of the model.`,
+    zh: `# 大语言模型设置\n\n在使用 LLM 时，除了 Prompt 本身，配置参数也至关重要。\n\n- **Temperature**: 控制随机性。较低的值（如 0.2）使输出更确定，较高的值（如 0.8）使输出更具创造性。\n- **Top P**: 核采样。`
+  },
+
   // --- TECHNIQUES ---
   "techniques/cot": {
     en: `# Chain-of-Thought Prompting\n\nChain-of-thought (CoT) prompting enables complex reasoning capabilities through intermediate reasoning steps.\n\n![CoT Example](/img/cot.png "Chain of Thought Visualization")`,
@@ -258,9 +280,9 @@ const CONTENT_DB: Record<string, Record<string, string>> = {
     en: `# Few-Shot Prompting\n\nFew-shot prompting provides a few examples to the model to guide its generation.`,
     zh: `# 少样本提示\n\n少样本提示 (Few-Shot) 通过向模型提供少量的输入输出示例，来引导模型理解任务意图。`
   },
-  "introduction/basics": {
-    en: `# Basics of Prompting\n\nPrompt engineering is the art of communicating with AI.`,
-    zh: `# 提示词基础\n\n提示工程是一门与 AI 交流的艺术。`
+  "techniques/react": {
+    en: `# ReAct Framework\n\nReason + Act. Allowing LLMs to interact with external tools.`,
+    zh: `# ReAct 框架\n\nReAct (Reason + Act) 是一种结合了**推理**和**行动**的范式。它允许 LLM 不仅生成文本，还能调用外部工具（如搜索、计算器）来获取信息，从而回答更复杂的问题。`
   },
   
   // --- AGENTS (Simulating EN-only content to test fallback) ---
@@ -292,6 +314,20 @@ const CONTENT_DB: Record<string, Record<string, string>> = {
   },
   "guides/reasoning-llms": {
     en: `# Reasoning LLMs\n\nUnderstanding how Chain-of-Thought models process information.`
+  },
+
+  // --- RISKS ---
+  "risks/adversarial": {
+    en: `# Adversarial Prompting\n\nTechniques used to bypass safety guardrails.`,
+    zh: `# 对抗性提示\n\n对抗性提示（Adversarial Prompting）是指通过精心设计的输入，诱导模型产生本应被安全机制拦截的输出（如仇恨言论、虚假信息等）。`
+  },
+  "risks/factuality": {
+    en: `# Factuality\n\nIssues related to hallucinations and incorrect information.`,
+    zh: `# 真实性 (Factuality)\n\nLLM 容易产生“幻觉” (Hallucination)，即一本正经地胡说八道。本节讨论如何通过 RAG 和引用来提高真实性。`
+  },
+  "risks/biases": {
+    en: `# Biases\n\nUnderstanding and mitigating biases in LLM outputs.`,
+    zh: `# 偏见 (Biases)\n\n模型可能继承训练数据中的社会偏见。了解这些偏见对于负责任的 AI 开发至关重要。`
   }
 };
 
