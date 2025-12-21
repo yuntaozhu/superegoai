@@ -18,17 +18,21 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.170.0",
+    "@types/node": "^20.11.24",
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.3.3",
     "vite": "^5.1.4",
     "tailwindcss": "^3.4.1",
     "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35"
+    "postcss": "^8.4.35",
+    "gray-matter": "^4.0.3",
+    "ts-node": "^10.9.2"
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run index-content && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "index-content": "node --loader ts-node/esm scripts/generate-knowledge-base.ts"
   }
 }
