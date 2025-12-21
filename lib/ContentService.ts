@@ -1,3 +1,4 @@
+
 /**
  * ContentService: Knowledge Indexer & Audit Manager
  * 
@@ -7,7 +8,7 @@
  * 2. Serve content to React components
  */
 
-// Import the generated JSON.
+// Import the generated JSON using a relative path to avoid alias resolution issues.
 // @ts-ignore
 import knowledgeBase from '../generated/knowledge_base.json';
 

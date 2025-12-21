@@ -1,12 +1,49 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { exec } from 'child_process';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Custom Plugin to Watch Content Directory
+const contentWatcher = () => ({
+  name: 'content-watcher',
+  // Hook into HMR update
+  handleHotUpdate({ file, server }: { file: string; server: any }) {
+    // Check if the modified file is inside the prompt-engineering/pages directory
+    if (file.includes('prompt-engineering/pages') && (file.endsWith('.mdx') || file.endsWith('.json'))) {
+      console.log(`\n📝 Content change detected: ${path.basename(file)}`);
+      console.log('🔄 Re-indexing knowledge base...');
+      
+      exec('npm run index-content', (err, stdout, stderr) => {
+        if (err) {
+          console.error('❌ Indexing failed:', stderr);
+        } else {
+          console.log('✅ Indexing complete.');
+          // Optional: You could trigger a custom full-reload here if HMR doesn't pick up the JSON change
+          // server.ws.send({ type: 'full-reload' }); 
+        }
+      });
+    }
+  }
+});
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    contentWatcher()
+  ],
+  resolve: {
+    alias: [
+      { find: '@', replacement: path.resolve(__dirname) }
+    ],
+  },
   define: {
-    'process.env': {
-      API_KEY: JSON.stringify(process.env.API_KEY)
-    }
+    // Inject API_KEY specifically to avoid overwriting the entire process.env object
+    'process.env.API_KEY': JSON.stringify(process.env.API_KEY)
   }
 });

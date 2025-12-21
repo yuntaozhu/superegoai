@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,15 +9,17 @@
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
               brand: {
                 dark: '#0f172a',
+                light: '#f8fafc',
                 primary: '#3b82f6',
                 accent: '#8b5cf6',
-                light: '#f8fafc',
-                surface: '#1e293b'
+                surface: '#1e293b',
+                surfaceLight: '#ffffff'
               }
             },
             fontFamily: {
@@ -25,51 +28,33 @@
             typography: (theme) => ({
               DEFAULT: {
                 css: {
-                  color: theme('colors.gray.300'),
+                  color: theme('colors.gray.600'), // Default to light mode text
                   maxWidth: 'none',
                   a: {
-                    color: theme('colors.blue.400'),
+                    color: theme('colors.blue.600'),
                     textDecoration: 'none',
                     '&:hover': {
-                      color: theme('colors.blue.300'),
+                      color: theme('colors.blue.500'),
                       textDecoration: 'underline',
                     },
                   },
-                  h1: { color: theme('colors.white') },
-                  h2: { color: theme('colors.white') },
-                  h3: { color: theme('colors.white') },
-                  h4: { color: theme('colors.white') },
-                  'h5, h6': { color: theme('colors.white') },
-                  strong: { color: theme('colors.white') },
+                  'h1, h2, h3, h4': { color: theme('colors.slate.900') },
                   code: { 
-                    color: theme('colors.pink.400'),
-                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    color: theme('colors.pink.500'),
+                    backgroundColor: 'rgba(0,0,0,0.05)',
                     padding: '0.2em 0.4em',
                     borderRadius: '0.25rem',
                     fontWeight: '400',
                   },
-                  'code::before': { content: '""' },
-                  'code::after': { content: '""' },
-                  blockquote: { 
-                    color: theme('colors.gray.400'), 
-                    borderLeftColor: theme('colors.blue.500'),
-                    fontStyle: 'italic',
-                  },
-                  ul: {
-                    li: {
-                      '&::marker': {
-                        color: theme('colors.blue.500'),
-                      },
-                    },
-                  },
-                  ol: {
-                    li: {
-                      '&::marker': {
-                        color: theme('colors.blue.500'),
-                      },
-                    },
-                  },
-                  hr: { borderColor: theme('colors.white'), opacity: '0.1' },
+                  // Dark mode overrides
+                  '.dark &': {
+                    color: theme('colors.gray.300'),
+                    'h1, h2, h3, h4': { color: theme('colors.white') },
+                    code: {
+                      color: theme('colors.pink.400'),
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                    }
+                  }
                 },
               },
             }),
@@ -78,24 +63,27 @@
       }
     </script>
     <style>
+      /* Base styles handle transition */
       body {
-        background-color: #0f172a;
-        color: #f8fafc;
-        font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
+      
       /* Custom scrollbar for webkit */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #0f172a; 
+        background: transparent; 
       }
       ::-webkit-scrollbar-thumb {
-        background: #334155; 
+        background: #94a3b8; 
         border-radius: 4px;
       }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #334155; 
+      }
       ::-webkit-scrollbar-thumb:hover {
-        background: #475569; 
+        background: #64748b; 
       }
       
       /* Prism Overrides */
@@ -144,7 +132,8 @@
     "crypto": "https://esm.sh/crypto@^1.0.1",
     "fs": "https://esm.sh/fs@^0.0.1-security",
     "url": "https://esm.sh/url@^0.11.4",
-    "gray-matter": "https://esm.sh/gray-matter@^4.0.3"
+    "gray-matter": "https://esm.sh/gray-matter@^4.0.3",
+    "child_process": "https://esm.sh/child_process@^1.0.2"
   }
 }
 </script>

@@ -21,40 +21,43 @@ import ResearchPlanet from './pages/ResearchPlanet';
 
 import { LanguageProvider, HashRouter as Router, Routes, Route } from './context/LanguageContext';
 import { PromptRegistryProvider } from './context/PromptRegistryContext';
+import { ThemeProvider } from './context/ThemeContext';
 import P5Background from './components/P5Background';
 
 const App: React.FC = () => {
   return (
     <LanguageProvider>
-      <PromptRegistryProvider>
-        <Router>
-          <div className="flex flex-col min-h-screen bg-brand-dark text-white relative">
-            <P5Background />
-            <Navbar />
-            <main className="flex-grow z-10">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/planets" element={<PlanetsPage />} />
-                <Route path="/studio" element={<Studio />} />
-                <Route path="/consulting" element={<Consulting />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/prompt-guide" element={<PromptGuide />} />
-                
-                {/* Refactored Specific Planet Routes */}
-                <Route path="/course/art" element={<ArtPlanet />} />
-                <Route path="/course/sports" element={<SportsPlanet />} />
-                <Route path="/course/data" element={<SuperEgoPlanet />} />
-                <Route path="/course/quant" element={<QuantPlanet />} />
-                <Route path="/course/solopreneur" element={<CodePlanet />} />
-                <Route path="/course/digital-twin" element={<ResearchPlanet />} />
-              </Routes>
-            </main>
-            <ChatAssistant />
-            <Footer />
-          </div>
-        </Router>
-      </PromptRegistryProvider>
+      <ThemeProvider>
+        <PromptRegistryProvider>
+          <Router>
+            <div className="flex flex-col min-h-screen bg-brand-light dark:bg-brand-dark text-slate-900 dark:text-white transition-colors duration-300 relative">
+              <P5Background />
+              <Navbar />
+              <main className="flex-grow z-10">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/planets" element={<PlanetsPage />} />
+                  <Route path="/studio" element={<Studio />} />
+                  <Route path="/consulting" element={<Consulting />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/prompt-guide" element={<PromptGuide />} />
+                  
+                  {/* Refactored Specific Planet Routes */}
+                  <Route path="/course/art" element={<ArtPlanet />} />
+                  <Route path="/course/sports" element={<SportsPlanet />} />
+                  <Route path="/course/data" element={<SuperEgoPlanet />} />
+                  <Route path="/course/quant" element={<QuantPlanet />} />
+                  <Route path="/course/solopreneur" element={<CodePlanet />} />
+                  <Route path="/course/digital-twin" element={<ResearchPlanet />} />
+                </Routes>
+              </main>
+              <ChatAssistant />
+              <Footer />
+            </div>
+          </Router>
+        </PromptRegistryProvider>
+      </ThemeProvider>
     </LanguageProvider>
   );
 };

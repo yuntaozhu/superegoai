@@ -1,3 +1,4 @@
+
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
@@ -83,7 +84,7 @@ function extractAndValidateImages(content: string, filePath: string): string[] {
     if (fs.existsSync(physicalPath)) {
       images.push(`/img/${cleanName}`);
     } else {
-      // Just log for now, don't break the build
+      // Log error but allow build to proceed
       // logError(`Image not found: "${imgPathRaw}" referenced in ${filePath}`);
     }
   }
@@ -221,14 +222,18 @@ async function main() {
     }
   }
 
-  // Write Output
+  // Write Output using Atomic Write Pattern
+  // This prevents the frontend from reading a partial file during the write process
   const outputData = {
     generated_at: new Date().toISOString(),
     total_entries: entries.length,
     entries: entries
   };
 
-  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(outputData, null, 2));
+  const tempFile = OUTPUT_FILE + '.tmp';
+  fs.writeFileSync(tempFile, JSON.stringify(outputData, null, 2));
+  fs.renameSync(tempFile, OUTPUT_FILE);
+
   console.log(`✅ Indexing complete. Generated ${entries.length} entries.`);
   console.log(`📂 Output saved to: ${OUTPUT_FILE}`);
 }
