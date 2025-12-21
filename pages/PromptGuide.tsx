@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
-  Search, ChevronRight, Terminal, Zap, Hash, Home, Globe, Menu, Folder, List, ExternalLink, ArrowRight
+  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft
 } from 'lucide-react';
 import { ContentService, CategoryStructure, PageMeta } from '../lib/ContentService';
-import { MdxComponents } from '../components/MdxComponents';
+import MdxRenderer from '../components/MdxRenderer';
 
-// Using any to bypass framer-motion type mismatch in the current environment
+// Using any to bypass framer-motion type mismatch
 const m = motion as any;
 
 const PromptGuide: React.FC = () => {
@@ -26,7 +25,7 @@ const PromptGuide: React.FC = () => {
     const dataTree = ContentService.getTree(language);
     setTree(dataTree);
     
-    // Try to restore position or default to basics
+    // Restore or Default Position
     if (activePage) {
       const match = dataTree.flatMap(c => c.pages).find(p => p.id === activePage.id);
       if (match) setActivePage(match);
@@ -36,15 +35,16 @@ const PromptGuide: React.FC = () => {
     }
   }, [language]);
 
-  // Load page content
+  // Load content
   useEffect(() => {
     if (activePage) {
       setIsLoading(true);
+      // Reset scroll
       if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
       
       ContentService.getPage(activePage.path, language).then(res => {
         setDoc(res);
-        setTimeout(() => setIsLoading(false), 250);
+        setTimeout(() => setIsLoading(false), 250); // slight delay for smooth transition
       });
     }
   }, [activePage, language]);
@@ -61,75 +61,11 @@ const PromptGuide: React.FC = () => {
     })).filter(cat => cat.pages.length > 0);
   }, [tree, searchQuery]);
 
-  const activeCategoryTitle = useMemo(() => {
-    if (!activePage) return '';
-    return tree.find(c => c.id === activePage.category)?.title || activePage.category;
-  }, [tree, activePage]);
-
-  // Enhanced regex-based renderer for SuperEgo components
-  const renderMdx = (content: string) => {
-    const parts = content.split(/(<PromptAnatomy[\s\S]*?\/>|<Callout[\s\S]*?<\/Callout>|<Cards[\s\S]*?<\/Cards>|<Steps[\s\S]*?<\/Steps>|```[\s\S]*?```|#{1,3}\s.*)/g);
-
-    return parts.map((part, i) => {
-      if (!part || !part.trim()) return null;
-
-      if (part.startsWith('<PromptAnatomy')) {
-        const instruction = part.match(/instruction="(.*?)"/)?.[1] || '';
-        const context = part.match(/context="(.*?)"/)?.[1] || '';
-        const data = part.match(/data="(.*?)"/)?.[1] || '';
-        const indicator = part.match(/indicator="(.*?)"/)?.[1] || '';
-        return (
-          <MdxComponents.PromptAnatomy 
-            key={i} 
-            instruction={instruction} 
-            context={context} 
-            data={data} 
-            indicator={indicator} 
-          />
-        );
-      }
-
-      if (part.startsWith('<Callout')) {
-        const type = part.match(/type="(.*?)"/)?.[1] || 'info';
-        const children = part.replace(/<Callout.*?>|<\/Callout>/g, '').trim();
-        return <MdxComponents.Callout key={i} type={type as any}>{children}</MdxComponents.Callout>;
-      }
-      
-      if (part.startsWith('<Cards')) {
-        const cardMatches = part.matchAll(/<Card title="(.*?)" href="(.*?)">(.*?)<\/Card>/g);
-        const cards = Array.from(cardMatches).map((m_match, ci) => (
-          <MdxComponents.Card key={ci} title={m_match[1]} href={m_match[2]}>{m_match[3]}</MdxComponents.Card>
-        ));
-        return <MdxComponents.Cards key={i}>{cards}</MdxComponents.Cards>;
-      }
-
-      if (part.startsWith('<Steps')) {
-        const children = part.replace(/<Steps>|<\/Steps>/g, '').trim();
-        const steps = children.split(/\n\s*\d+\.\s+/).filter(Boolean).map((s, si) => (
-          <div key={si} className="mb-4">
-            <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
-               <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-[10px] flex items-center justify-center border border-blue-500/20">{si + 1}</span>
-               {language === 'zh' ? '步骤' : 'Step'}
-            </h4>
-            <MdxComponents.p>{s.trim()}</MdxComponents.p>
-          </div>
-        ));
-        return <MdxComponents.Steps key={i}>{steps}</MdxComponents.Steps>;
-      }
-      
-      if (part.startsWith('```')) {
-        const lang = part.match(/```(\w+)/)?.[1] || 'text';
-        const code = part.replace(/```\w+\n|```/g, '').trim();
-        return <MdxComponents.code key={i} className={`language-${lang}`}>{code}</MdxComponents.code>;
-      }
-
-      if (part.startsWith('# ')) return <MdxComponents.h1 key={i}>{part.replace('# ', '')}</MdxComponents.h1>;
-      if (part.startsWith('## ')) return <MdxComponents.h2 key={i}><Hash className="w-5 h-5 opacity-20" /> {part.replace('## ', '')}</MdxComponents.h2>;
-      if (part.startsWith('### ')) return <MdxComponents.h3 key={i}>{part.replace('### ', '')}</MdxComponents.h3>;
-      
-      return <MdxComponents.p key={i} dangerouslySetInnerHTML={{ __html: part.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>') }} />;
-    });
-  };
+  // Determine Prev/Next Links
+  const flattenPages = useMemo(() => tree.flatMap(cat => cat.pages), [tree]);
+  const activeIndex = flattenPages.findIndex(p => p.path === activePage?.path);
+  const prevPage = activeIndex > 0 ? flattenPages[activeIndex - 1] : null;
+  const nextPage = activeIndex >= 0 && activeIndex < flattenPages.length - 1 ? flattenPages[activeIndex + 1] : null;
 
   return (
     <div className="min-h-screen bg-[#020308] pt-16 flex overflow-hidden">
@@ -139,7 +75,7 @@ const PromptGuide: React.FC = () => {
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
-            className="w-72 border-r border-white/5 bg-[#05060f]/90 backdrop-blur-3xl flex flex-col h-[calc(100vh-64px)] z-20"
+            className="w-72 border-r border-white/5 bg-[#05060f]/90 backdrop-blur-3xl flex flex-col h-[calc(100vh-64px)] z-20 absolute md:static"
           >
             <div className="p-6 border-b border-white/5">
               <div className="flex items-center gap-2 mb-6">
@@ -162,7 +98,7 @@ const PromptGuide: React.FC = () => {
               </div>
             </div>
 
-            <nav className="flex-grow overflow-y-auto custom-scrollbar p-4">
+            <nav className="flex-grow overflow-y-auto custom-scrollbar p-4 pb-20">
               {filteredTree.map(category => (
                 <div key={category.id} className="mb-6">
                   <h3 className="text-[9px] font-bold text-gray-600 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
@@ -173,7 +109,7 @@ const PromptGuide: React.FC = () => {
                     {category.pages.map(page => (
                       <button
                         key={page.id}
-                        onClick={() => setActivePage(page)}
+                        onClick={() => { setActivePage(page); if(window.innerWidth < 768) setIsSidebarOpen(false); }}
                         className={`w-full text-left px-3 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between group ${
                           activePage?.path === page.path 
                             ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20' 
@@ -199,16 +135,16 @@ const PromptGuide: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <main className="flex-grow flex flex-col relative min-w-0 bg-black/40">
+      <main className="flex-grow flex flex-col relative min-w-0 bg-black/40 h-[calc(100vh-64px)]">
         <div className="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#020308]/60 backdrop-blur-md sticky top-0 z-10">
            <div className="flex items-center gap-4">
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors">
               <List className="w-4 h-4" />
             </button>
-            <div className="flex items-center gap-2 text-[10px] font-mono text-gray-700 uppercase tracking-widest">
-              <span className="hidden sm:inline">{activePage?.category}</span>
+            <div className="flex items-center gap-2 text-[10px] font-mono text-gray-700 uppercase tracking-widest overflow-hidden whitespace-nowrap">
+              <span className="hidden sm:inline">{tree.find(c => c.id === activePage?.category)?.title}</span>
               <ChevronRight className="w-2.5 h-2.5 hidden sm:inline" />
-              <span className="text-blue-500 font-black">{doc?.title}</span>
+              <span className="text-blue-500 font-black truncate">{doc?.title}</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -216,13 +152,13 @@ const PromptGuide: React.FC = () => {
                 <Globe className="w-3 h-3" /> {language.toUpperCase()}
              </div>
              <Link to="/studio" className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
-               <Zap className="w-3 h-3 fill-current" /> {language === 'zh' ? '实验室' : 'Studio'}
+               <Zap className="w-3 h-3 fill-current" /> <span className="hidden sm:inline">{language === 'zh' ? '实验室' : 'Studio'}</span>
              </Link>
           </div>
         </div>
 
         <div ref={scrollContainerRef} className="flex-grow overflow-y-auto custom-scrollbar bg-black/10">
-          <div className="max-w-4xl mx-auto py-16 px-6 md:px-12">
+          <div className="max-w-4xl mx-auto py-16 px-6 md:px-12 min-h-full">
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <m.div key="loader" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-40 gap-4">
@@ -236,24 +172,51 @@ const PromptGuide: React.FC = () => {
                       <Home className="w-3 h-3" /> Guide
                     </Link>
                     <ChevronRight className="w-2.5 h-2.5 opacity-20" />
-                    <span className="opacity-40">{activeCategoryTitle}</span>
+                    <span className="opacity-40">{tree.find(c => c.id === activePage?.category)?.title}</span>
                     <ChevronRight className="w-2.5 h-2.5 opacity-20" />
                     <span className="text-blue-500 font-black">{doc?.title}</span>
                   </nav>
 
-                  {doc && renderMdx(doc.content)}
+                  {/* Render Content using the new MdxRenderer */}
+                  {doc && <MdxRenderer content={doc.content} />}
                   
-                  <div className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between gap-8 opacity-60">
-                     <div className="space-y-2">
-                        <span className="text-[9px] text-gray-700 uppercase font-black tracking-widest">Metadata Author</span>
-                        <div className="text-xs text-white">SuperEgo Architecture Node // dair-ai</div>
+                  {/* Prev/Next Navigation */}
+                  <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-between border-t border-white/5 pt-8">
+                    {prevPage ? (
+                      <button 
+                        onClick={() => { setActivePage(prevPage); if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0; }}
+                        className="group flex flex-col items-start gap-2 p-4 rounded-xl border border-white/5 hover:border-blue-500/30 bg-white/5 hover:bg-white/10 transition-all flex-1 text-left"
+                      >
+                        <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest group-hover:text-blue-400 transition-colors flex items-center gap-1">
+                          <ArrowLeft className="w-3 h-3" /> Previous
+                        </span>
+                        <span className="text-sm font-bold text-white">{prevPage.title}</span>
+                      </button>
+                    ) : <div className="flex-1" />}
+                    
+                    {nextPage ? (
+                      <button 
+                        onClick={() => { setActivePage(nextPage); if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0; }}
+                        className="group flex flex-col items-end gap-2 p-4 rounded-xl border border-white/5 hover:border-blue-500/30 bg-white/5 hover:bg-white/10 transition-all flex-1 text-right"
+                      >
+                        <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest group-hover:text-blue-400 transition-colors flex items-center gap-1">
+                          Next <ArrowRight className="w-3 h-3" />
+                        </span>
+                        <span className="text-sm font-bold text-white">{nextPage.title}</span>
+                      </button>
+                    ) : <div className="flex-1" />}
+                  </div>
+
+                  <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-8 opacity-40 hover:opacity-100 transition-opacity">
+                     <div className="space-y-1">
+                        <span className="text-[9px] text-gray-700 uppercase font-black tracking-widest">Metadata Source</span>
+                        <div className="text-[10px] text-white">prompt-engineering/pages/{activePage?.path}</div>
                      </div>
-                     <Link to="/studio" className="flex items-center gap-3 group text-right">
+                     <Link to="/studio" className="flex items-center gap-2 group text-right">
                         <div className="flex flex-col items-end">
-                           <span className="text-[9px] text-gray-700 uppercase font-bold tracking-widest">Next Phase</span>
-                           <span className="text-sm text-gray-400 group-hover:text-blue-400 transition-colors">Start Prompt Studio</span>
+                           <span className="text-[9px] text-gray-700 uppercase font-bold tracking-widest">Execute in Lab</span>
                         </div>
-                        <ArrowRight className="w-5 h-5 text-blue-500 group-hover:translate-x-1 transition-transform" />
+                        <Zap className="w-4 h-4 text-blue-500 group-hover:fill-current transition-colors" />
                      </Link>
                   </div>
                 </m.article>
