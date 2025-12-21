@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
-  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft, Languages, AlertCircle, FileText, Database
+  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft, Languages, AlertCircle, FileText, Database, X
 } from 'lucide-react';
 import { ContentService, CategoryStructure, PageMeta, PageContent, SyncStatus } from '../lib/ContentService';
 import MdxRenderer from '../components/MdxRenderer';
@@ -63,6 +63,7 @@ const PromptGuide: React.FC = () => {
       ...cat,
       pages: cat.pages.filter(p => 
         p.title.toLowerCase().includes(q) || 
+        (p.description && p.description.toLowerCase().includes(q)) ||
         cat.title.toLowerCase().includes(q)
       )
     })).filter(cat => cat.pages.length > 0);
@@ -148,10 +149,18 @@ const PromptGuide: React.FC = () => {
                 <input 
                   type="text" 
                   placeholder={language === 'zh' ? "快速定位模块..." : "Quick search..."}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-[11px] text-white focus:outline-none focus:border-blue-500 transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-8 py-2 text-[11px] text-white focus:outline-none focus:border-blue-500 transition-all"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors p-1"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -173,8 +182,13 @@ const PromptGuide: React.FC = () => {
                             : 'text-gray-500 hover:text-white hover:bg-white/5 border border-transparent'
                         }`}
                       >
-                        <span className="truncate">{page.title}</span>
-                        <ChevronRight className={`w-3 h-3 transition-transform ${activePage?.path === page.path ? 'opacity-100' : 'opacity-0 group-hover:opacity-40 group-hover:translate-x-0.5'}`} />
+                        <div className="overflow-hidden">
+                          <div className="truncate font-medium">{page.title}</div>
+                          {searchQuery && page.description && (
+                            <div className="truncate text-[9px] opacity-60 mt-0.5 font-light">{page.description}</div>
+                          )}
+                        </div>
+                        <ChevronRight className={`w-3 h-3 flex-shrink-0 transition-transform ${activePage?.path === page.path ? 'opacity-100' : 'opacity-0 group-hover:opacity-40 group-hover:translate-x-0.5'}`} />
                       </button>
                     ))}
                   </div>

@@ -23,16 +23,21 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 // Clear log file
 fs.writeFileSync(LOG_FILE, `Indexing Log - ${new Date().toISOString()}\n\n`);
 
+interface LocaleEntry {
+  title: string;
+  description?: string;
+  content: string;
+  headers: string[];
+}
+
 interface IndexEntry {
   id: string;
   path: string;
-  title: string;
-  description?: string;
   category: string;
-  language: 'zh' | 'en';
-  source_type: 'zh_native' | 'en_fallback' | 'en_native';
-  content: string;
-  headers: string[];
+  locales: {
+    zh?: LocaleEntry;
+    en?: LocaleEntry;
+  };
   images: string[];
   last_updated_hash: string;
   meta_order?: number;
@@ -147,62 +152,52 @@ async function processDirectory(dirPath: string, categoryId: string) {
     const enPath = path.join(dirPath, `${id}.en.mdx`);
     const virtualPath = `${categoryId}/${id}`;
 
-    let finalContent = '';
-    let finalLang: 'zh' | 'en' = 'zh';
-    let sourceType: 'zh_native' | 'en_fallback' | 'en_native' = 'zh_native';
-    let finalFrontmatter: any = {};
-    let usedFilePath = '';
+    let zhEntry: LocaleEntry | undefined;
+    let enEntry: LocaleEntry | undefined;
+    let images: string[] = [];
 
-    // 1. Try Loading Chinese
+    // 1. Load Chinese
     const zhData = parseMDX(zhPath);
-    
-    // Validation Logic for ZH content
-    let isZhValid = false;
     if (zhData) {
         const cleanContent = zhData.content.trim();
-        // Simple heuristic for "empty" or placeholder files
+        // Validation: Simple heuristic for "empty" files
         if (cleanContent.length > 50 && !cleanContent.includes("同步中") && !cleanContent.includes("Content pending")) {
-            isZhValid = true;
+            zhEntry = {
+                title: zhData.frontmatter.title || titleFromMeta,
+                description: zhData.frontmatter.description,
+                content: zhData.content,
+                headers: extractHeaders(zhData.content)
+            };
+            images.push(...extractAndValidateImages(zhData.content, zhPath));
         }
     }
 
-    if (isZhValid && zhData) {
-        finalContent = zhData.content;
-        finalFrontmatter = zhData.frontmatter;
-        finalLang = 'zh';
-        sourceType = 'zh_native';
-        usedFilePath = zhPath;
-    } else {
-        // 2. Fallback to English
-        const enData = parseMDX(enPath);
-        if (enData) {
-            finalContent = enData.content;
-            finalFrontmatter = enData.frontmatter;
-            finalLang = 'en'; 
-            sourceType = 'en_fallback';
-            usedFilePath = enPath;
-        } else {
-            // Orphan Logic
-            continue; 
-        }
+    // 2. Load English
+    const enData = parseMDX(enPath);
+    if (enData) {
+        enEntry = {
+            title: enData.frontmatter.title || titleFromMeta, // Heuristic: Use meta title if frontmatter missing
+            description: enData.frontmatter.description,
+            content: enData.content,
+            headers: extractHeaders(enData.content)
+        };
+        images.push(...extractAndValidateImages(enData.content, enPath));
     }
 
-    // 3. Extract Metadata
-    const headers = extractHeaders(finalContent);
-    const images = extractAndValidateImages(finalContent, usedFilePath);
-    const hash = calculateHash(finalContent);
+    // Skip if both are missing
+    if (!zhEntry && !enEntry) continue;
+
+    const hash = calculateHash((zhEntry?.content || '') + (enEntry?.content || ''));
 
     entries.push({
         id: id,
         path: virtualPath,
-        title: finalFrontmatter.title || titleFromMeta, // Frontmatter overrides meta
-        description: finalFrontmatter.description || '',
         category: categoryId,
-        language: finalLang,
-        source_type: sourceType,
-        content: finalContent,
-        headers: headers,
-        images: images,
+        locales: {
+            zh: zhEntry,
+            en: enEntry
+        },
+        images: [...new Set(images)], // Dedupe
         last_updated_hash: hash,
         meta_order: i
     });

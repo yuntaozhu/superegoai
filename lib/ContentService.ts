@@ -17,6 +17,7 @@ export interface PageMeta {
   title: string;
   category: string;
   path: string;
+  description?: string;
 }
 
 export interface CategoryStructure {
@@ -57,14 +58,18 @@ export const ContentService = {
     const entries = (knowledgeBase as any)?.entries || [];
 
     entries.forEach((entry: any) => {
+      // Resolve title based on requested language, with fallback
+      const localeData = entry.locales[lang] || entry.locales.en || entry.locales.zh;
+      
       if (!categories[entry.category]) {
         categories[entry.category] = [];
       }
       categories[entry.category].push({
         id: entry.id,
-        title: entry.title,
+        title: localeData?.title || entry.id,
         category: entry.category,
-        path: entry.path
+        path: entry.path,
+        description: localeData?.description || ''
       });
     });
 
@@ -98,18 +103,52 @@ export const ContentService = {
         };
     }
 
+    // Determine available languages
+    const availableLanguages: ('en' | 'zh')[] = [];
+    if (entry.locales.zh) availableLanguages.push('zh');
+    if (entry.locales.en) availableLanguages.push('en');
+
+    // Select content based on language preference
+    let selectedData = entry.locales[lang];
+    let isFallback = false;
+    let actualLang = lang;
+
+    // Fallback logic
+    if (!selectedData) {
+        if (lang === 'zh' && entry.locales.en) {
+            selectedData = entry.locales.en;
+            actualLang = 'en';
+            isFallback = true;
+        } else if (lang === 'en' && entry.locales.zh) {
+            selectedData = entry.locales.zh;
+            actualLang = 'zh';
+            isFallback = true;
+        }
+    }
+
+    if (!selectedData) {
+         return {
+            content: `# Content Unavailable\n\nThis module is indexed but has no content.`,
+            frontmatter: { title: 'Empty' },
+            title: entry.id,
+            lang: lang,
+            filePath: 'N/A',
+            availableLanguages: []
+        };
+    }
+
     return {
-        content: entry.content,
+        content: selectedData.content,
         frontmatter: { 
-            title: entry.title, 
-            description: entry.description 
+            title: selectedData.title, 
+            description: selectedData.description 
         },
-        title: entry.title,
-        lang: entry.language as 'en' | 'zh',
-        filePath: `prompt-engineering/pages/${cleanPath}.${entry.language}.mdx`,
-        isFallback: entry.source_type === 'en_fallback',
-        availableLanguages: ['zh', 'en'], // Simplified
-        headers: entry.headers
+        title: selectedData.title,
+        lang: actualLang,
+        filePath: `prompt-engineering/pages/${cleanPath}.${actualLang}.mdx`,
+        isFallback: isFallback,
+        availableLanguages: availableLanguages,
+        headers: selectedData.headers
     };
   },
 
@@ -117,13 +156,18 @@ export const ContentService = {
   getSyncReport: (): SyncStatus[] => {
     const entries = (knowledgeBase as any)?.entries || [];
     return entries.map((entry: any) => {
+        const hasZh = !!entry.locales.zh;
+        const hasEn = !!entry.locales.en;
+        
         let status: SyncStatus['status'] = 'synced';
-        if (entry.source_type === 'en_fallback') status = 'missing_zh';
+        if (hasZh && !hasEn) status = 'missing_en';
+        else if (!hasZh && hasEn) status = 'missing_zh';
+        else if (!hasZh && !hasEn) status = 'orphan';
         
         return {
             id: entry.path,
-            enTitle: entry.source_type === 'en_fallback' ? entry.title : '---',
-            zhTitle: entry.language === 'zh' ? entry.title : '---',
+            enTitle: hasEn ? entry.locales.en.title : '---',
+            zhTitle: hasZh ? entry.locales.zh.title : '---',
             status: status
         };
     });
