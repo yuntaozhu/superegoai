@@ -245,6 +245,7 @@ const META_INDEX: Record<string, Record<string, Record<string, string>>> = {
 // 2. CONTENT DATABASE (Simulating File System)
 // We populate this with sample content. In a real Nextra app, this would be MDX files.
 const CONTENT_DB: Record<string, Record<string, string>> = {
+  // --- TECHNIQUES ---
   "techniques/cot": {
     en: `# Chain-of-Thought Prompting\n\nChain-of-thought (CoT) prompting enables complex reasoning capabilities through intermediate reasoning steps.\n\n![CoT Example](/img/cot.png "Chain of Thought Visualization")`,
     zh: `# 链式思考 (CoT) 提示\n\n链式思考 (Chain-of-Thought, CoT) 提示通过展示中间推理步骤，赋予模型处理复杂逻辑的能力。\n\n> 核心思想：让模型“把想法写出来”。`
@@ -261,10 +262,36 @@ const CONTENT_DB: Record<string, Record<string, string>> = {
     en: `# Basics of Prompting\n\nPrompt engineering is the art of communicating with AI.`,
     zh: `# 提示词基础\n\n提示工程是一门与 AI 交流的艺术。`
   },
-  // Example of missing ZH content to test fallback/audit
+  
+  // --- AGENTS (Simulating EN-only content to test fallback) ---
   "agents/introduction": {
     en: `# Introduction to Agents\n\nAgents are systems that use LLMs as reasoning engines to determine which actions to take and in what order.`
-    // zh intentionally missing
+  },
+  "agents/components": {
+    en: `# Agent Components\n\nAgents consist of three main components: Profile, Memory, and Planning.`
+  },
+  "agents/ai-workflows-vs-ai-agents": {
+    en: `# AI Workflows vs AI Agents\n\nWorkflows are deterministic chains. Agents are probabilistic reasoning loops.`
+  },
+  "agents/context-engineering": {
+    en: `# Context Engineering\n\nThe art of structuring context for optimal agent performance.`
+  },
+  "agents/context-engineering-deep-dive": {
+    en: `# Context Engineering Deep Dive\n\nAdvanced techniques for managing token windows and memory retrieval.`
+  },
+  "agents/deep-agents": {
+    en: `# Deep Agents\n\nRecursive agentic systems capable of self-correction.`
+  },
+
+  // --- GUIDES (Simulating EN-only content) ---
+  "guides/optimizing-prompts": {
+    en: `# Optimizing Prompts\n\nStrategies for iteratively improving prompt performance.`
+  },
+  "guides/deep-research": {
+    en: `# OpenAI Deep Research\n\nAnalyzing the capabilities of deep research models.`
+  },
+  "guides/reasoning-llms": {
+    en: `# Reasoning LLMs\n\nUnderstanding how Chain-of-Thought models process information.`
   }
 };
 
