@@ -13,8 +13,13 @@ const contentWatcher = () => ({
   name: 'content-watcher',
   // Hook into HMR update
   handleHotUpdate({ file, server }: { file: string; server: any }) {
-    // Check if the modified file is inside the prompt-engineering/pages directory
-    if (file.includes('prompt-engineering/pages') && (file.endsWith('.mdx') || file.endsWith('.json'))) {
+    // Check if the modified file is inside the prompt-engineering/pages or blog/posts directory
+    const isContentFile = (
+      file.includes('prompt-engineering/pages') || 
+      file.includes('blog/posts')
+    ) && (file.endsWith('.mdx') || file.endsWith('.json'));
+
+    if (isContentFile) {
       console.log(`\n📝 Content change detected: ${path.basename(file)}`);
       console.log('🔄 Re-indexing knowledge base...');
       

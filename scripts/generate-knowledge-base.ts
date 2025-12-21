@@ -10,7 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..');
 const CONTENT_BASE_DIR = path.join(ROOT_DIR, 'prompt-engineering', 'pages');
-const IMG_BASE_DIR = path.join(ROOT_DIR, 'prompt-engineering', 'img');
+const BLOG_BASE_DIR = path.join(ROOT_DIR, 'blog', 'posts');
+const IMG_BASE_DIR = path.join(ROOT_DIR, 'prompt-engineering', 'img'); // Shared image dir for now
 const OUTPUT_DIR = path.join(ROOT_DIR, 'generated');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'knowledge_base.json');
 const LOG_FILE = path.join(ROOT_DIR, 'scripts', 'indexing_errors.log');
@@ -28,6 +29,7 @@ interface LocaleEntry {
   description?: string;
   content: string;
   headers: string[];
+  frontmatter: Record<string, any>;
 }
 
 interface IndexEntry {
@@ -84,6 +86,8 @@ function extractAndValidateImages(content: string, filePath: string): string[] {
     const cleanName = path.basename(imgPathRaw);
     
     // Check if file exists in prompt-engineering/img
+    // Note: For blog, we might want a separate logic, but sticking to shared folder for simplicity 
+    // or absolute URLs.
     const physicalPath = path.join(IMG_BASE_DIR, cleanName);
     
     if (fs.existsSync(physicalPath)) {
@@ -171,7 +175,8 @@ async function processDirectory(dirPath: string, categoryId: string) {
                 title: zhData.frontmatter.title || titleFromMeta,
                 description: zhData.frontmatter.description,
                 content: zhData.content,
-                headers: extractHeaders(zhData.content)
+                headers: extractHeaders(zhData.content),
+                frontmatter: zhData.frontmatter
             };
             images.push(...extractAndValidateImages(zhData.content, zhPath));
         }
@@ -187,7 +192,8 @@ async function processDirectory(dirPath: string, categoryId: string) {
                 title: enData.frontmatter.title || titleFromMeta, 
                 description: enData.frontmatter.description,
                 content: enData.content,
-                headers: extractHeaders(enData.content)
+                headers: extractHeaders(enData.content),
+                frontmatter: enData.frontmatter
             };
             images.push(...extractAndValidateImages(enData.content, enPath));
         }
@@ -216,14 +222,22 @@ async function processDirectory(dirPath: string, categoryId: string) {
 async function main() {
   console.log('🚀 Starting Knowledge Base Indexing...');
   
-  // Define categories to scan
-  const categories = ['introduction', 'techniques', 'agents', 'guides', 'applications', 'prompts', 'models', 'risks', 'research'];
+  // 1. Define categories to scan from Prompt Guide
+  const promptCategories = ['introduction', 'techniques', 'agents', 'guides', 'applications', 'prompts', 'models', 'risks', 'research'];
 
-  for (const cat of categories) {
+  for (const cat of promptCategories) {
     const catDir = path.join(CONTENT_BASE_DIR, cat);
     if (fs.existsSync(catDir)) {
         await processDirectory(catDir, cat);
     }
+  }
+
+  // 2. Scan Blog Posts
+  if (fs.existsSync(BLOG_BASE_DIR)) {
+    console.log('📝 Indexing Blog Posts...');
+    await processDirectory(BLOG_BASE_DIR, 'blog');
+  } else {
+    console.warn('⚠️ Blog directory not found:', BLOG_BASE_DIR);
   }
 
   // Write Output using Atomic Write Pattern

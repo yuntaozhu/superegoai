@@ -1,30 +1,56 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { getContent } from '../constants';
-import { useLanguage, BlogPost, Link } from '../context/LanguageContext';
-import { Home, ChevronRight, Search, ArrowLeft } from 'lucide-react';
+import { useLanguage, Link } from '../context/LanguageContext';
+import { Home, ChevronRight, Search, ArrowLeft, Loader2, FileText, Calendar, Tag } from 'lucide-react';
+import { ContentService, PageMeta, PageContent } from '../lib/ContentService';
+import MdxRenderer from '../components/MdxRenderer';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Using any to bypass framer-motion type mismatch
+const m = motion as any;
 
 const POSTS_INCREMENT = 10;
 
 const BlogPage: React.FC = () => {
   const { language, t } = useLanguage();
-  const content = getContent(language);
+  const [posts, setPosts] = useState<PageMeta[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const [selectedPostMeta, setSelectedPostMeta] = useState<PageMeta | null>(null);
+  const [postContent, setPostContent] = useState<PageContent | null>(null);
+  const [isLoadingContent, setIsLoadingContent] = useState(false);
   const [visibleCount, setVisibleCount] = useState(POSTS_INCREMENT);
   const [scrollProgress, setScrollProgress] = useState(0);
   const observerTarget = useRef<HTMLDivElement>(null);
 
+  // 1. Fetch Blog Posts List on Mount/Lang Change
+  useEffect(() => {
+    const fetchedPosts = ContentService.getBlogPosts(language);
+    setPosts(fetchedPosts);
+  }, [language]);
+
+  // 2. Fetch Post Content when selected
+  useEffect(() => {
+    if (selectedPostMeta) {
+      setIsLoadingContent(true);
+      ContentService.getPage(selectedPostMeta.path, language).then(content => {
+        setPostContent(content);
+        setIsLoadingContent(false);
+        window.scrollTo(0, 0);
+      });
+    } else {
+      setPostContent(null);
+    }
+  }, [selectedPostMeta, language]);
+
   // Extract all unique tags
-  const allTags = Array.from(new Set(content.blogPosts.flatMap(post => post.tags))).sort();
+  const allTags = Array.from(new Set(posts.flatMap(post => post.tags || []))).sort();
 
   // Filter posts based on search AND selected tag
-  const filteredPosts = content.blogPosts.filter((post) => {
-    const searchContent = post.title + post.excerpt + post.tags.join(' ');
-    const matchesSearch = searchContent.toLowerCase().includes(searchValue.toLowerCase());
-    const matchesTag = selectedTag ? post.tags.includes(selectedTag) : true;
+  const filteredPosts = posts.filter((post) => {
+    const searchContent = (post.title + (post.description || '') + (post.tags || []).join(' ')).toLowerCase();
+    const matchesSearch = searchContent.includes(searchValue.toLowerCase());
+    const matchesTag = selectedTag ? post.tags?.includes(selectedTag) : true;
     return matchesSearch && matchesTag;
   });
 
@@ -35,8 +61,8 @@ const BlogPage: React.FC = () => {
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(POSTS_INCREMENT);
-    if (!selectedPost) window.scrollTo(0, 0);
-  }, [searchValue, selectedTag, selectedPost]);
+    if (!selectedPostMeta) window.scrollTo(0, 0);
+  }, [searchValue, selectedTag, selectedPostMeta]);
 
   // Infinite Scroll Observer
   useEffect(() => {
@@ -63,7 +89,7 @@ const BlogPage: React.FC = () => {
   // Reading Progress Logic
   useEffect(() => {
     const handleScroll = () => {
-      if (!selectedPost) return;
+      if (!selectedPostMeta) return;
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = (window.scrollY / totalHeight) * 100;
       setScrollProgress(progress);
@@ -71,57 +97,10 @@ const BlogPage: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [selectedPost]);
-
-  // SEO: Dynamic Meta Tags
-  useEffect(() => {
-    const baseTitle = language === 'en' ? 'Blog | AI First Course' : '博客 | AI First Course';
-    const baseDesc = language === 'en' 
-        ? 'Insights on AI, Architecture, and the SuperEgo. Technical deep dives into AI agents, architecture, and the future of coding.' 
-        : '关于 AI、架构与超我的深度洞察。关于 AI 智能体、架构与编程未来的技术深度探索。';
-
-    let title = baseTitle;
-    let description = baseDesc;
-
-    if (selectedPost) {
-        title = `${selectedPost.title} | AI First Course`;
-        description = selectedPost.excerpt;
-    }
-
-    document.title = title;
-    
-    const setMetaTag = (name: string, content: string) => {
-        let element = document.querySelector(`meta[name="${name}"]`);
-        if (!element) {
-            element = document.createElement('meta');
-            element.setAttribute('name', name);
-            document.head.appendChild(element);
-        }
-        element.setAttribute('content', content);
-    };
-
-    setMetaTag('description', description);
-  }, [selectedPost, language]);
-
-  // Social Sharing Logic
-  const handleShare = (platform: 'twitter' | 'wechat' | 'rednote') => {
-    if (!selectedPost) return;
-    const url = window.location.href;
-    const text = `${selectedPost.title} - AI First Course`;
-
-    if (platform === 'twitter') {
-      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
-    } else {
-      navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-        const msg = language === 'en' ? 'Link copied!' : '链接已复制！';
-        setToastMsg(msg);
-        setTimeout(() => setToastMsg(null), 3000);
-      });
-    }
-  };
+  }, [selectedPostMeta]);
 
   // Handle Detail View
-  if (selectedPost) {
+  if (selectedPostMeta) {
     return (
       <div className="min-h-screen bg-brand-dark pt-24 pb-20 px-4 sm:px-6 lg:px-8 relative">
         {/* Reading Progress Bar */}
@@ -132,15 +111,6 @@ const BlogPage: React.FC = () => {
            />
         </div>
 
-        {/* Toast Notification */}
-        {toastMsg && (
-          <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4">
-             <div className="bg-brand-surface/90 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-full shadow-2xl">
-               {toastMsg}
-             </div>
-          </div>
-        )}
-
         <article className="max-w-3xl mx-auto">
           {/* Breadcrumb Navigation */}
           <nav className="flex items-center gap-2 mb-8 text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-500 overflow-hidden whitespace-nowrap">
@@ -150,68 +120,72 @@ const BlogPage: React.FC = () => {
             </Link>
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <button 
-              onClick={() => { setSelectedPost(null); setScrollProgress(0); }}
+              onClick={() => { setSelectedPostMeta(null); setScrollProgress(0); }}
               className="hover:text-white transition-colors"
             >
               {language === 'en' ? 'Insights' : '洞察'}
             </button>
             <ChevronRight className="w-3 h-3 flex-shrink-0" />
             <span className="text-gray-400 truncate max-w-[150px] sm:max-w-xs">
-              {selectedPost.title}
+              {selectedPostMeta.title}
             </span>
           </nav>
 
           {/* Back Button */}
           <button 
-            onClick={() => { setSelectedPost(null); setScrollProgress(0); }}
+            onClick={() => { setSelectedPostMeta(null); setScrollProgress(0); }}
             className="group mb-12 flex items-center text-sm text-gray-400 hover:text-blue-400 transition-colors font-medium bg-white/5 px-4 py-2 rounded-full border border-white/5"
           >
             <ArrowLeft className="w-4 h-4 mr-2 transform group-hover:-translate-x-1 transition-transform" />
             {language === 'en' ? 'All Posts' : '所有文章'}
           </button>
 
-          {/* Header */}
-          <header className="mb-12 text-center">
-             <div className="mb-4 text-xs text-blue-500 font-mono tracking-widest uppercase">
-                {new Date(selectedPost.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+          {isLoadingContent ? (
+             <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+               <Loader2 className="w-8 h-8 animate-spin mb-4" />
+               <span className="text-xs font-mono uppercase tracking-widest">Loading Signal...</span>
              </div>
-             <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-[1.1] uppercase">
-               {selectedPost.title}
-             </h1>
-             <div className="flex justify-center gap-3 flex-wrap">
-                {selectedPost.tags.map(tag => (
-                  <span key={tag} className="text-[10px] font-bold px-3 py-1 rounded-full bg-white/5 text-gray-400 border border-white/10 uppercase tracking-widest">
-                    {tag}
-                  </span>
-                ))}
-             </div>
-          </header>
-          
-          {/* Main Content */}
-          <div 
-            className="prose prose-invert prose-lg max-w-none text-gray-300 leading-8"
-            dangerouslySetInnerHTML={{ __html: selectedPost.content }}
-          />
+          ) : postContent ? (
+            <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              {/* Header */}
+              <header className="mb-12 text-center">
+                 <div className="mb-4 text-xs text-blue-500 font-mono tracking-widest uppercase flex items-center justify-center gap-2">
+                    <Calendar className="w-3 h-3" />
+                    {selectedPostMeta.date ? new Date(selectedPostMeta.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Date'}
+                 </div>
+                 <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-[1.1] uppercase">
+                   {postContent.title}
+                 </h1>
+                 <div className="flex justify-center gap-3 flex-wrap">
+                    {selectedPostMeta.tags?.map(tag => (
+                      <span key={tag} className="text-[10px] font-bold px-3 py-1 rounded-full bg-white/5 text-gray-400 border border-white/10 uppercase tracking-widest flex items-center gap-1">
+                        <Tag className="w-2.5 h-2.5" /> {tag}
+                      </span>
+                    ))}
+                 </div>
+              </header>
+              
+              {/* Main Content Rendered via MDX */}
+              <div className="prose prose-invert prose-lg max-w-none">
+                 <MdxRenderer content={postContent.content} />
+              </div>
 
-          {/* Social Share & Author */}
-          <div className="mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-8">
-             <div className="flex items-center gap-4">
-               <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-xl">🧠</div>
-               <div>
-                  <div className="text-white font-bold">{selectedPost.author}</div>
-                  <div className="text-xs text-gray-500">SuperEgo Architect</div>
-               </div>
-             </div>
-             
-             <div className="flex items-center gap-4">
-                <button onClick={() => handleShare('twitter')} className="p-3 bg-white/5 rounded-full hover:bg-blue-400 hover:text-white transition-all">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                </button>
-                <button onClick={() => handleShare('wechat')} className="p-3 bg-white/5 rounded-full hover:bg-green-500 hover:text-white transition-all">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.5,13.5A2.5,2.5 0 0,0 11,11A2.5,2.5 0 0,0 8.5,8.5C7.12,8.5 6,9.62 6,11A2.5,2.5 0 0,0 8.5,13.5M16.5,13.5A2.5,2.5 0 0,0 19,11A2.5,2.5 0 0,0 16.5,8.5C15.12,8.5 14,9.62 14,11A2.5,2.5 0 0,0 16.5,13.5M12.5,2C6.98,2 2.5,6.03 2.5,11C2.5,13.68 3.93,16.09 6.24,17.72L5.5,22L9.56,20.06C10.47,20.36 11.45,20.53 12.47,20.53L12.5,20.53C18.02,20.53 22.5,16.5 22.5,11.53C22.5,6.56 18.02,2 12.5,2Z"></path></svg>
-                </button>
-             </div>
-          </div>
+              {/* Social Share & Author */}
+              <div className="mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-8">
+                 <div className="flex items-center gap-4">
+                   <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-xl text-white font-bold">
+                      {selectedPostMeta.author ? selectedPostMeta.author.charAt(0) : 'S'}
+                   </div>
+                   <div>
+                      <div className="text-white font-bold">{selectedPostMeta.author || 'SuperEgo Team'}</div>
+                      <div className="text-xs text-gray-500">SuperEgo Architect</div>
+                   </div>
+                 </div>
+              </div>
+            </m.div>
+          ) : (
+            <div className="text-center py-20 text-red-400">Failed to load content.</div>
+          )}
         </article>
       </div>
     );
@@ -254,9 +228,9 @@ const BlogPage: React.FC = () => {
               <article key={post.id} className="group relative">
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="md:w-1/4">
-                    <div className="text-xs font-mono text-gray-600 uppercase tracking-widest">{post.date}</div>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                       {post.tags.map(t => (
+                    <div className="text-xs font-mono text-gray-600 uppercase tracking-widest mb-2">{post.date}</div>
+                    <div className="flex flex-wrap gap-2">
+                       {post.tags?.map(t => (
                          <button 
                            key={t} 
                            onClick={() => setSelectedTag(t)}
@@ -269,15 +243,15 @@ const BlogPage: React.FC = () => {
                   </div>
                   <div className="md:w-3/4 space-y-6">
                     <h2 className="text-3xl md:text-4xl font-black text-white group-hover:text-blue-400 transition-colors uppercase tracking-tight">
-                      <button onClick={() => setSelectedPost(post)} className="text-left leading-tight">
+                      <button onClick={() => setSelectedPostMeta(post)} className="text-left leading-tight">
                         {post.title}
                       </button>
                     </h2>
                     <p className="text-gray-400 text-lg leading-relaxed font-light line-clamp-3">
-                      {post.excerpt}
+                      {post.description}
                     </p>
                     <button 
-                      onClick={() => setSelectedPost(post)}
+                      onClick={() => setSelectedPostMeta(post)}
                       className="inline-flex items-center gap-4 px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-black uppercase tracking-widest text-[10px] border border-white/5 transition-all group/btn"
                     >
                       {language === 'en' ? 'Read Signal' : '阅读信号'}

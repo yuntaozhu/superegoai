@@ -8,7 +8,9 @@
  * 2. Serve content to React components
  */
 
-// Import the generated JSON using a relative path to avoid alias resolution issues in some environments.
+// Import the generated JSON using a relative path to avoid alias resolution issues.
+// We strictly use relative path '../generated/knowledge_base.json' because alias '@/' might fail in some environments
+// if not perfectly configured or if the file is outside the 'src' root context.
 // @ts-ignore
 import knowledgeBase from '../generated/knowledge_base.json';
 
@@ -18,6 +20,9 @@ export interface PageMeta {
   category: string;
   path: string;
   description?: string;
+  date?: string;
+  tags?: string[];
+  author?: string;
 }
 
 export interface CategoryStructure {
@@ -35,7 +40,7 @@ export interface SyncStatus {
 
 export interface PageContent {
   content: string;
-  frontmatter: { title: string; [key: string]: any };
+  frontmatter: { title: string; date?: string; tags?: string[]; author?: string; [key: string]: any };
   title: string;
   lang: 'en' | 'zh';
   filePath: string; 
@@ -58,6 +63,9 @@ export const ContentService = {
     const entries = (knowledgeBase as any)?.entries || [];
 
     entries.forEach((entry: any) => {
+      // Skip blog posts for the main tree
+      if (entry.category === 'blog') return;
+
       // Ensure locales object exists before accessing
       const locales = entry.locales || {};
       // Resolve title based on requested language, with fallback
@@ -84,6 +92,40 @@ export const ContentService = {
             pages: pages
         };
     }).filter(c => c.pages.length > 0);
+  },
+
+  // Get Blog Posts specially
+  getBlogPosts: (lang: 'en' | 'zh' = 'zh'): PageMeta[] => {
+    const entries = (knowledgeBase as any)?.entries || [];
+    const posts: PageMeta[] = [];
+
+    entries.forEach((entry: any) => {
+      if (entry.category !== 'blog') return;
+
+      const locales = entry.locales || {};
+      const localeData = locales[lang] || locales.en || locales.zh;
+
+      if (localeData) {
+        posts.push({
+          id: entry.id,
+          title: localeData.title || entry.id,
+          category: 'blog',
+          path: entry.path,
+          description: localeData.description || '',
+          // Extract frontmatter
+          date: localeData.frontmatter?.date,
+          tags: localeData.frontmatter?.tags,
+          author: localeData.frontmatter?.author
+        });
+      }
+    });
+
+    // Sort by date desc
+    return posts.sort((a, b) => {
+      const dateA = new Date(a.date || 0).getTime();
+      const dateB = new Date(b.date || 0).getTime();
+      return dateB - dateA;
+    });
   },
 
   // Deep Drill: Get Page Content with Strict File Resolution
@@ -144,11 +186,14 @@ export const ContentService = {
         content: selectedData.content,
         frontmatter: { 
             title: selectedData.title, 
-            description: selectedData.description 
+            description: selectedData.description,
+            ...selectedData.frontmatter 
         },
         title: selectedData.title,
         lang: actualLang,
-        filePath: `prompt-engineering/pages/${cleanPath}.${actualLang}.mdx`,
+        filePath: entry.category === 'blog' 
+            ? `blog/posts/${entry.id}.${actualLang}.mdx`
+            : `prompt-engineering/pages/${cleanPath.replace(entry.category + '/', '')}.${actualLang}.mdx`, // Reconstruct path roughly
         isFallback: isFallback,
         availableLanguages: availableLanguages,
         headers: selectedData.headers
