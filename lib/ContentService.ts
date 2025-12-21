@@ -365,7 +365,7 @@ export const ContentService = {
           frontmatter: { title: META_INDEX['zh'][cleanPath.split('/')[0]]?.[cleanPath.split('/')[1]] || 'Untitled' },
           title: META_INDEX['zh'][cleanPath.split('/')[0]]?.[cleanPath.split('/')[1]] || 'Untitled',
           lang: 'zh',
-          filePath: `pages/${cleanPath}.zh.mdx`,
+          filePath: `prompt-engineering/pages/${cleanPath}.zh.mdx`,
           availableLanguages
         };
       }
@@ -376,7 +376,7 @@ export const ContentService = {
           frontmatter: { title: META_INDEX['en'][cleanPath.split('/')[0]]?.[cleanPath.split('/')[1]] || 'Untitled' },
           title: META_INDEX['en'][cleanPath.split('/')[0]]?.[cleanPath.split('/')[1]] || 'Untitled',
           lang: 'en',
-          filePath: `pages/${cleanPath}.en.mdx`, // We are reading the EN file
+          filePath: `prompt-engineering/pages/${cleanPath}.en.mdx`, // We are reading the EN file
           isFallback: true,
           availableLanguages
         };
@@ -391,7 +391,7 @@ export const ContentService = {
           frontmatter: { title: META_INDEX['en'][cleanPath.split('/')[0]]?.[cleanPath.split('/')[1]] || 'Untitled' },
           title: META_INDEX['en'][cleanPath.split('/')[0]]?.[cleanPath.split('/')[1]] || 'Untitled',
           lang: 'en',
-          filePath: `pages/${cleanPath}.en.mdx`,
+          filePath: `prompt-engineering/pages/${cleanPath}.en.mdx`,
           availableLanguages
         };
       }
@@ -405,7 +405,7 @@ export const ContentService = {
       frontmatter: { title: stubTitle },
       title: stubTitle,
       lang: lang,
-      filePath: `pages/${cleanPath}.${lang}.mdx (Virtual)`,
+      filePath: `prompt-engineering/pages/${cleanPath}.${lang}.mdx (Virtual)`,
       availableLanguages: []
     };
   },
