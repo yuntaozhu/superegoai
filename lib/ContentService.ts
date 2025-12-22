@@ -9,8 +9,6 @@
  */
 
 // Import the generated JSON using a relative path to avoid alias resolution issues.
-// We strictly use relative path '../generated/knowledge_base.json' because alias '@/' might fail in some environments
-// if not perfectly configured or if the file is outside the 'src' root context.
 // @ts-ignore
 import knowledgeBase from '../generated/knowledge_base.json';
 
@@ -25,10 +23,12 @@ export interface PageMeta {
   author?: string;
 }
 
-export interface CategoryStructure {
+export interface NavTreeNode {
   id: string;
   title: string;
-  pages: PageMeta[];
+  type: 'category' | 'group' | 'page';
+  path?: string;
+  children?: NavTreeNode[];
 }
 
 export interface SyncStatus {
@@ -49,49 +49,23 @@ export interface PageContent {
   headers?: string[];
 }
 
-// Helper to capitalize first letter
-const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+// Helper to map raw tree node to localized NavTreeNode
+const mapTreeNode = (node: any, lang: 'en' | 'zh'): NavTreeNode => {
+  const title = node.titles?.[lang] || node.titles?.['en'] || node.id;
+  return {
+    id: node.id,
+    title: title,
+    type: node.type,
+    path: node.path,
+    children: node.children ? node.children.map((c: any) => mapTreeNode(c, lang)) : undefined
+  };
+};
 
 export const ContentService = {
-  // Get Navigation Tree from the indexed JSON
-  getTree: (lang: 'en' | 'zh' = 'zh'): CategoryStructure[] => {
-    // Group entries by category
-    const categories: Record<string, PageMeta[]> = {};
-    const categoryOrder = ['introduction', 'techniques', 'agents', 'guides', 'applications', 'prompts', 'models', 'risks', 'research'];
-
-    // Handle case where JSON might not exist yet during initial dev
-    const entries = (knowledgeBase as any)?.entries || [];
-
-    entries.forEach((entry: any) => {
-      // Skip blog posts for the main tree
-      if (entry.category === 'blog') return;
-
-      // Ensure locales object exists before accessing
-      const locales = entry.locales || {};
-      // Resolve title based on requested language, with fallback
-      const localeData = locales[lang] || locales.en || locales.zh;
-      
-      if (!categories[entry.category]) {
-        categories[entry.category] = [];
-      }
-      categories[entry.category].push({
-        id: entry.id,
-        title: localeData?.title || entry.id,
-        category: entry.category,
-        path: entry.path,
-        description: localeData?.description || ''
-      });
-    });
-
-    // Map to structure 
-    return categoryOrder.map(catId => {
-        const pages = categories[catId] || [];
-        return {
-            id: catId,
-            title: capitalize(catId), 
-            pages: pages
-        };
-    }).filter(c => c.pages.length > 0);
+  // Get Navigation Tree from the indexed JSON (Hierarchical)
+  getTree: (lang: 'en' | 'zh' = 'zh'): NavTreeNode[] => {
+    const rawTree = (knowledgeBase as any)?.navigationTree || [];
+    return rawTree.map((node: any) => mapTreeNode(node, lang));
   },
 
   // Get Blog Posts specially
@@ -130,6 +104,7 @@ export const ContentService = {
 
   // Deep Drill: Get Page Content with Strict File Resolution
   getPage: async (path: string, lang: 'en' | 'zh' = 'zh'): Promise<PageContent> => {
+    // Support both with and without leading slash
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
     const entries = (knowledgeBase as any)?.entries || [];
     
@@ -182,6 +157,16 @@ export const ContentService = {
         };
     }
 
+    // Heuristic for file path (mostly for display/debug)
+    let displayPath = '';
+    if (entry.category === 'blog') {
+        displayPath = `blog/posts/${entry.id}.${actualLang}.mdx`;
+    } else {
+        // Construct path from id and category? 
+        // Since we have hierarchical paths now, it's safer to rely on the virtual path
+        displayPath = `prompt-engineering/pages/${cleanPath}.${actualLang}.mdx`;
+    }
+
     return {
         content: selectedData.content,
         frontmatter: { 
@@ -191,9 +176,7 @@ export const ContentService = {
         },
         title: selectedData.title,
         lang: actualLang,
-        filePath: entry.category === 'blog' 
-            ? `blog/posts/${entry.id}.${actualLang}.mdx`
-            : `prompt-engineering/pages/${cleanPath.replace(entry.category + '/', '')}.${actualLang}.mdx`, // Reconstruct path roughly
+        filePath: displayPath,
         isFallback: isFallback,
         availableLanguages: availableLanguages,
         headers: selectedData.headers

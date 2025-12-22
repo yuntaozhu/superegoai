@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage, Link } from '../context/LanguageContext';
-import { Home, ChevronRight, Search, ArrowLeft, Loader2, FileText, Calendar, Tag } from 'lucide-react';
+import { Home, ChevronRight, Search, ArrowLeft, Loader2, FileText, Calendar, Tag, User } from 'lucide-react';
 import { ContentService, PageMeta, PageContent } from '../lib/ContentService';
 import MdxRenderer from '../components/MdxRenderer';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -148,14 +148,27 @@ const BlogPage: React.FC = () => {
           ) : postContent ? (
             <m.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               {/* Header */}
-              <header className="mb-12 text-center">
-                 <div className="mb-4 text-xs text-blue-500 font-mono tracking-widest uppercase flex items-center justify-center gap-2">
-                    <Calendar className="w-3 h-3" />
-                    {selectedPostMeta.date ? new Date(selectedPostMeta.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Date'}
+              <header className="mb-16 text-center border-b border-white/10 pb-12">
+                 <div className="flex flex-wrap items-center justify-center gap-4 mb-6 text-xs font-mono tracking-widest uppercase">
+                    <div className="text-blue-500 flex items-center gap-2">
+                        <Calendar className="w-3 h-3" />
+                        {selectedPostMeta.date ? new Date(selectedPostMeta.date).toLocaleDateString(language === 'en' ? 'en-US' : 'zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Date'}
+                    </div>
+                    {selectedPostMeta.author && (
+                        <>
+                            <div className="hidden sm:block w-1 h-1 rounded-full bg-white/20" />
+                            <div className="text-gray-400 flex items-center gap-2">
+                                <User className="w-3 h-3" />
+                                {selectedPostMeta.author}
+                            </div>
+                        </>
+                    )}
                  </div>
+                 
                  <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-[1.1] uppercase">
                    {postContent.title}
                  </h1>
+                 
                  <div className="flex justify-center gap-3 flex-wrap">
                     {selectedPostMeta.tags?.map(tag => (
                       <span key={tag} className="text-[10px] font-bold px-3 py-1 rounded-full bg-white/5 text-gray-400 border border-white/10 uppercase tracking-widest flex items-center gap-1">
@@ -170,7 +183,7 @@ const BlogPage: React.FC = () => {
                  <MdxRenderer content={postContent.content} />
               </div>
 
-              {/* Social Share & Author */}
+              {/* Social Share & Author Footer */}
               <div className="mt-20 pt-10 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-8">
                  <div className="flex items-center gap-4">
                    <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-xl text-white font-bold">

@@ -8,15 +8,15 @@ interface MobiusGalaxyProps {
   orientation: 'horizontal' | 'vertical';
   isMobile?: boolean;
   onSelectCourse: (course: Course) => void;
+  onHoverCourse?: (course: Course | null) => void;
 }
 
-const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMobile = false, onSelectCourse }) => {
+const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMobile = false, onSelectCourse, onHoverCourse }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
 
-  // Refs for animation values to avoid re-renders while maintaining smooth transitions
   const rotationTargetRef = useRef(0);
   const currentRotationRef = useRef(0);
   const isDraggingRef = useRef(false);
@@ -27,7 +27,6 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // 1. 初始化场景与相机
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x020308);
     
@@ -39,11 +38,10 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     renderer.setPixelRatio(window.devicePixelRatio);
     mountRef.current.appendChild(renderer.domElement);
 
-    // 参数配置
     const stripWidth = isMobile ? 2.0 : 2.8; 
     const radius = isMobile ? 3.8 : 5.8;
     
-    // 2. 背景：远景星空 (Starfield)
+    // Starfield
     const starGeo = new THREE.BufferGeometry();
     const starCoords = [];
     for (let i = 0; i < 6000; i++) {
@@ -56,7 +54,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
-    // 3. 莫比乌斯星云轨迹 (Nebula Ribbon)
+    // Nebula Ribbon
     const nebulaGeo = new THREE.BufferGeometry();
     const nebulaCount = isMobile ? 5000 : 12000;
     const nebulaPos = new Float32Array(nebulaCount * 3);
@@ -83,115 +81,35 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     const nebulaPoints = new THREE.Points(nebulaGeo, nebulaMat);
     scene.add(nebulaPoints);
 
-    // --- Dynamic Effects ---
-    const createWispTexture = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = 128; canvas.height = 128;
-      const ctx = canvas.getContext('2d')!;
-      const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-      grad.addColorStop(0, 'rgba(139, 92, 246, 0.15)');
-      grad.addColorStop(0.5, 'rgba(59, 130, 246, 0.05)');
-      grad.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 128, 128);
-      return new THREE.CanvasTexture(canvas);
-    };
-    
-    const wispsGroup = new THREE.Group();
-    scene.add(wispsGroup);
-    const wispTexture = createWispTexture();
-    const wisps: THREE.Sprite[] = [];
-    for(let i=0; i < (isMobile ? 4 : 8); i++) {
-      const wispMat = new THREE.SpriteMaterial({ map: wispTexture, transparent: true, blending: THREE.AdditiveBlending });
-      const wisp = new THREE.Sprite(wispMat);
-      const r = radius * (2 + Math.random() * 2);
-      const a = Math.random() * Math.PI * 2;
-      wisp.position.set(Math.cos(a)*r, (Math.random()-0.5)*20, Math.sin(a)*r);
-      wisp.scale.set(15 + Math.random()*25, 15 + Math.random()*25, 1);
-      wisp.userData = { speed: (Math.random() - 0.5) * 0.001, radius: r, angle: a };
-      wisps.push(wisp);
-      wispsGroup.add(wisp);
-    }
-
-    const shootingStarsGroup = new THREE.Group();
-    scene.add(shootingStarsGroup);
-    const activeShootingStars: { mesh: THREE.Line, velocity: THREE.Vector3, life: number }[] = [];
-    const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending });
-
-    const spawnShootingStar = () => {
-      const geometry = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, 0, -5)
-      ]);
-      const line = new THREE.Line(geometry, shootingStarMat.clone());
-      const angle = Math.random() * Math.PI * 2;
-      const dist = radius * 4 + Math.random() * 100;
-      line.position.set(Math.cos(angle) * dist, (Math.random() - 0.5) * 100, Math.sin(angle) * dist);
-      
-      const target = new THREE.Vector3((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
-      const dir = target.clone().sub(line.position).normalize();
-      line.lookAt(line.position.clone().add(dir));
-      
-      activeShootingStars.push({ mesh: line, velocity: dir.multiplyScalar(2.5 + Math.random() * 2), life: 1.0 });
-      shootingStarsGroup.add(line);
-    };
-
-    // 4. 程序化星球纹理生成器 - 现在包含课程名称
+    // Planet Texture Gen
     const createPlanetTexture = (baseColor: number, text: string) => {
       const canvas = document.createElement('canvas');
       canvas.width = 1024; canvas.height = 512;
       const ctx = canvas.getContext('2d')!;
       const color = new THREE.Color(baseColor);
-      
-      // 背景色
       ctx.fillStyle = `rgb(${color.r*255},${color.g*255},${color.b*255})`;
       ctx.fillRect(0, 0, 1024, 512);
       
-      // 噪点与星尘
       for (let i = 0; i < 4000; i++) {
         const x = Math.random() * 1024;
         const y = Math.random() * 512;
         const size = Math.random() * 2;
         const alpha = Math.random() * 0.3;
         ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
       }
       
-      // 纹理条纹
-      for (let i = 0; i < 12; i++) {
-        ctx.strokeStyle = `rgba(0,0,0,0.2)`;
-        ctx.lineWidth = Math.random() * 30;
-        ctx.beginPath();
-        ctx.moveTo(0, Math.random() * 512);
-        ctx.bezierCurveTo(340, Math.random() * 512, 680, Math.random() * 512, 1024, Math.random() * 512);
-        ctx.stroke();
-      }
-
-      // 核心课程名称 - 绘制在纹理上
-      ctx.font = 'bold 120px Inter, "Microsoft YaHei", sans-serif';
+      ctx.font = 'bold 100px monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      
-      // 绘制两次以确保 360 度可见
-      const drawLabel = (x: number) => {
-        ctx.shadowBlur = 40;
-        ctx.shadowColor = 'rgba(0,0,0,1)';
-        ctx.fillStyle = 'white';
-        ctx.fillText(text.toUpperCase(), x, 256);
-        ctx.shadowBlur = 0;
-      };
-
-      drawLabel(256);
-      drawLabel(768);
+      ctx.fillStyle = 'white';
+      ctx.fillText(text.toUpperCase(), 256, 256);
+      ctx.fillText(text.toUpperCase(), 768, 256);
 
       const texture = new THREE.CanvasTexture(canvas);
-      texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
       return texture;
     };
 
-    // 5. 行星系统
     const planetGroup = new THREE.Group();
     scene.add(planetGroup);
     const planetMeshes: THREE.Mesh[] = [];
@@ -207,23 +125,19 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const z = v * Math.sin(u / 2);
 
       const getColor = (colorStr: string) => {
-        if (colorStr.includes('blue')) return 0x3b82f6;
-        if (colorStr.includes('purple')) return 0x8b5cf6;
-        if (colorStr.includes('orange')) return 0xf97316;
-        if (colorStr.includes('emerald')) return 0x10b981;
-        if (colorStr.includes('yellow')) return 0xfacc15;
-        if (colorStr.includes('indigo')) return 0x6366f1;
+        if (colorStr.includes('#')) return parseInt(colorStr.replace('#', '0x'));
+        if (colorStr.includes('FFD700')) return 0xFFD700;
+        if (colorStr.includes('00BFFF')) return 0x00BFFF;
         return 0xffffff;
       };
-      const baseColor = getColor(course.color);
       
-      const courseName = course.title.includes('：') 
-        ? course.title.split('：')[0] 
-        : course.title;
+      // Simple logic to extract color from "from-[#HEX]" or fallback
+      const hexMatch = course.color.match(/#([0-9A-F]{6})/i);
+      const baseColor = hexMatch ? parseInt(hexMatch[1], 16) : 0x3b82f6;
 
       const sphereGeo = new THREE.SphereGeometry(planetScale, 64, 64);
       const sphereMat = new THREE.MeshStandardMaterial({
-        map: createPlanetTexture(baseColor, courseName),
+        map: createPlanetTexture(baseColor, course.organ.split(' ')[1] || course.organ),
         roughness: 0.7,
         metalness: 0.3,
         emissive: baseColor,
@@ -238,84 +152,26 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       planetMeshes.push(sphere);
       planetGroup.add(sphere);
 
-      // 大气层光晕
-      const glowGeo = new THREE.SphereGeometry(planetScale * 1.3, 32, 32);
-      const glowMat = new THREE.ShaderMaterial({
-        uniforms: {
-          glowColor: { value: new THREE.Color(baseColor) },
-          viewVector: { value: camera.position }
-        },
-        vertexShader: `
-          uniform vec3 viewVector;
-          varying float intensity;
-          void main() {
-            vec3 vNormal = normalize(normalMatrix * normal);
-            vec3 vNormel = normalize(viewVector - vec3(modelViewMatrix * vec4(position, 1.0)));
-            intensity = pow(0.75 - dot(vNormal, vNormel), 4.5);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform vec3 glowColor;
-          varying float intensity;
-          void main() {
-            gl_FragColor = vec4(glowColor, intensity);
-          }
-        `,
-        side: THREE.BackSide,
-        blending: THREE.AdditiveBlending,
-        transparent: true
-      });
-      const glow = new THREE.Mesh(glowGeo, glowMat);
-      sphere.add(glow);
-
-      // 悬浮标签仅保留模块编号，使视觉更干净
+      // Label
       const labelCanvas = document.createElement('canvas');
       labelCanvas.width = 512; labelCanvas.height = 100;
       const lCtx = labelCanvas.getContext('2d')!;
-      lCtx.font = `bold 32px monospace`;
+      lCtx.font = `bold 36px monospace`;
       lCtx.textAlign = 'center';
-      lCtx.fillStyle = `rgba(255,255,255,0.7)`;
-      lCtx.shadowBlur = 10;
-      lCtx.shadowColor = 'black';
-      lCtx.fillText(`NODE_${course.id.toUpperCase()}`, 256, 50);
-
+      lCtx.fillStyle = `rgba(255,255,255,0.9)`;
+      lCtx.fillText(course.organ, 256, 50);
       const labelTexture = new THREE.CanvasTexture(labelCanvas);
-      const labelMat = new THREE.SpriteMaterial({ map: labelTexture, transparent: true });
-      const labelSprite = new THREE.Sprite(labelMat);
-      labelSprite.scale.set(1.5, 0.3, 1);
-      labelSprite.position.y = planetScale + (isMobile ? 0.6 : 0.85);
+      const labelSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: labelTexture, transparent: true }));
+      labelSprite.scale.set(1.8, 0.35, 1);
+      labelSprite.position.y = planetScale + 0.6;
       sphere.add(labelSprite);
-
-      // 图标悬浮
-      const iconCanvas = document.createElement('canvas');
-      iconCanvas.width = 128; iconCanvas.height = 128;
-      const iCtx = iconCanvas.getContext('2d')!;
-      iCtx.font = `${isMobile ? '70px' : '90px'} Arial`;
-      iCtx.textAlign = 'center';
-      iCtx.textBaseline = 'middle';
-      iCtx.fillText(course.icon, 64, 64);
-      const iconTexture = new THREE.CanvasTexture(iconCanvas);
-      const iconMat = new THREE.SpriteMaterial({ map: iconTexture, transparent: true });
-      const iconSprite = new THREE.Sprite(iconMat);
-      iconSprite.scale.set(planetScale * 1.3, planetScale * 1.3, 1);
-      iconSprite.position.y = - (planetScale + (isMobile ? 0.35 : 0.5));
-      sphere.add(iconSprite);
     });
 
-    // 6. 光照系统
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
     const sunLight = new THREE.PointLight(0xffffff, 30);
     sunLight.position.set(0, 0, 0);
     scene.add(sunLight);
-    const rimLight = new THREE.DirectionalLight(0x3b82f6, 1.5);
-    rimLight.position.set(10, 10, 10);
-    scene.add(rimLight);
-
-    // 交互逻辑 - Refined for smoother control
-    const SENSITIVITY = isMobile ? 0.006 : 0.003; 
-    const INTERPOLATION = 0.05; 
 
     const onPointerDown = (e: any) => {
       isDraggingRef.current = true;
@@ -329,16 +185,24 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       if (isDraggingRef.current) {
         const delta = orientation === 'vertical' ? clientY - startY : clientX - startX;
-        rotationTargetRef.current += delta * SENSITIVITY;
+        rotationTargetRef.current += delta * (isMobile ? 0.006 : 0.003);
         startX = clientX; startY = clientY;
       }
       const rect = renderer.domElement.getBoundingClientRect();
       mouse.x = ((clientX - rect.left) / width) * 2 - 1;
       mouse.y = -((clientY - rect.top) / height) * 2 + 1;
+
+      // Raycasting for hover
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(planetMeshes);
+      if (intersects.length > 0) {
+        onHoverCourse?.((intersects[0].object as any).userData.course);
+      } else {
+        onHoverCourse?.(null);
+      }
     };
 
     const onPointerUp = () => isDraggingRef.current = false;
-
     const onClick = () => {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(planetMeshes);
@@ -356,15 +220,11 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     window.addEventListener('touchend', onPointerUp);
     window.addEventListener('click', onClick);
 
-    // 动画循环
     const animate = () => {
       requestAnimationFrame(animate);
-
       const now = Date.now();
-      currentRotationRef.current += (rotationTargetRef.current - currentRotationRef.current) * INTERPOLATION;
-      if (!isDraggingRef.current && focusedIndex === -1) {
-        rotationTargetRef.current += 0.0008; // Slower passive rotation
-      }
+      currentRotationRef.current += (rotationTargetRef.current - currentRotationRef.current) * 0.05;
+      if (!isDraggingRef.current) rotationTargetRef.current += 0.0008;
 
       if (orientation === 'vertical') {
         nebulaPoints.rotation.x = currentRotationRef.current;
@@ -374,43 +234,10 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
         planetGroup.rotation.y = currentRotationRef.current;
       }
 
-      // 背景动态更新
-      stars.rotation.y += 0.00015;
-      starMat.opacity = 0.35 + Math.sin(now * 0.0008) * 0.1;
-
-      // 星云闪烁
-      nebulaMat.opacity = 0.55 + Math.sin(now * 0.001) * 0.1;
-
-      // 星云碎片
-      wisps.forEach(wisp => {
-        wisp.userData.angle += wisp.userData.speed;
-        wisp.position.x = Math.cos(wisp.userData.angle) * wisp.userData.radius;
-        wisp.position.z = Math.sin(wisp.userData.angle) * wisp.userData.radius;
-        wisp.material.opacity = 0.8 + Math.sin(now * 0.0005 + wisp.userData.angle) * 0.2;
-      });
-
-      // 流星
-      if (Math.random() < 0.005) spawnShootingStar();
-      for (let i = activeShootingStars.length - 1; i >= 0; i--) {
-        const ss = activeShootingStars[i];
-        ss.mesh.position.add(ss.velocity);
-        ss.life -= 0.015;
-        (ss.mesh.material as THREE.LineBasicMaterial).opacity = ss.life;
-        if (ss.life <= 0) {
-          shootingStarsGroup.remove(ss.mesh);
-          activeShootingStars.splice(i, 1);
-        }
-      }
-
+      stars.rotation.y += 0.0001;
       planetMeshes.forEach((mesh, i) => {
-        mesh.rotation.y += 0.012;
-        mesh.position.y += Math.sin(now * 0.001 + i) * 0.0015;
-        
-        const isFocused = i === focusedIndex;
-        const targetScale = isFocused ? 1.3 : 1.0;
-        mesh.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
-        const mat = mesh.material as THREE.MeshStandardMaterial;
-        mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, isFocused ? 0.8 : 0.2, 0.1);
+        mesh.rotation.y += 0.01;
+        mesh.position.y += Math.sin(now * 0.001 + i) * 0.001;
       });
 
       renderer.render(scene, camera);
@@ -419,65 +246,22 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({ courses, orientation, isMob
     animate();
 
     const handleResize = () => {
-      const newWidth = window.innerWidth;
-      const newHeight = window.innerHeight;
-      camera.aspect = newWidth / newHeight;
+      camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(newWidth, newHeight);
+      renderer.setSize(window.innerWidth, window.innerHeight);
     };
-
     window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('mousedown', onPointerDown);
       window.removeEventListener('mousemove', onPointerMove);
       window.removeEventListener('mouseup', onPointerUp);
-      window.removeEventListener('touchstart', onPointerDown);
-      window.removeEventListener('touchmove', onPointerMove);
-      window.removeEventListener('touchend', onPointerUp);
       window.removeEventListener('click', onClick);
-      window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      starGeo.dispose();
-      nebulaGeo.dispose();
-      wispTexture.dispose();
-      shootingStarMat.dispose();
     };
-  }, [courses, orientation, isMobile, focusedIndex]);
+  }, [courses, orientation, isMobile]);
 
-  // Keyboard Navigation Effect
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        setFocusedIndex(prev => (prev + 1) % courses.length);
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        setFocusedIndex(prev => (prev - 1 + courses.length) % courses.length);
-      } else if (e.key === 'Enter' && focusedIndex !== -1) {
-        onSelectCourse(courses[focusedIndex]);
-      } else if (e.key === 'Escape') {
-        setFocusedIndex(-1);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [courses, focusedIndex, onSelectCourse]);
-
-  useEffect(() => {
-    if (focusedIndex !== -1) {
-      const u = (focusedIndex / courses.length) * Math.PI * 2;
-      rotationTargetRef.current = -u;
-    }
-  }, [focusedIndex, courses.length]);
-
-  return (
-    <div 
-      ref={mountRef} 
-      className="w-full h-full cursor-grab active:cursor-grabbing outline-none" 
-      tabIndex={0}
-      aria-label="3D Galaxy Navigation"
-    />
-  );
+  return <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing outline-none" />;
 };
 
 export default MobiusGalaxy;

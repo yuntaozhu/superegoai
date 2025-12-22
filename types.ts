@@ -1,3 +1,4 @@
+
 export interface ModuleItem {
   title: string;
   description: string;
@@ -17,10 +18,12 @@ export interface Course {
   description: string;
   icon: string;
   color: string;
-  target: string;     // 面向群体
-  format: string;     // 授课方式
-  duration: string;   // 学习周期
-  outcome: string;    // 学习效果/交付物
+  organ: string;      // 闭环生命体：器官名称
+  organRole: string;  // 器官职责描述
+  target: string;     
+  format: string;     
+  duration: string;   
+  outcome: string;    
   philosophyMap: {
     title: string;
     points: string[];

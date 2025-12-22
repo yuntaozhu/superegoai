@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { MdxComponents } from './MdxComponents';
 import { useLanguage } from '../context/LanguageContext';
@@ -28,20 +29,28 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
              finalSrc = `https://raw.githubusercontent.com/dair-ai/Prompt-Engineering-Guide/main/img/${src.replace('img/', '')}`;
         }
         
-        return `<img src="${finalSrc}" alt="${alt}" title="${title || ''}" class="rounded-xl border border-white/10 my-8 w-full shadow-2xl" loading="lazy" />`;
+        return `
+          <figure class="my-10 group">
+            <div class="rounded-2xl border border-white/10 overflow-hidden bg-black/20 shadow-2xl relative">
+              <img src="${finalSrc}" alt="${alt}" class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500" loading="lazy" />
+              <div class="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-2xl pointer-events-none"></div>
+            </div>
+            ${title ? `<figcaption class="mt-3 text-center text-xs text-gray-500 font-mono uppercase tracking-widest">${title}</figcaption>` : ''}
+          </figure>
+        `;
     });
 
     // 2. Links: [text](url)
-    processed = processed.replace(/([^!]|^)\[(.*?)\]\((.*?)\)/g, '$1<a href="$3" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 transition-colors">$2</a>');
+    processed = processed.replace(/([^!]|^)\[(.*?)\]\((.*?)\)/g, '$1<a href="$3" target="_blank" rel="noopener noreferrer" class="text-blue-400 font-medium hover:text-blue-300 underline decoration-blue-500/30 underline-offset-4 transition-all hover:decoration-blue-400">$2</a>');
 
     // 3. Bold: **text**
-    processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
+    processed = processed.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold tracking-tight">$1</strong>');
     
     // 4. Italic: *text*
-    processed = processed.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em class="text-blue-200/80 italic">$2</em>');
+    processed = processed.replace(/(^|[^*])\*([^*]+)\*/g, '$1<em class="text-blue-200/90 italic font-serif">$2</em>');
 
     // 5. Inline Code: `text`
-    processed = processed.replace(/`([^`]+)`/g, '<code class="bg-white/10 text-blue-400 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>');
+    processed = processed.replace(/`([^`]+)`/g, '<code class="bg-blue-500/10 text-blue-300 px-1.5 py-0.5 rounded-md text-[0.9em] font-mono border border-blue-500/20">$1</code>');
 
     return processed;
   };
@@ -50,7 +59,7 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
   const parts = content.split(/(<PromptAnatomy[\s\S]*?\/>|<Callout[\s\S]*?>[\s\S]*?<\/Callout>|<Cards[\s\S]*?>[\s\S]*?<\/Cards>|<Steps>[\s\S]*?<\/Steps>|```[\s\S]*?```|#{1,3}\s.*)/g);
 
   return (
-    <div className={`mdx-content space-y-6 text-gray-300 ${language === 'zh' ? 'leading-loose' : 'leading-relaxed'}`}>
+    <div className={`mdx-content max-w-none ${language === 'zh' ? 'leading-loose' : 'leading-relaxed'}`}>
       {parts.map((part, i) => {
         if (!part || !part.trim()) return null;
 
@@ -102,13 +111,12 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
           const steps = items.map((s, si) => {
             const cleanText = s.replace(/^\d+\.\s/, '').trim();
             return (
-              <div key={si} className="mb-4">
-                <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-3">
-                   <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center border border-blue-500/20 font-mono">{si + 1}</span>
-                   {language === 'zh' ? '步骤' : 'Step'}
-                </h4>
+              <div key={si} className="mb-8 relative">
+                <div className="absolute -left-10 top-0.5 w-6 h-6 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold font-mono flex items-center justify-center border border-blue-500/20 shadow-sm ring-4 ring-[#020308]">
+                  {si + 1}
+                </div>
                 <div 
-                    className="text-gray-400 pl-9"
+                    className="text-gray-300"
                     dangerouslySetInnerHTML={{ __html: processMarkdown(cleanText) }} 
                 />
               </div>
@@ -132,16 +140,18 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
         if (part.startsWith('### ')) return <MdxComponents.h3 key={i}>{part.replace('### ', '')}</MdxComponents.h3>;
         
         // 7. Paragraphs, Lists, and Blockquotes
-        const paragraphs = part.split(/\n\s*\n/);
+        // We use a simpler split to avoid breaking lists that are close to paragraphs
+        // Splitting by double newline usually indicates a paragraph break.
+        const blocks = part.split(/\n{2,}/);
         
         return (
           <React.Fragment key={i}>
-            {paragraphs.map((para, pi) => {
-                if (!para.trim()) return null;
+            {blocks.map((block, pi) => {
+                if (!block.trim()) return null;
 
                 // Blockquotes
-                if (para.trim().startsWith('> ')) {
-                    const clean = para.replace(/^> /gm, '').trim();
+                if (block.trim().startsWith('> ')) {
+                    const clean = block.replace(/^> /gm, '').trim();
                     return (
                         <MdxComponents.blockquote key={`${i}-${pi}`}>
                             <div dangerouslySetInnerHTML={{ __html: processMarkdown(clean) }} />
@@ -150,24 +160,27 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
                 }
 
                 // Unordered List (starts with - )
-                if (para.trim().startsWith('- ')) {
-                    const items = para.trim().split('\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^- /, '').trim());
+                if (block.trim().startsWith('- ')) {
+                    const items = block.trim().split('\n').filter(l => l.trim().startsWith('- ')).map(l => l.replace(/^- /, '').trim());
                     return (
                         <MdxComponents.ul key={`${i}-${pi}`}>
                             {items.map((item, idx) => (
-                                <MdxComponents.li key={idx} dangerouslySetInnerHTML={{ __html: processMarkdown(item) }} />
+                                <li key={idx} className="relative pl-6 mb-2">
+                                  <span className="absolute left-0 top-2.5 w-1.5 h-1.5 rounded-full bg-white/20"></span>
+                                  <span dangerouslySetInnerHTML={{ __html: processMarkdown(item) }} />
+                                </li>
                             ))}
                         </MdxComponents.ul>
                     );
                 }
 
                 // Ordered List (starts with 1. )
-                if (/^\d+\.\s/.test(para.trim())) {
-                    const items = para.trim().split('\n').filter(l => /^\d+\.\s/.test(l.trim())).map(l => l.replace(/^\d+\.\s/, '').trim());
+                if (/^\d+\.\s/.test(block.trim())) {
+                    const items = block.trim().split('\n').filter(l => /^\d+\.\s/.test(l.trim())).map(l => l.replace(/^\d+\.\s/, '').trim());
                     return (
                         <MdxComponents.ol key={`${i}-${pi}`}>
                             {items.map((item, idx) => (
-                                <MdxComponents.li key={idx} dangerouslySetInnerHTML={{ __html: processMarkdown(item) }} />
+                                <li key={idx} dangerouslySetInnerHTML={{ __html: processMarkdown(item) }} />
                             ))}
                         </MdxComponents.ol>
                     );
@@ -177,7 +190,7 @@ const MdxRenderer: React.FC<MdxRendererProps> = ({ content }) => {
                   <MdxComponents.p 
                     key={`${i}-${pi}`} 
                     dangerouslySetInnerHTML={{ 
-                      __html: processMarkdown(para)
+                      __html: processMarkdown(block)
                     }} 
                   />
                 );

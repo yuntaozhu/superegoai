@@ -3,82 +3,231 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import { 
-  Search, ChevronRight, Terminal, Zap, Home, Globe, List, Folder, ExternalLink, ArrowRight, ArrowLeft, Languages, AlertCircle, FileText, Database, X
+  Search, ChevronRight, ChevronDown, Terminal, Zap, Home, List, Folder, ExternalLink, ArrowRight, ArrowLeft, Languages, AlertCircle, FileText, Database, X
 } from 'lucide-react';
-import { ContentService, CategoryStructure, PageMeta, PageContent, SyncStatus } from '../lib/ContentService';
+import { ContentService, NavTreeNode, PageContent, SyncStatus } from '../lib/ContentService';
 import MdxRenderer from '../components/MdxRenderer';
 
 // Using any to bypass framer-motion type mismatch
 const m = motion as any;
 
+// Recursive Tree Item Component
+const SidebarItem: React.FC<{ 
+  node: NavTreeNode; 
+  activePath?: string; 
+  depth?: number;
+  onSelect: (node: NavTreeNode) => void; 
+}> = ({ node, activePath, depth = 0, onSelect }) => {
+  const isActive = activePath === node.path;
+  const hasChildren = node.children && node.children.length > 0;
+  const isParentOfActive = activePath?.startsWith(node.id + '/') || (node.children?.some(c => activePath?.startsWith(c.path || ''))); 
+  
+  const [isOpen, setIsOpen] = useState(depth === 0 || isParentOfActive);
+
+  useEffect(() => {
+    const checkActive = (n: NavTreeNode): boolean => {
+      if (n.path === activePath) return true;
+      if (n.children) return n.children.some(checkActive);
+      return false;
+    };
+    if (checkActive(node)) {
+        setIsOpen(true);
+    }
+  }, [activePath, node]);
+
+  if (node.type === 'category') {
+    return (
+      <div className="mb-6">
+        <h3 className="text-[9px] font-bold text-gray-600 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
+          <Folder className="w-3 h-3" />
+          {node.title}
+        </h3>
+        <div className="space-y-1">
+          {node.children?.map(child => (
+            <SidebarItem 
+              key={child.id} 
+              node={child} 
+              activePath={activePath} 
+              depth={depth + 1} 
+              onSelect={onSelect} 
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (node.type === 'page') {
+    return (
+      <button
+        onClick={() => onSelect(node)}
+        className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-all flex items-center justify-between group ${
+          isActive 
+            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20' 
+            : 'text-gray-500 hover:text-white hover:bg-white/5 border border-transparent'
+        }`}
+        style={{ paddingLeft: `${depth * 12 + 12}px` }}
+      >
+        <span className="truncate font-medium">{node.title}</span>
+        {isActive && <ChevronRight className="w-3 h-3 flex-shrink-0" />}
+      </button>
+    );
+  }
+
+  if (node.type === 'group') {
+    return (
+      <div className="my-1">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-400 hover:text-white transition-all flex items-center justify-between hover:bg-white/5"
+          style={{ paddingLeft: `${depth * 12 + 12}px` }}
+        >
+          <span className="font-bold flex items-center gap-2">
+             {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+             {node.title}
+          </span>
+        </button>
+        <AnimatePresence>
+          {isOpen && hasChildren && (
+            <m.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              {node.children?.map(child => (
+                <SidebarItem 
+                  key={child.id} 
+                  node={child} 
+                  activePath={activePath} 
+                  depth={depth + 1} 
+                  onSelect={onSelect} 
+                />
+              ))}
+            </m.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const PromptGuide: React.FC = () => {
   const { language, setLanguage } = useLanguage();
-  const [tree, setTree] = useState<CategoryStructure[]>([]);
-  const [activePage, setActivePage] = useState<PageMeta | null>(null);
+  const [tree, setTree] = useState<NavTreeNode[]>([]);
+  const [activePageNode, setActivePageNode] = useState<NavTreeNode | null>(null);
   const [doc, setDoc] = useState<PageContent | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [showAudit, setShowAudit] = useState(false); // Audit Modal State
+  const [showAudit, setShowAudit] = useState(false);
   const [auditReport, setAuditReport] = useState<SyncStatus[]>([]);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Sync tree on language change
   useEffect(() => {
     const dataTree = ContentService.getTree(language);
     setTree(dataTree);
     
-    // Restore or Default Position
-    if (activePage) {
-      const match = dataTree.flatMap(c => c.pages).find(p => p.id === activePage.id);
-      if (match) setActivePage(match);
-      else if (dataTree[0]?.pages[0]) setActivePage(dataTree[0].pages[0]);
-    } else if (dataTree[0]?.pages[0]) {
-      setActivePage(dataTree[0].pages[0]);
+    if (!activePageNode && dataTree.length > 0) {
+        const findFirstPage = (nodes: NavTreeNode[]): NavTreeNode | null => {
+            for (const n of nodes) {
+                if (n.type === 'page') return n;
+                if (n.children) {
+                    const found = findFirstPage(n.children);
+                    if (found) return found;
+                }
+            }
+            return null;
+        };
+        const first = findFirstPage(dataTree);
+        if (first) setActivePageNode(first);
     }
   }, [language]);
 
-  // Load content
   useEffect(() => {
-    if (activePage) {
+    if (activePageNode?.path) {
       setIsLoading(true);
       if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0;
       
-      ContentService.getPage(activePage.path, language).then(res => {
+      ContentService.getPage(activePageNode.path, language).then(res => {
         setDoc(res);
         setTimeout(() => setIsLoading(false), 250); 
       });
     }
-  }, [activePage, language]);
+  }, [activePageNode, language]);
 
-  // Generate Audit Report on mount
   useEffect(() => {
     setAuditReport(ContentService.getSyncReport());
   }, []);
 
-  const filteredTree = useMemo(() => {
-    if (!searchQuery) return tree;
-    const q = searchQuery.toLowerCase();
-    return tree.map(cat => ({
-      ...cat,
-      pages: cat.pages.filter(p => 
-        p.title.toLowerCase().includes(q) || 
-        (p.description && p.description.toLowerCase().includes(q)) ||
-        cat.title.toLowerCase().includes(q)
-      )
-    })).filter(cat => cat.pages.length > 0);
-  }, [tree, searchQuery]);
+  // Breadcrumb Logic: Find path to active node
+  const breadcrumbs = useMemo(() => {
+    if (!activePageNode) return [];
+    
+    const lineage: NavTreeNode[] = [];
+    const findPath = (nodes: NavTreeNode[], targetPath: string): boolean => {
+      for (const node of nodes) {
+        if (node.path === targetPath) {
+          lineage.push(node);
+          return true;
+        }
+        if (node.children) {
+          if (findPath(node.children, targetPath)) {
+            lineage.unshift(node);
+            return true;
+          }
+        }
+      }
+      return false;
+    };
 
-  // Prev/Next Logic
-  const flattenPages = useMemo(() => tree.flatMap(cat => cat.pages), [tree]);
-  const activeIndex = flattenPages.findIndex(p => p.path === activePage?.path);
+    if (activePageNode.path) {
+      findPath(tree, activePageNode.path);
+    }
+    return lineage;
+  }, [tree, activePageNode]);
+
+  const filterTree = (nodes: NavTreeNode[], query: string): NavTreeNode[] => {
+    if (!query) return nodes;
+    const q = query.toLowerCase();
+    
+    return nodes.reduce((acc: NavTreeNode[], node) => {
+      const matches = node.title.toLowerCase().includes(q);
+      const filteredChildren = node.children ? filterTree(node.children, query) : [];
+      
+      if (matches || filteredChildren.length > 0) {
+        acc.push({
+          ...node,
+          children: filteredChildren
+        });
+      }
+      return acc;
+    }, []);
+  };
+
+  const filteredTree = useMemo(() => filterTree(tree, searchQuery), [tree, searchQuery]);
+
+  const flattenPages = useMemo(() => {
+    const pages: NavTreeNode[] = [];
+    const traverse = (nodes: NavTreeNode[]) => {
+        nodes.forEach(n => {
+            if (n.type === 'page') pages.push(n);
+            if (n.children) traverse(n.children);
+        });
+    };
+    traverse(tree);
+    return pages;
+  }, [tree]);
+
+  const activeIndex = flattenPages.findIndex(p => p.path === activePageNode?.path);
   const prevPage = activeIndex > 0 ? flattenPages[activeIndex - 1] : null;
   const nextPage = activeIndex >= 0 && activeIndex < flattenPages.length - 1 ? flattenPages[activeIndex + 1] : null;
 
   return (
     <div className="min-h-screen bg-[#020308] pt-16 flex overflow-hidden font-sans">
       
-      {/* Audit Modal */}
       <AnimatePresence>
         {showAudit && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-10">
@@ -165,34 +314,16 @@ const PromptGuide: React.FC = () => {
             </div>
 
             <nav className="flex-grow overflow-y-auto custom-scrollbar p-4 pb-20">
-              {filteredTree.map(category => (
-                <div key={category.id} className="mb-6">
-                  <h3 className="text-[9px] font-bold text-gray-600 uppercase tracking-widest mb-3 px-2 flex items-center gap-2">
-                    <Folder className="w-3 h-3" />
-                    {category.title}
-                  </h3>
-                  <div className="space-y-1">
-                    {category.pages.map(page => (
-                      <button
-                        key={page.id}
-                        onClick={() => { setActivePage(page); if(window.innerWidth < 768) setIsSidebarOpen(false); }}
-                        className={`w-full text-left px-3 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between group ${
-                          activePage?.path === page.path 
-                            ? 'bg-blue-600/20 text-blue-400 border border-blue-500/20' 
-                            : 'text-gray-500 hover:text-white hover:bg-white/5 border border-transparent'
-                        }`}
-                      >
-                        <div className="overflow-hidden">
-                          <div className="truncate font-medium">{page.title}</div>
-                          {searchQuery && page.description && (
-                            <div className="truncate text-[9px] opacity-60 mt-0.5 font-light">{page.description}</div>
-                          )}
-                        </div>
-                        <ChevronRight className={`w-3 h-3 flex-shrink-0 transition-transform ${activePage?.path === page.path ? 'opacity-100' : 'opacity-0 group-hover:opacity-40 group-hover:translate-x-0.5'}`} />
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {filteredTree.map(node => (
+                <SidebarItem 
+                  key={node.id} 
+                  node={node} 
+                  activePath={activePageNode?.path} 
+                  onSelect={(n) => {
+                    setActivePageNode(n);
+                    if(window.innerWidth < 768) setIsSidebarOpen(false);
+                  }}
+                />
               ))}
             </nav>
 
@@ -219,10 +350,17 @@ const PromptGuide: React.FC = () => {
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-1.5 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors">
               <List className="w-4 h-4" />
             </button>
-            <div className="flex items-center gap-2 text-[10px] font-mono text-gray-700 uppercase tracking-widest overflow-hidden whitespace-nowrap">
-              <span className="hidden sm:inline">{tree.find(c => c.id === activePage?.category)?.title}</span>
-              <ChevronRight className="w-2.5 h-2.5 hidden sm:inline" />
-              <span className="text-blue-500 font-black truncate">{doc?.title}</span>
+            
+            {/* Topbar Breadcrumbs */}
+            <div className="flex items-center gap-2 text-[9px] font-mono text-gray-700 uppercase tracking-[0.2em] overflow-hidden whitespace-nowrap">
+              {breadcrumbs.map((bc, idx) => (
+                <React.Fragment key={bc.id}>
+                   <span className={`hidden sm:inline ${idx === breadcrumbs.length - 1 ? 'text-blue-500 font-black' : 'opacity-60'}`}>
+                     {bc.title}
+                   </span>
+                   {idx < breadcrumbs.length - 1 && <ChevronRight className="w-2.5 h-2.5 hidden sm:inline opacity-30" />}
+                </React.Fragment>
+              ))}
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -249,9 +387,9 @@ const PromptGuide: React.FC = () => {
                   <span className="text-[10px] font-mono text-gray-700 uppercase tracking-[0.4em] animate-pulse">Syncing_Nodes...</span>
                 </m.div>
               ) : (
-                <m.article key={`${activePage?.path}-${language}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+                <m.article key={`${activePageNode?.path}-${language}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
                   
-                  {/* File Source Header (Structured Block) */}
+                  {/* File Source Header */}
                   {doc && (
                     <div className="mb-10 p-4 rounded-xl border border-white/10 bg-white/5 font-mono text-xs">
                        <div className="flex items-center justify-between mb-3 border-b border-white/5 pb-2">
@@ -263,30 +401,10 @@ const PromptGuide: React.FC = () => {
                           </span>
                        </div>
                        <div className="flex flex-col sm:flex-row gap-4 text-gray-400">
-                          <div className="flex-1">
+                          <div className="flex-1 truncate">
                              <span className="text-gray-600 mr-2">PATH:</span> 
                              <span className="text-blue-300">{doc.filePath}</span>
                           </div>
-                          {doc.availableLanguages.length > 1 && (
-                             <div className="flex gap-2">
-                                {doc.availableLanguages.includes('en') && (
-                                   <button 
-                                     onClick={() => setLanguage('en')} 
-                                     className={`px-2 py-0.5 rounded text-[9px] border ${language === 'en' ? 'bg-blue-500 text-white border-blue-500' : 'border-white/20 hover:border-white/50'}`}
-                                   >
-                                     EN
-                                   </button>
-                                )}
-                                {doc.availableLanguages.includes('zh') && (
-                                   <button 
-                                     onClick={() => setLanguage('zh')} 
-                                     className={`px-2 py-0.5 rounded text-[9px] border ${language === 'zh' ? 'bg-blue-500 text-white border-blue-500' : 'border-white/20 hover:border-white/50'}`}
-                                   >
-                                     ZH
-                                   </button>
-                                )}
-                             </div>
-                          )}
                        </div>
                        {doc.isFallback && (
                           <div className="mt-3 text-yellow-500/80 italic flex items-center gap-2">
@@ -297,14 +415,19 @@ const PromptGuide: React.FC = () => {
                     </div>
                   )}
 
-                  <nav className="flex items-center gap-2 mb-10 text-[9px] font-mono uppercase tracking-[0.2em] text-gray-600">
+                  {/* Main Content Breadcrumbs */}
+                  <nav className="flex items-center flex-wrap gap-y-2 gap-x-2 mb-10 text-[9px] font-mono uppercase tracking-[0.2em] text-gray-600">
                     <Link to="/" className="hover:text-white transition-colors flex items-center gap-1.5">
                       <Home className="w-3 h-3" /> Guide
                     </Link>
-                    <ChevronRight className="w-2.5 h-2.5 opacity-20" />
-                    <span className="opacity-40">{tree.find(c => c.id === activePage?.category)?.title}</span>
-                    <ChevronRight className="w-2.5 h-2.5 opacity-20" />
-                    <span className="text-blue-500 font-black">{doc?.title}</span>
+                    {breadcrumbs.map((bc, idx) => (
+                      <React.Fragment key={bc.id}>
+                        <ChevronRight className="w-2.5 h-2.5 opacity-20" />
+                        <span className={idx === breadcrumbs.length - 1 ? 'text-blue-500 font-black' : 'hover:text-gray-400 transition-colors cursor-default'}>
+                          {bc.title}
+                        </span>
+                      </React.Fragment>
+                    ))}
                   </nav>
 
                   {/* Render Content */}
@@ -314,7 +437,7 @@ const PromptGuide: React.FC = () => {
                   <div className="mt-16 flex flex-col sm:flex-row gap-4 justify-between border-t border-white/5 pt-8">
                     {prevPage ? (
                       <button 
-                        onClick={() => { setActivePage(prevPage); if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0; }}
+                        onClick={() => { setActivePageNode(prevPage); if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0; }}
                         className="group flex flex-col items-start gap-2 p-4 rounded-xl border border-white/5 hover:border-blue-500/30 bg-white/5 hover:bg-white/10 transition-all flex-1 text-left"
                       >
                         <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest group-hover:text-blue-400 transition-colors flex items-center gap-1">
@@ -326,7 +449,7 @@ const PromptGuide: React.FC = () => {
                     
                     {nextPage ? (
                       <button 
-                        onClick={() => { setActivePage(nextPage); if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0; }}
+                        onClick={() => { setActivePageNode(nextPage); if (scrollContainerRef.current) scrollContainerRef.current.scrollTop = 0; }}
                         className="group flex flex-col items-end gap-2 p-4 rounded-xl border border-white/5 hover:border-blue-500/30 bg-white/5 hover:bg-white/10 transition-all flex-1 text-right"
                       >
                         <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest group-hover:text-blue-400 transition-colors flex items-center gap-1">
