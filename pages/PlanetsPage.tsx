@@ -19,7 +19,6 @@ const PlanetsPage: React.FC = () => {
   const content = getContent(language);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [hoveredCourse, setHoveredCourse] = useState<Course | null>(null);
-  const [hoverData, setHoverData] = useState<{ pos: { x: number; y: number } | null; color: string | null }>({ pos: null, color: null });
 
   // Map Course to AnatomyNode for compatibility with AnatomyCard
   const mapCourseToNode = (course: Course): AnatomyNode => ({
@@ -31,11 +30,11 @@ const PlanetsPage: React.FC = () => {
     method: course.format,
     outcome: course.outcome,
     link: `/course/${course.id}`,
-    color: course.id === 'core' ? '#FFD700' : 
-           course.id === 'logic' ? '#00BFFF' : 
-           course.id === 'senses' ? '#8A2BE2' : 
-           course.id === 'body' ? '#FF4500' : 
-           course.id === 'hands' ? '#00FFFF' : '#2E8B57',
+    color: course.id === 'data' ? '#FFD700' : 
+           course.id === 'digital-twin' ? '#00BFFF' : 
+           course.id === 'art' ? '#8A2BE2' : 
+           course.id === 'sports' ? '#FF4500' : 
+           course.id === 'solopreneur' ? '#00FFFF' : '#2E8B57',
     icon: course.icon
   });
 
@@ -61,11 +60,11 @@ const PlanetsPage: React.FC = () => {
       <div className="absolute inset-0 pointer-events-none z-10 flex flex-col items-center justify-center">
         <m.div 
           initial={{ opacity: 0 }}
-          animate={{ opacity: hoveredCourse ? 0 : 0.4 }}
+          animate={{ opacity: hoveredCourse ? 0 : 0.3 }}
           className="text-center"
         >
           <p className="text-blue-500 font-mono text-[10px] uppercase tracking-[0.5em] mb-4">Neural Network Orbit</p>
-          <h1 className="text-6xl md:text-[120px] font-black text-white/5 uppercase tracking-tighter select-none">
+          <h1 className="text-6xl md:text-[140px] font-black text-white/5 uppercase tracking-tighter select-none leading-none">
             {language === 'zh' ? '数字生命' : 'DIGITAL LIFE'}
           </h1>
         </m.div>
@@ -84,11 +83,11 @@ const PlanetsPage: React.FC = () => {
               <Activity className="w-3 h-3" />
               Interactive Evolution Map
             </div>
-            <div className="bg-black/40 backdrop-blur-xl p-4 rounded-2xl border border-white/5 max-w-xs">
+            <div className="bg-black/60 backdrop-blur-xl p-5 rounded-3xl border border-white/5 max-w-xs shadow-2xl">
               <p className="text-gray-400 text-[10px] leading-relaxed uppercase tracking-wider font-bold">
                 {language === 'zh' 
-                  ? '点击星系中的微缩星球，展开器官解剖视图。每一个星球都是闭环生命体的重要组成部分。'
-                  : 'Click on the miniature planets in the orbit to expand organ anatomy. Each node is vital to the Digital SuperEgo.'}
+                  ? '点击星系中的微缩星球，展开器官解剖视图。星球间通过神经网络彼此呼应。'
+                  : 'Click the miniature planets in orbit to expand organ anatomy. The nodes are linked via a neural web.'}
               </p>
             </div>
           </m.div>
@@ -99,17 +98,19 @@ const PlanetsPage: React.FC = () => {
             animate={{ x: 0, opacity: 1 }}
             className="hidden md:block pointer-events-auto"
           >
-            <div className="bg-black/40 backdrop-blur-xl p-6 rounded-[32px] border border-white/5 space-y-6 min-w-[200px]">
+            <div className="bg-black/60 backdrop-blur-xl p-6 rounded-[32px] border border-white/5 space-y-6 min-w-[200px] shadow-2xl">
                <div>
-                  <div className="text-[8px] font-mono text-gray-500 uppercase tracking-widest mb-1">Orbit Speed</div>
-                  <div className="text-xs font-black text-white uppercase">1.5 Rad/Sec (Stable)</div>
+                  <div className="text-[8px] font-mono text-gray-500 uppercase tracking-widest mb-1">Orbit Sync</div>
+                  <div className="text-xs font-black text-white uppercase tracking-tight">Active_Stable_Node</div>
                </div>
                <div>
                   <div className="text-[8px] font-mono text-gray-500 uppercase tracking-widest mb-1">Neural Load</div>
-                  <div className="text-xs font-black text-blue-400 uppercase">Balanced</div>
+                  <div className="text-xs font-black text-blue-400 uppercase">Synchronized</div>
                </div>
                <div className="pt-4 border-t border-white/5">
-                  <Link to="/consulting" className="text-[9px] font-black text-white uppercase tracking-widest hover:text-blue-500 transition-colors">Enterprise Access -></Link>
+                  <Link to="/consulting" className="text-[9px] font-black text-white uppercase tracking-widest hover:text-blue-500 transition-colors">
+                    Enterprise Access {"->"}
+                  </Link>
                </div>
             </div>
           </m.div>
@@ -122,22 +123,23 @@ const PlanetsPage: React.FC = () => {
               initial={{ x: 400, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 400, opacity: 0 }}
-              className="fixed right-6 top-32 bottom-32 w-full max-w-md pointer-events-auto z-50"
+              className="fixed right-6 top-24 bottom-24 w-full max-w-md pointer-events-auto z-50"
             >
               <div className="h-full relative group">
-                {/* Close Button */}
                 <button 
                   onClick={() => setSelectedCourse(null)}
-                  className="absolute -left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl z-10 hover:scale-110 transition-transform"
+                  className="absolute -left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl z-10 hover:scale-110 transition-transform"
                 >
                   <X className="w-5 h-5" />
                 </button>
                 
-                <AnatomyCard 
-                  data={mapCourseToNode(selectedCourse)} 
-                  isCenter={selectedCourse.id === 'data'} 
-                  onHover={() => {}} 
-                />
+                <div className="h-full scale-[0.95] origin-right">
+                  <AnatomyCard 
+                    data={mapCourseToNode(selectedCourse)} 
+                    isCenter={selectedCourse.id === 'data'} 
+                    onHover={() => {}} 
+                  />
+                </div>
               </div>
             </m.div>
           )}
@@ -152,7 +154,7 @@ const PlanetsPage: React.FC = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -20, opacity: 0 }}
-                className="bg-white/10 backdrop-blur-3xl px-8 py-3 rounded-full border border-white/20 shadow-2xl"
+                className="bg-white/10 backdrop-blur-3xl px-8 py-3 rounded-full border border-white/20 shadow-2xl pointer-events-auto"
               >
                 <div className="flex items-center gap-4">
                   <span className="text-xl">{hoveredCourse.icon}</span>
@@ -171,14 +173,14 @@ const PlanetsPage: React.FC = () => {
       <div className="fixed bottom-6 left-6 z-30">
         <Link to="/" className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10 text-gray-500 hover:text-white transition-all font-mono text-[9px] uppercase tracking-widest">
           <ArrowLeft className="w-3 h-3" />
-          System Reset
+          Protocol Reset
         </Link>
       </div>
 
       <style>{`
         .bg-grid-pattern {
-          background-image: linear-gradient(to right, #ffffff10 1px, transparent 1px),
-                            linear-gradient(to bottom, #ffffff10 1px, transparent 1px);
+          background-image: linear-gradient(to right, #ffffff08 1px, transparent 1px),
+                            linear-gradient(to bottom, #ffffff08 1px, transparent 1px);
           background-size: 40px 40px;
         }
       `}</style>
