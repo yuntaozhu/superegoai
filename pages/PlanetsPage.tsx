@@ -5,7 +5,7 @@ import { useLanguage, Link } from '../context/LanguageContext';
 import BioCosmos from '../components/BioCosmos';
 import AnatomyCard, { AnatomyNode } from '../components/AnatomyCard';
 import MobiusGalaxy from '../components/MobiusGalaxy';
-import { ArrowLeft, Activity, Info, Zap } from 'lucide-react';
+import { ArrowLeft, Activity, ShieldCheck } from 'lucide-react';
 
 const m = motion as any;
 
@@ -89,36 +89,18 @@ const PlanetsPage: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hoverData, setHoverData] = useState<{ pos: { x: number; y: number } | null; color: string | null }>({ pos: null, color: null });
 
-  // 映射课程到旧有的 Mobius 需要的 Course 类型（为了复用 3D 组件）
-  const mobiusCourses = ANATOMY_DATA.map(d => ({
-    id: d.id,
-    title: d.name,
-    shortTitle: d.organ,
-    color: `from-[${d.color}] to-[#000]`,
-    organ: d.organ,
-    icon: d.icon,
-    // 其他必要字段占位
-    tagline: '', description: '', organRole: '', target: '', format: '', duration: '', outcome: '', philosophyMap: { title: '', points: [] }, syllabus: []
-  }));
-
   return (
-    <div className="relative min-h-screen bg-[#020308] overflow-x-hidden pt-24 pb-32">
-      {/* 1. 粒子底层：BioCosmos 响应悬停能量 */}
+    <div className="relative min-h-screen bg-[#020308] overflow-x-hidden pt-24 pb-32 font-sans">
+      {/* 1. 动态粒子底层 */}
       <BioCosmos 
         activeColor={hoverData.color || undefined} 
         activePos={hoverData.pos || undefined} 
+        isCore={hoveredId === 'core'}
       />
 
-      {/* 2. 莫比乌斯环中层：作为能量流缠绕卡片 */}
+      {/* 2. 莫比乌斯丝带中层 */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-        <MobiusGalaxy 
-          courses={mobiusCourses}
-          orientation="horizontal"
-          onSelectCourse={() => {}}
-          onHoverCourse={(c) => {
-             // 仅作为视觉背景，不处理交互以防冲突
-          }}
-        />
+        <MobiusGalaxy orientation="horizontal" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -130,22 +112,24 @@ const PlanetsPage: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest"
           >
             <Activity className="w-3 h-3 animate-pulse" />
-            Digital Anatomy Terminal
+            Biological Digital Evolution Protocol
           </m.div>
           <m.h1 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none"
+            className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none"
           >
             {language === 'zh' ? '数字生命体：器官架构' : 'Digital Life Form: Anatomy'}
           </m.h1>
+          <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.5em]">The Anatomy of a Super Individual</p>
         </div>
 
         {/* 维特鲁威解剖布局 (Desktop) */}
-        <div className="hidden lg:block relative min-h-[900px]">
-          {/* 核心 (Center) - SuperEgo */}
+        <div className="hidden lg:block relative min-h-[1000px] mt-20">
+          
+          {/* 核心 (Center) - SuperEgo - 动态层级逻辑 */}
           <div 
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] transition-all duration-500 ${hoveredId === 'core' ? 'z-[100] scale-110' : 'z-20'}`}
+            className={`absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[400px] transition-all duration-700 ${hoveredId === 'core' ? 'z-[100] scale-110' : 'z-10'}`}
           >
             <AnatomyCard 
               data={ANATOMY_DATA[0]} 
@@ -157,8 +141,8 @@ const PlanetsPage: React.FC = () => {
             />
           </div>
 
-          {/* 逻辑 (Top Left) */}
-          <div className={`absolute left-[12%] top-[10%] w-[320px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[100]' : 'z-10'}`}>
+          {/* 逻辑与感官 (Top Nodes) */}
+          <div className={`absolute left-[15%] top-[5%] w-[320px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[100]' : 'z-20'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[1]} 
               onHover={(pos, color) => {
@@ -168,8 +152,7 @@ const PlanetsPage: React.FC = () => {
             />
           </div>
 
-          {/* 感官 (Top Right) */}
-          <div className={`absolute right-[12%] top-[10%] w-[320px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[100]' : 'z-10'}`}>
+          <div className={`absolute right-[15%] top-[5%] w-[320px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[100]' : 'z-20'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[2]} 
               onHover={(pos, color) => {
@@ -179,8 +162,8 @@ const PlanetsPage: React.FC = () => {
             />
           </div>
 
-          {/* 躯干 (Middle Left) */}
-          <div className={`absolute left-[5%] top-[50%] w-[320px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[100]' : 'z-10'}`}>
+          {/* 躯干与双手 (Mid Nodes) */}
+          <div className={`absolute left-[5%] top-[45%] w-[320px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[100]' : 'z-20'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[3]} 
               onHover={(pos, color) => {
@@ -190,8 +173,7 @@ const PlanetsPage: React.FC = () => {
             />
           </div>
 
-          {/* 双手 (Middle Right) */}
-          <div className={`absolute right-[5%] top-[50%] w-[320px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[100]' : 'z-10'}`}>
+          <div className={`absolute right-[5%] top-[45%] w-[320px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[100]' : 'z-20'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[4]} 
               onHover={(pos, color) => {
@@ -201,8 +183,8 @@ const PlanetsPage: React.FC = () => {
             />
           </div>
 
-          {/* 意志 (Bottom Center) */}
-          <div className={`absolute left-1/2 bottom-[5%] -translate-x-1/2 w-[320px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[100]' : 'z-10'}`}>
+          {/* 意志 (Bottom Node) */}
+          <div className={`absolute left-1/2 bottom-[5%] -translate-x-1/2 w-[320px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[100]' : 'z-20'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[5]} 
               onHover={(pos, color) => {
@@ -212,33 +194,37 @@ const PlanetsPage: React.FC = () => {
             />
           </div>
           
-          {/* 装饰连线 */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
-            <g stroke="white" strokeWidth="0.5" fill="none" strokeDasharray="4 4">
-              <line x1="50%" y1="50%" x2="25%" y2="20%" />
-              <line x1="50%" y1="50%" x2="75%" y2="20%" />
-              <line x1="50%" y1="50%" x2="15%" y2="60%" />
-              <line x1="50%" y1="50%" x2="85%" y2="60%" />
-              <line x1="50%" y1="50%" x2="50%" y2="85%" />
+          {/* 动态连线 */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-10">
+            <g stroke="white" strokeWidth="0.5" fill="none" strokeDasharray="5 5">
+               <path d="M 50% 45% L 25% 15%" />
+               <path d="M 50% 45% L 75% 15%" />
+               <path d="M 50% 45% L 15% 55%" />
+               <path d="M 50% 45% L 85% 55%" />
+               <path d="M 50% 45% L 50% 90%" />
             </g>
           </svg>
         </div>
 
         {/* Mobile View */}
-        <div className="lg:hidden space-y-8 relative">
+        <div className="lg:hidden space-y-10 relative mt-16 px-2">
           {ANATOMY_DATA.map((node) => (
             <AnatomyCard 
               key={node.id}
               data={node} 
-              onHover={(pos, color) => setHoverData({ pos, color })} 
+              isCenter={node.id === 'core'}
+              onHover={(pos, color) => {
+                setHoverData({ pos, color });
+                setHoveredId(color ? node.id : null);
+              }} 
             />
           ))}
         </div>
 
-        <div className="mt-40 text-center">
-          <Link to="/" className="inline-flex items-center gap-3 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all font-mono text-xs uppercase tracking-widest">
-            <ArrowLeft className="w-4 h-4" />
-            Terminate Protocol // Back to Home
+        <div className="mt-48 text-center">
+          <Link to="/" className="inline-flex items-center gap-3 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-gray-500 hover:text-white hover:bg-white/10 transition-all font-mono text-[10px] uppercase tracking-widest group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Biological Core // Reset Protocol
           </Link>
         </div>
       </div>

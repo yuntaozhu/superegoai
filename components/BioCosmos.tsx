@@ -4,9 +4,10 @@ import React, { useEffect, useRef } from 'react';
 interface BioCosmosProps {
   activeColor?: string;
   activePos?: { x: number; y: number };
+  isCore?: boolean;
 }
 
-const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos }) => {
+const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos, isCore }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Instance = useRef<any>(null);
 
@@ -15,31 +16,29 @@ const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos }) => {
 
     const sketch = (p: any) => {
       let particles: Particle[] = [];
-      const count = 150; // 增加粒子数量增强汇聚感
+      const count = isCore ? 200 : 120; 
 
       p.setup = () => {
         const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
         canvas.parent(containerRef.current);
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < 200; i++) {
           particles.push(new Particle(p));
         }
       };
 
       p.draw = () => {
         p.clear();
-        p.background(2, 3, 8, 30); 
+        p.background(2, 3, 8, isCore ? 40 : 25); 
         
         for (let i = 0; i < particles.length; i++) {
-          particles[i].update(activePos);
-          particles[i].display(activeColor);
+          particles[i].update(activePos, isCore);
+          particles[i].display(activeColor, isCore);
           
-          // 悬停时增强连线亮度
-          if (activePos) {
+          if (activePos && !isCore) {
             for (let j = i + 1; j < particles.length; j++) {
               let d = p.dist(particles[i].pos.x, particles[i].pos.y, particles[j].pos.x, particles[j].pos.y);
-              if (d < 100) {
-                let alpha = p.map(d, 0, 100, 60, 0);
-                p.stroke(activeColor ? activeColor + '40' : 'rgba(255,255,255,0.1)');
+              if (d < 80) {
+                p.stroke(activeColor ? activeColor + '30' : 'rgba(255,255,255,0.05)');
                 p.strokeWeight(0.5);
                 p.line(particles[i].pos.x, particles[i].pos.y, particles[j].pos.x, particles[j].pos.y);
               }
@@ -68,27 +67,29 @@ const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos }) => {
         this.vel = p.createVector(p.random(-1, 1), p.random(-1, 1));
         this.acc = p.createVector(0, 0);
         this.maxSpeed = p.random(1, 3);
-        this.size = p.random(1, 2.5);
+        this.size = p.random(1, 3);
         this.noiseOffset = p.random(1000);
       }
 
-      update(target?: { x: number; y: number }) {
+      update(target?: { x: number; y: number }, highEnergy?: boolean) {
         if (target) {
           let targetVec = this.p.createVector(target.x, target.y);
           let dir = this.p.constructor.Vector.sub(targetVec, this.pos);
           let dist = dir.mag();
           
-          // 越靠近目标速度越快，形成吸入感
-          let strength = this.p.map(dist, 0, this.p.width, 0.5, 0.01);
+          // 核心引力算法
+          let strength = highEnergy 
+            ? this.p.map(dist, 0, this.p.width, 0.8, 0.05) 
+            : this.p.map(dist, 0, this.p.width, 0.4, 0.01);
+            
           dir.setMag(strength);
           this.acc.add(dir);
-          this.maxSpeed = 6; // 汇聚状态加速
+          this.maxSpeed = highEnergy ? 12 : 5;
         } else {
-          // 游离状态：受微弱噪声驱动
           let n = this.p.noise(this.pos.x * 0.005, this.pos.y * 0.005, this.p.frameCount * 0.01 + this.noiseOffset);
-          let angle = n * this.p.TWO_PI * 2;
+          let angle = n * this.p.TWO_PI * 4;
           let noiseVec = this.p.constructor.Vector.fromAngle(angle);
-          noiseVec.mult(0.1);
+          noiseVec.mult(0.05);
           this.acc.add(noiseVec);
           this.maxSpeed = 2;
         }
@@ -104,19 +105,18 @@ const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos }) => {
         if (this.pos.y > this.p.height) this.pos.y = 0;
       }
 
-      display(colorStr?: string) {
+      display(colorStr?: string, highEnergy?: boolean) {
         this.p.noStroke();
         if (colorStr) {
-          // 转换 HEX 为更加明亮的颜色用于粒子
           this.p.fill(colorStr);
-          // 核心粒子增加发光感
-          if (this.p.random() > 0.9) {
-            this.p.fill(255, 255, 255, 200);
+          if (highEnergy && this.p.random() > 0.8) {
+            this.p.fill(255, 255, 255); // 核心高亮白
           }
         } else {
-          this.p.fill(59, 130, 246, 120);
+          this.p.fill(59, 130, 246, 100);
         }
-        this.p.circle(this.pos.x, this.pos.y, this.size);
+        let dynamicSize = highEnergy ? this.size * 1.5 : this.size;
+        this.p.circle(this.pos.x, this.pos.y, dynamicSize);
       }
     }
 
@@ -138,7 +138,7 @@ const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos }) => {
     return () => {
       if (p5Instance.current) p5Instance.current.remove();
     };
-  }, []);
+  }, [isCore]);
 
   return <div ref={containerRef} className="fixed inset-0 -z-10 pointer-events-none" />;
 };
