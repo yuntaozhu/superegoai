@@ -8,9 +8,12 @@
  * 2. Serve content to React components
  */
 
-// Import the generated JSON using a relative path to avoid alias resolution issues.
+// Use a direct relative path. Using ./../ instead of ../ to satisfy some strict browser specifier checks.
 // @ts-ignore
-import knowledgeBase from '../generated/knowledge_base.json';
+import knowledgeBaseData from './../generated/knowledge_base.json';
+
+// Safety check for environments where JSON import might be problematic
+const knowledgeBase = knowledgeBaseData || { navigationTree: [], entries: [] };
 
 export interface PageMeta {
   id: string;
@@ -27,7 +30,7 @@ export interface NavTreeNode {
   id: string;
   title: string;
   type: 'category' | 'group' | 'page';
-  path?: string;
+  path?: string; 
   children?: NavTreeNode[];
 }
 
@@ -49,7 +52,6 @@ export interface PageContent {
   headers?: string[];
 }
 
-// Helper to map raw tree node to localized NavTreeNode
 const mapTreeNode = (node: any, lang: 'en' | 'zh'): NavTreeNode => {
   const title = node.titles?.[lang] || node.titles?.['en'] || node.id;
   return {
@@ -62,13 +64,11 @@ const mapTreeNode = (node: any, lang: 'en' | 'zh'): NavTreeNode => {
 };
 
 export const ContentService = {
-  // Get Navigation Tree from the indexed JSON (Hierarchical)
   getTree: (lang: 'en' | 'zh' = 'zh'): NavTreeNode[] => {
     const rawTree = (knowledgeBase as any)?.navigationTree || [];
     return rawTree.map((node: any) => mapTreeNode(node, lang));
   },
 
-  // Get Blog Posts specially
   getBlogPosts: (lang: 'en' | 'zh' = 'zh'): PageMeta[] => {
     const entries = (knowledgeBase as any)?.entries || [];
     const posts: PageMeta[] = [];
@@ -86,7 +86,6 @@ export const ContentService = {
           category: 'blog',
           path: entry.path,
           description: localeData.description || '',
-          // Extract frontmatter
           date: localeData.frontmatter?.date,
           tags: localeData.frontmatter?.tags,
           author: localeData.frontmatter?.author
@@ -94,7 +93,6 @@ export const ContentService = {
       }
     });
 
-    // Sort by date desc
     return posts.sort((a, b) => {
       const dateA = new Date(a.date || 0).getTime();
       const dateB = new Date(b.date || 0).getTime();
@@ -102,13 +100,9 @@ export const ContentService = {
     });
   },
 
-  // Deep Drill: Get Page Content with Strict File Resolution
   getPage: async (path: string, lang: 'en' | 'zh' = 'zh'): Promise<PageContent> => {
-    // Support both with and without leading slash
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
     const entries = (knowledgeBase as any)?.entries || [];
-    
-    // Find entry in knowledge base
     const entry = entries.find((e: any) => e.path === cleanPath);
 
     if (!entry) {
@@ -122,18 +116,15 @@ export const ContentService = {
         };
     }
 
-    // Determine available languages
     const locales = entry.locales || {};
     const availableLanguages: ('en' | 'zh')[] = [];
     if (locales.zh) availableLanguages.push('zh');
     if (locales.en) availableLanguages.push('en');
 
-    // Select content based on language preference
     let selectedData = locales[lang];
     let isFallback = false;
     let actualLang = lang;
 
-    // Fallback logic: If requested language is missing, try the other one
     if (!selectedData) {
         if (lang === 'zh' && locales.en) {
             selectedData = locales.en;
@@ -157,13 +148,10 @@ export const ContentService = {
         };
     }
 
-    // Heuristic for file path (mostly for display/debug)
     let displayPath = '';
     if (entry.category === 'blog') {
         displayPath = `blog/posts/${entry.id}.${actualLang}.mdx`;
     } else {
-        // Construct path from id and category? 
-        // Since we have hierarchical paths now, it's safer to rely on the virtual path
         displayPath = `prompt-engineering/pages/${cleanPath}.${actualLang}.mdx`;
     }
 
@@ -183,7 +171,6 @@ export const ContentService = {
     };
   },
 
-  // Audit Tool: Generate Sync Report based on the JSON analysis
   getSyncReport: (): SyncStatus[] => {
     const entries = (knowledgeBase as any)?.entries || [];
     return entries.map((entry: any) => {

@@ -97,7 +97,7 @@ const PlanetsPage: React.FC = () => {
   const scrollToSection = (id: string) => {
     const el = document.getElementById(`deep-dive-${id}`);
     if (el) {
-      const offset = 100; // Account for navbar
+      const offset = 100;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = el.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -118,7 +118,9 @@ const PlanetsPage: React.FC = () => {
         activePos={hoverData.pos || undefined} 
         isCore={hoveredId === 'core'}
       />
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-20">
+      
+      {/* 重构后的背景星系：完全置底但清晰可见 */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-60">
         <MobiusGalaxy orientation="horizontal" />
       </div>
 
@@ -424,7 +426,7 @@ const PlanetsPage: React.FC = () => {
                    </li>
                    <li className="flex items-start gap-4">
                       <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500" />
-                      情绪化决策，受 FOMO 驱动
+                      情绪化决策，受 FOMO驱动
                    </li>
                    <li className="flex items-start gap-4">
                       <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500" />
