@@ -162,6 +162,18 @@ const PromptGuide: React.FC = () => {
     setAuditReport(ContentService.getSyncReport());
   }, []);
 
+  // Helper to find first page in a node branch
+  const findFirstPageInNode = (node: NavTreeNode): NavTreeNode | null => {
+    if (node.type === 'page') return node;
+    if (node.children) {
+      for (const child of node.children) {
+        const found = findFirstPageInNode(child);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   // Breadcrumb Logic: Find path to active node
   const breadcrumbs = useMemo(() => {
     if (!activePageNode) return [];
@@ -355,9 +367,15 @@ const PromptGuide: React.FC = () => {
             <div className="flex items-center gap-2 text-[9px] font-mono text-gray-700 uppercase tracking-[0.2em] overflow-hidden whitespace-nowrap">
               {breadcrumbs.map((bc, idx) => (
                 <React.Fragment key={bc.id}>
-                   <span className={`hidden sm:inline ${idx === breadcrumbs.length - 1 ? 'text-blue-500 font-black' : 'opacity-60'}`}>
+                   <button 
+                     onClick={() => {
+                       const firstPage = findFirstPageInNode(bc);
+                       if (firstPage) setActivePageNode(firstPage);
+                     }}
+                     className={`hidden sm:inline transition-colors hover:text-white ${idx === breadcrumbs.length - 1 ? 'text-blue-500 font-black' : 'opacity-60'}`}
+                   >
                      {bc.title}
-                   </span>
+                   </button>
                    {idx < breadcrumbs.length - 1 && <ChevronRight className="w-2.5 h-2.5 hidden sm:inline opacity-30" />}
                 </React.Fragment>
               ))}
@@ -423,9 +441,15 @@ const PromptGuide: React.FC = () => {
                     {breadcrumbs.map((bc, idx) => (
                       <React.Fragment key={bc.id}>
                         <ChevronRight className="w-2.5 h-2.5 opacity-20" />
-                        <span className={idx === breadcrumbs.length - 1 ? 'text-blue-500 font-black' : 'hover:text-gray-400 transition-colors cursor-default'}>
+                        <button 
+                          onClick={() => {
+                            const firstPage = findFirstPageInNode(bc);
+                            if (firstPage) setActivePageNode(firstPage);
+                          }}
+                          className={`transition-colors ${idx === breadcrumbs.length - 1 ? 'text-blue-500 font-black' : 'hover:text-gray-400'}`}
+                        >
                           {bc.title}
-                        </span>
+                        </button>
                       </React.Fragment>
                     ))}
                   </nav>

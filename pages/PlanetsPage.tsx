@@ -94,12 +94,20 @@ const PlanetsPage: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [hoverData, setHoverData] = useState<{ pos: { x: number; y: number } | null; color: string | null }>({ pos: null, color: null });
   
-  const scrollContainerRef = useRef(null);
-  const { scrollYProgress } = useScroll();
-
   const scrollToSection = (id: string) => {
     const el = document.getElementById(`deep-dive-${id}`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (el) {
+      const offset = 100; // Account for navbar
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
@@ -115,7 +123,7 @@ const PlanetsPage: React.FC = () => {
       </div>
 
       {/* HERO SECTION: THE GALAXY VIEW */}
-      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+      <section className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 pb-20">
         <div className="text-center mb-20 space-y-6">
           <m.div 
             initial={{ opacity: 0, y: -10 }}
@@ -133,8 +141,13 @@ const PlanetsPage: React.FC = () => {
             {language === 'zh' ? '数字生命体架构' : 'Digital Life Form'}
           </m.h1>
           <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.5em]">The Anatomy of a Super Individual</p>
-          <div className="pt-4 flex justify-center gap-4">
-             <ChevronDownIcon className="w-6 h-6 text-gray-700 animate-bounce" />
+          <div className="pt-8 flex justify-center gap-4">
+             <m.div 
+               animate={{ y: [0, 8, 0] }}
+               transition={{ repeat: Infinity, duration: 2 }}
+             >
+               <ChevronDownIcon className="w-6 h-6 text-gray-700" />
+             </m.div>
           </div>
         </div>
 
@@ -142,7 +155,7 @@ const PlanetsPage: React.FC = () => {
         <div className="hidden lg:block relative w-full max-w-7xl min-h-[900px]">
           {/* CORE: SuperEgo */}
           <div 
-            className={`absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[380px] transition-all duration-500 ${hoveredId === 'core' ? 'z-[100] scale-110' : 'z-50'}`}
+            className={`absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[420px] transition-all duration-500 ${hoveredId === 'core' ? 'z-[100]' : 'z-50'}`}
           >
             <AnatomyCard 
               data={ANATOMY_DATA[0]} 
@@ -150,62 +163,68 @@ const PlanetsPage: React.FC = () => {
               onHover={(pos, color) => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? 'core' : null);
-              }} 
+              }}
+              onClick={() => scrollToSection('core')}
             />
           </div>
 
           {/* LOGIC */}
-          <div className={`absolute left-[15%] top-[5%] w-[300px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[101]' : 'z-10'}`}>
+          <div className={`absolute left-[12%] top-[5%] w-[320px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[101]' : 'z-10'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[1]} 
               onHover={(pos, color) => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? 'logic' : null);
-              }} 
+              }}
+              onClick={() => scrollToSection('logic')}
             />
           </div>
 
           {/* SENSES */}
-          <div className={`absolute right-[15%] top-[5%] w-[300px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[101]' : 'z-10'}`}>
+          <div className={`absolute right-[12%] top-[5%] w-[320px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[101]' : 'z-10'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[2]} 
               onHover={(pos, color) => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? 'senses' : null);
-              }} 
+              }}
+              onClick={() => scrollToSection('senses')}
             />
           </div>
 
           {/* BODY */}
-          <div className={`absolute left-[5%] top-[45%] w-[300px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[101]' : 'z-10'}`}>
+          <div className={`absolute left-[2%] top-[45%] w-[320px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[101]' : 'z-10'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[3]} 
               onHover={(pos, color) => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? 'body' : null);
-              }} 
+              }}
+              onClick={() => scrollToSection('body')}
             />
           </div>
 
           {/* HANDS */}
-          <div className={`absolute right-[5%] top-[45%] w-[300px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[101]' : 'z-10'}`}>
+          <div className={`absolute right-[2%] top-[45%] w-[320px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[101]' : 'z-10'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[4]} 
               onHover={(pos, color) => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? 'hands' : null);
-              }} 
+              }}
+              onClick={() => scrollToSection('hands')}
             />
           </div>
 
           {/* WILL */}
-          <div className={`absolute left-1/2 bottom-[5%] -translate-x-1/2 w-[300px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[101]' : 'z-10'}`}>
+          <div className={`absolute left-1/2 bottom-[2%] -translate-x-1/2 w-[320px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[101]' : 'z-10'}`}>
             <AnatomyCard 
               data={ANATOMY_DATA[5]} 
               onHover={(pos, color) => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? 'will' : null);
-              }} 
+              }}
+              onClick={() => scrollToSection('will')}
             />
           </div>
           
@@ -231,6 +250,7 @@ const PlanetsPage: React.FC = () => {
                 setHoverData({ pos, color });
                 setHoveredId(color ? node.id : null);
               }} 
+              onClick={() => scrollToSection(node.id)}
             />
           ))}
         </div>

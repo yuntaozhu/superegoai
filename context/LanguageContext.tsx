@@ -95,7 +95,8 @@ export const Navigate: React.FC<{ to: string; replace?: boolean }> = ({ to, repl
     return null;
 };
 
-export const Link: React.FC<{ to: string; children: ReactNode; className?: string; onClick?: () => void }> = ({ to, children, className, onClick }) => {
+// --- Fix: Link component should accept React.MouseEventHandler to allow passing event arguments (like stopPropagation) ---
+export const Link: React.FC<{ to: string; children: ReactNode; className?: string; onClick?: React.MouseEventHandler<HTMLAnchorElement> }> = ({ to, children, className, onClick }) => {
     return (
         <a href={`#${to}`} className={className} onClick={onClick}>
             {children}
