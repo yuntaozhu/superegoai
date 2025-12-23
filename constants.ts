@@ -18,18 +18,18 @@ const CONTENT_ZH: ContentData = {
   courses: [
     {
       id: "data",
-      title: "AI SuperEgo: Engineering Your Second Cortex",
-      shortTitle: "核心：第二皮层",
+      title: "AI SuperEgo: Engineering Your Second Brain",
+      shortTitle: "核心：第二外脑",
       organ: "THE CORE",
-      organRole: "Engineering Your Second Cortex",
-      tagline: "第二皮层：主权认知架构协议 —— 基于神经科学的全栈 Exobrain 实战",
-      description: "跨越生物大脑局限，通过构建 FTI 架构的数字认知外骨骼，实现专家级的决策与进化能力。经验不再是限制，代码质量与思维深度才是。",
+      organRole: "Engineering Your Second Brain",
+      tagline: "构建第二外脑 —— 基于 Decoding AI 架构与认知神经科学的全栈实战",
+      description: "跨越生物大脑局限，通过构建 FTI 架构的数字外脑，实现专家级的决策与进化能力。经验不再是限制，代码质量与思维深度才是。",
       icon: "🧠",
       color: "from-[#FFD700] to-[#B8860B]", // Gold
       target: "渴望获得超凡认知力的超级个体",
       format: "Decoding AI 全栈实战",
       duration: "12 周深度研习",
-      outcome: "构建一套可伴随终身进化、具备元认知监控的私有第二皮层系统。",
+      outcome: "构建一套可伴随终身进化、具备元认知监控的私有第二外脑系统。",
       philosophyMap: {
         title: "能力平权宣言",
         points: ["工具即大脑延伸", "打破算法投喂", "主权思维自动化"]
@@ -149,9 +149,9 @@ const CONTENT_EN: ContentData = {
   blogPosts: [],
   courses: CONTENT_ZH.courses.map(course => ({
     ...course,
-    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Cortex" : course.shortTitle.split('：')[1],
-    description: course.id === 'data' ? "A full-stack Exobrain implementation based on Decoding AI architecture and Cognitive Neuroscience. Break biological limits." : "Master the architecture of AI orchestration and build your unique Second Brain assets.",
-    outcome: "Build a persistent, self-evolving Second Cortex system with metacognitive monitoring."
+    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : course.shortTitle.split('：')[1],
+    description: course.id === 'data' ? "A full-stack implementation based on Decoding AI architecture and Cognitive Neuroscience. Build your own Second Brain." : "Master the architecture of AI orchestration and build your unique Second Brain assets.",
+    outcome: "Build a persistent, self-evolving Second Brain system with metacognitive monitoring."
   }))
 };
 
