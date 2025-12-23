@@ -22,7 +22,7 @@ const CONTENT_ZH: ContentData = {
       shortTitle: "核心：第二皮层",
       organ: "THE CORE",
       organRole: "Engineering Your Second Cortex",
-      tagline: "基于 Decoding AI 架构与认知神经科学的全栈 Exobrain 实战",
+      tagline: "第二皮层：主权认知架构协议 —— 基于神经科学的全栈 Exobrain 实战",
       description: "跨越生物大脑局限，通过构建 FTI 架构的数字认知外骨骼，实现专家级的决策与进化能力。经验不再是限制，代码质量与思维深度才是。",
       icon: "🧠",
       color: "from-[#FFD700] to-[#B8860B]", // Gold

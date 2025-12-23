@@ -18,11 +18,11 @@ const ANATOMY_DATA: AnatomyNode[] = [
   {
     id: 'core',
     organ: 'The Core (核心皮层)',
-    name: 'AI SuperEgo —— 认知外骨骼工程',
-    metaphor: 'Engineering Your Second Cortex. 能力平权的终极实践。',
-    target: '渴望跨越认知局限的开发者、决策者与终身学习者。',
+    name: 'AI SuperEgo —— 第二皮层：主权认知架构协议',
+    metaphor: 'Engineering Your Second Cortex. “能力平权”的终极工程实战。',
+    target: '渴望打破生物瓶颈、构建数字化认知外骨骼的超级个体。',
     method: '12 Weeks | Decoding AI Architecture | Neuro-Inference.',
-    outcome: '构建私有核心推理中枢，实现从“查阅资料”到“外挂前额叶”的质变。',
+    outcome: '构建可代码化的第二大脑，实现从“算法受体”到“架构总导演”的进化。',
     link: '/course/data',
     color: '#FFD700',
     icon: '🧠'
@@ -348,7 +348,7 @@ const PlanetsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* DEEP DIVE SECTION */}
+      {/* SECTION 2: ANATOMY DEEP DIVE */}
       <section className="relative z-10 py-32 space-y-40">
         <div className="max-w-7xl mx-auto px-6">
            <div className="text-center mb-32">
