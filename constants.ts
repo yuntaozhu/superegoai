@@ -9,7 +9,7 @@ interface ContentData {
 
 const CONTENT_ZH: ContentData = {
   philosophyPillars: [
-    { title: '认知基石', concept: '系统本位', practice: '构建超我控制中枢' },
+    { title: '能力平权', concept: '认知公平', practice: '构建 Exobrain 抹平经验差距' },
     { title: '资产构建', concept: '数字分身', practice: 'FTI 架构数据闭环' },
     { title: '身份转变', concept: '总导演', practice: '编排而非执行' },
     { title: '工作流革命', concept: '一人公司', practice: '多智能体协同' }
@@ -18,21 +18,21 @@ const CONTENT_ZH: ContentData = {
   courses: [
     {
       id: "data",
-      title: "AI SuperEgo：构建主权第二大脑",
-      shortTitle: "核心：超我",
+      title: "AI SuperEgo: Engineering Your Second Cortex",
+      shortTitle: "核心：第二皮层",
       organ: "THE CORE",
-      organRole: "OS / Memory / Personality",
-      tagline: "闭环生命的控制中枢",
-      description: "企业的 RAG 技术翻译为个人知识系统的构建法则。它是整个生命体的数字分身与长期记忆库。",
+      organRole: "Engineering Your Second Cortex",
+      tagline: "基于 Decoding AI 架构与认知神经科学的全栈 Exobrain 实战",
+      description: "跨越生物大脑局限，通过构建 FTI 架构的数字认知外骨骼，实现专家级的决策与进化能力。经验不再是限制，代码质量与思维深度才是。",
       icon: "🧠",
       color: "from-[#FFD700] to-[#B8860B]", // Gold
-      target: "核心大脑模块",
-      format: "架构级课程",
-      duration: "4 周",
-      outcome: "建立私有向量数据库，打造具备RAG能力的AI参谋长。",
+      target: "渴望获得超凡认知力的超级个体",
+      format: "Decoding AI 全栈实战",
+      duration: "12 周深度研习",
+      outcome: "构建一套可伴随终身进化、具备元认知监控的私有第二皮层系统。",
       philosophyMap: {
-        title: "主权定义",
-        points: ["数据主权", "模型主权", "创造主权"]
+        title: "能力平权宣言",
+        points: ["工具即大脑延伸", "打破算法投喂", "主权思维自动化"]
       },
       syllabus: []
     },
@@ -141,7 +141,7 @@ const CONTENT_ZH: ContentData = {
 
 const CONTENT_EN: ContentData = {
   philosophyPillars: [
-    { title: 'Cognitive Core', concept: 'System Oriented', practice: 'Building the SuperEgo Hub' },
+    { title: 'Cognitive Equity', concept: 'AI Sovereignty', practice: 'Building Exobrain to Bridge Experience Gaps' },
     { title: 'Asset Building', concept: 'Digital Twin', practice: 'FTI Data Feedback Loop' },
     { title: 'Identity Shift', concept: 'Director General', practice: 'Orchestrating, Not Executing' },
     { title: 'Workflow Revolution', concept: 'Solopreneur', practice: 'Multi-Agent Collaboration' }
@@ -149,9 +149,9 @@ const CONTENT_EN: ContentData = {
   blogPosts: [],
   courses: CONTENT_ZH.courses.map(course => ({
     ...course,
-    title: course.shortTitle.split('：')[1],
-    description: "The official English description for this anatomical module is being indexed. Explore the trajectory to learn more about the orchestration framework.",
-    outcome: "Master the architecture of AI orchestration and build your unique Second Brain assets."
+    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Cortex" : course.shortTitle.split('：')[1],
+    description: course.id === 'data' ? "A full-stack Exobrain implementation based on Decoding AI architecture and Cognitive Neuroscience. Break biological limits." : "Master the architecture of AI orchestration and build your unique Second Brain assets.",
+    outcome: "Build a persistent, self-evolving Second Cortex system with metacognitive monitoring."
   }))
 };
 

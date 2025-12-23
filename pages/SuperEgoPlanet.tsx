@@ -4,8 +4,8 @@ import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
+import { Shield, Eye, Cpu, Database, Network, LineChart, Target, Zap, Activity } from 'lucide-react';
 
-// Using any to bypass framer-motion type mismatch in the current environment
 const m = motion as any;
 
 const SuperEgoPlanet: React.FC = () => {
@@ -13,183 +13,290 @@ const SuperEgoPlanet: React.FC = () => {
   const content = getContent(language);
   const course = content.courses.find(c => c.id === 'data')!;
 
-  const stages = [
+  const modules = [
     {
-      id: 'S1',
-      title: '第一阶段：构建地基 —— FTI 架构与数据管道',
-      subtitle: '建立自动化的“数据摄取系统”',
-      modules: [
-        { name: '主权数据仓库', detail: '讲解 ETL (采集、清洗、入库) 概念，搭建私有知识库。' },
-        { name: '高级 RAG 实战', detail: '配置 Hybrid Search (混合检索)，实现精准匹配。' }
-      ],
-      tech: ['FTI Architecture', 'Vector DB', 'Embedding', 'Hybrid Search'],
-      gradient: 'from-cyan-500 to-blue-500',
-      icon: '💾'
+      id: '01',
+      title: 'Sovereignty - 认知主权与架构蓝图',
+      neuro: 'Exobrain Architecture (外脑架构)',
+      theory: 'Extended Mind Thesis (延展心智)',
+      tech: ['LangChain', 'Qdrant Setup', 'System Blueprint', 'FTI Flow'],
+      mission: '夺回对信息的控制权。建立一套不依赖算法推荐、完全属于你的认知操作系统。',
+      deliverable: '认知主权宣言 & 系统蓝图',
+      icon: <Shield className="w-6 h-6" />,
+      color: 'from-yellow-500 to-amber-600'
     },
     {
-      id: 'S2',
-      title: '第二阶段：觉醒 SuperEgo —— 推理与决策',
-      subtitle: '给 AI 注入人格与逻辑',
-      modules: [
-        { name: '超我人格塑造', detail: '编写复杂的 System Prompt 链，实现 Retrieval-Reflection-Action。' },
-        { name: 'Text-to-SQL', detail: '自然语言驱动数据库，让 SuperEgo 懂文字也懂 Excel/CSV。' }
-      ],
-      tech: ['Prompt Engineering', 'SQL Agent', 'Logic Chains', 'Inference Pipeline'],
-      gradient: 'from-blue-500 to-indigo-600',
-      icon: '⚡'
+      id: '02',
+      title: 'The Gatekeeper - 显著性网络与高维摄取',
+      neuro: 'Salience Network (显著性网络)',
+      theory: 'Attention Economy Mitigation',
+      tech: ['ETL Pipelines', 'Filter Agent', 'Metadata Extraction', 'Noise Reduction'],
+      mission: '只有高质量的输入才能产生高质量的输出。让 AI 帮你阻挡平庸信息的洪流。',
+      deliverable: '自动去噪的数据摄取管道',
+      icon: <Eye className="w-6 h-6" />,
+      color: 'from-blue-500 to-cyan-500'
     },
     {
-      id: 'S3',
-      title: '第三阶段：多模态通感 —— 右脑的爆发',
-      subtitle: '实现从“逻辑”到“感性”的跨越',
-      modules: [
-        { name: '视觉与动态叙事', detail: '利用 MJ/Flux 将笔记转化为专业海报与产品概念视频。' },
-        { name: '情绪共鸣创作', detail: '利用 Suno/Udio 根据心情日记生成特定情绪的 Lo-fi 音乐。' }
-      ],
-      tech: ['Midjourney', 'Luma / Kling', 'Suno', 'Creative Cortex'],
-      gradient: 'from-purple-500 to-pink-600',
-      icon: '🎨'
+      id: '03',
+      title: 'Synthesis - 知识蒸馏与结构化',
+      neuro: 'Cognitive Offloading (认知卸载)',
+      theory: 'Working Memory Offload',
+      tech: ['Unstructured Lib', 'Synthetic Data Gen', 'Concept Graphing', 'Instruction Tuning'],
+      mission: '打破“阅读速度”的生物限制。将非结构化笔记转化为 <Instruction, Input, Output> 的知识晶体。',
+      deliverable: '结构化的高质量知识库',
+      icon: <Database className="w-6 h-6" />,
+      color: 'from-emerald-500 to-teal-500'
     },
     {
-      id: 'S4',
-      title: '第四阶段：终极形态 —— 自动化与自我进化',
-      subtitle: '实现系统闭环与自我进化',
-      modules: [
-        { name: '多智能体编排', detail: '使用 Dify/LangGraph 搭建调研、脚本到视频生成的流水线。' },
-        { name: '反馈优化闭环', detail: '通过点踩/修改回写向量库，让 SuperEgo 不断变聪明。' }
-      ],
-      tech: ['Multi-Agent', 'Optimization Loop', 'RLHF', 'Dify Workflow'],
-      gradient: 'from-amber-500 to-orange-600',
-      icon: '🧬'
+      id: '04',
+      title: 'Simulation - 经验模拟与超我微调',
+      neuro: 'SuperEgo / Expert Model (专家模拟)',
+      theory: 'Mirror Neurons (镜像神经元)',
+      tech: ['Llama 3 / Mistral', 'LoRA/QLoRA', 'CoT Training', 'Adapter Deployment'],
+      mission: '实现能力平权的关键。通过微调直接继承顶级专家的思维模式，弥补经验差距。',
+      deliverable: '个人专属的微调推理模型',
+      icon: <Cpu className="w-6 h-6" />,
+      color: 'from-purple-500 to-indigo-600'
+    },
+    {
+      id: '05',
+      title: 'Connection - 联想记忆与全知检索',
+      neuro: 'Associative Memory (联想记忆)',
+      theory: 'Memex Implementation',
+      tech: ['Semantic Chunking', 'Hybrid Search (BM25+Vector)', 'Cohere Rerank', 'Context Injection'],
+      mission: '创造力是连接的能力。让系统瞬间发现跨学科、跨时间的隐秘联系，构建全知检索系统。',
+      deliverable: '上下文感知的全知检索系统',
+      icon: <Network className="w-6 h-6" />,
+      color: 'from-pink-500 to-rose-600'
+    },
+    {
+      id: '06',
+      title: 'Evolution - 元认知与系统运维',
+      neuro: 'Metacognition (元认知)',
+      theory: 'Self-Correction Loops',
+      tech: ['LangGraph Agents', 'Observability (Opik/LangSmith)', 'Eval Tracing', 'Streamlit HUD'],
+      mission: '系统必须自我进化。通过客观数据监控思维过程，消除幻觉，建立自动化测试集。',
+      deliverable: '自我进化的认知仪表盘',
+      icon: <Activity className="w-6 h-6" />,
+      color: 'from-orange-500 to-red-600'
     }
   ];
 
   return (
     <PlanetLayout course={course}>
-      {/* Sovereignty Section */}
-      <section className="mt-8 md:mt-16 mb-16 md:mb-24 px-4 md:px-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
-          <m.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="space-y-6 md:space-y-8 text-center md:text-left"
-          >
-            <div className="flex items-center justify-center md:justify-start gap-3">
-              <span className="w-10 h-0.5 bg-yellow-400 rounded-full" />
-              <span className="text-yellow-400 font-mono text-[10px] md:text-xs uppercase tracking-widest">Sovereign OS</span>
-            </div>
-            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-tight">
-              构建你的“主权” <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">第二大脑</span>
-            </h2>
-            <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
-              拒绝玩具级的“调包侠”教学。我们将企业级的 <span className="text-white font-bold">FTI</span> 架构翻译为个人知识系统的构建法则，实现全方位主权。
-            </p>
-          </m.div>
+      {/* Intro Header */}
+      <section className="mt-12 mb-24 text-center space-y-8">
+        <m.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 font-mono text-xs font-black uppercase tracking-[0.3em]"
+        >
+          <Zap className="w-4 h-4" />
+          Cognitive Equity Protocol // 能力平权协议
+        </m.div>
+        
+        <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none">
+          Engineering Your <br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-200">
+            Second Cortex
+          </span>
+        </h2>
+        
+        <p className="text-gray-400 text-lg md:text-2xl max-w-4xl mx-auto font-light leading-relaxed">
+          这是基于“能力平权”理念和深度融合 <span className="text-white font-bold">Decoding AI</span> 架构与认知神经科学的终极实战。
+          不仅是学习，更是构建你的“数字认知外骨骼”。
+        </p>
+      </section>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-             {[
-               { title: '数据主权', desc: '私有 Vector DB', icon: '🔒' },
-               { title: '模型主权', desc: '多模型协同', icon: '🛡️' },
-               { title: '创造主权', desc: '多模态通感', icon: '🎨' },
-             ].map((p, i) => (
-               <div key={i} className={`p-4 md:p-5 bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl text-center hover:bg-white/10 transition-colors ${i === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
-                  <div className="text-xl md:text-2xl mb-2 md:mb-3">{p.icon}</div>
-                  <h4 className="text-white font-bold text-xs md:text-sm mb-1">{p.title}</h4>
-                  <p className="text-gray-500 text-[7px] md:text-[9px] uppercase font-mono">{p.desc}</p>
-               </div>
-             ))}
+      {/* Framework Table Display */}
+      <section className="mb-32 overflow-hidden px-4">
+        <div className="max-w-7xl mx-auto bg-white/5 border border-white/10 rounded-[48px] overflow-hidden backdrop-blur-3xl shadow-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-4 bg-white/5 border-b border-white/10 text-[10px] font-mono font-black uppercase tracking-widest text-gray-500 p-6 hidden md:grid">
+            <div>Module / 模块</div>
+            <div>Function / 认知功能</div>
+            <div>Tech Stack / 技术栈</div>
+            <div>Deliverable / 交付成果</div>
+          </div>
+          <div className="divide-y divide-white/5">
+            {modules.map((m_item) => (
+              <div key={m_item.id} className="grid grid-cols-1 md:grid-cols-4 p-6 md:p-10 hover:bg-white/5 transition-colors items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${m_item.color} flex items-center justify-center text-white shadow-xl`}>
+                    {m_item.icon}
+                  </div>
+                  <div>
+                    <div className="text-xs font-mono text-yellow-500 font-black">PHASE_{m_item.id}</div>
+                    <div className="text-white font-black text-sm uppercase leading-tight">{m_item.title.split(' - ')[0]}</div>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-white font-bold text-sm">{m_item.neuro}</div>
+                  <div className="text-gray-500 text-xs italic">{m_item.theory}</div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {m_item.tech.slice(0, 3).map(t => (
+                    <span key={t} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[9px] font-mono text-gray-400">{t}</span>
+                  ))}
+                </div>
+                <div className="text-yellow-500/80 font-black text-xs uppercase tracking-wider">
+                  {m_item.deliverable}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Evolutionary Path */}
-      <section className="py-12 md:py-20 px-4 md:px-0">
-        <div className="space-y-12 md:space-y-16">
-          {stages.map((stage, idx) => (
+      {/* Detailed Module Breakdown */}
+      <section className="space-y-32 mb-40">
+        {modules.map((m_item, idx) => (
+          <div key={m_item.id} className={`flex flex-col lg:flex-row gap-20 items-center ${idx % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
             <m.div 
-              key={stage.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="group relative bg-brand-surface border border-white/10 rounded-[32px] md:rounded-[56px] overflow-hidden backdrop-blur-xl hover:border-yellow-500/20 transition-all duration-500"
+              className="flex-1 space-y-10"
             >
-              <div className={`absolute top-0 left-0 w-1.5 md:w-3 h-full bg-gradient-to-b ${stage.gradient}`} />
-              <div className="p-8 md:p-16 flex flex-col lg:flex-row gap-8 md:gap-12">
-                 <div className="lg:w-1/3 space-y-4 md:space-y-8">
-                    <div className="flex items-center gap-4">
-                       <div className={`w-10 h-10 md:w-14 md:h-14 rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-xl md:text-3xl shadow-inner`}>
-                          {stage.icon}
-                       </div>
-                       <div className="text-[10px] font-mono text-gray-600">PHASE_{stage.id}</div>
-                    </div>
-                    <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">{stage.title}</h3>
-                    <p className="text-gray-400 text-xs md:text-sm italic">{stage.subtitle}</p>
-                    <div className="flex flex-wrap gap-2 pt-2 md:pt-4">
-                       {stage.tech.map(t => (
-                         <span key={t} className="px-2 md:px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[8px] md:text-[10px] font-mono text-gray-500">{t}</span>
-                       ))}
-                    </div>
+              <div className="space-y-4">
+                <div className={`w-16 h-1 bg-gradient-to-r ${m_item.color} rounded-full`} />
+                <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+                  {m_item.title}
+                </h3>
+              </div>
+              
+              <div className="p-8 rounded-[40px] bg-white/5 border border-white/10 relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 p-8 opacity-5">
+                    {m_item.icon}
                  </div>
-
-                 <div className="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                    {stage.modules.map((m_mod, i) => (
-                      <div key={i} className="p-6 md:p-8 bg-black/40 rounded-2xl md:rounded-[40px] border border-white/5 hover:bg-black/60 transition-colors">
-                         <h4 className="text-white font-bold mb-2 md:mb-3 flex items-center gap-2 text-xs md:text-sm">
-                           <div className="w-1.5 h-1.5 rounded-full bg-yellow-500/50" />
-                           {m_mod.name}
-                         </h4>
-                         <p className="text-gray-400 text-[10px] md:text-xs leading-relaxed">{m_mod.detail}</p>
-                      </div>
-                    ))}
-                    <div className="md:col-span-2 p-6 md:p-8 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 text-center">
-                       <span className="text-[9px] md:text-[10px] font-mono text-yellow-500/60 uppercase tracking-[0.2em]">Stage Deliverable</span>
-                       <div className="text-white font-black mt-2 text-sm md:text-lg">
-                          {idx === 0 && '私有 FTI 数据管道'}
-                          {idx === 1 && 'SQL 财务智能助理'}
-                          {idx === 2 && '多模态灵感电影'}
-                          {idx === 3 && '自动化 Agent 工厂'}
-                       </div>
+                 <div className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.4em] mb-4">Core_Mission // 核心任务</div>
+                 <p className="text-gray-200 text-lg md:text-xl font-light leading-relaxed mb-8">
+                   {m_item.mission}
+                 </p>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-white/5">
+                    <div>
+                       <div className="text-[9px] font-black uppercase tracking-widest text-blue-400 mb-2">Technical Realization</div>
+                       <ul className="space-y-2">
+                          {m_item.tech.map(t => (
+                            <li key={t} className="text-xs text-gray-400 flex items-center gap-2">
+                               <div className="w-1 h-1 rounded-full bg-blue-500/50" /> {t}
+                            </li>
+                          ))}
+                       </ul>
+                    </div>
+                    <div>
+                       <div className="text-[9px] font-black uppercase tracking-widest text-yellow-500 mb-2">Cognitive Function</div>
+                       <p className="text-xs text-gray-400 font-light italic leading-relaxed">
+                          基于 {m_item.neuro} 理论，实现 {m_item.theory}。
+                       </p>
                     </div>
                  </div>
               </div>
             </m.div>
-          ))}
-        </div>
+
+            <m.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="flex-1 w-full max-w-md aspect-square rounded-[64px] bg-gradient-to-br from-white/5 to-transparent border border-white/10 flex items-center justify-center relative group"
+            >
+               <div className={`absolute inset-0 rounded-[64px] bg-gradient-to-br ${m_item.color} opacity-5 group-hover:opacity-10 transition-opacity`} />
+               <div className="relative text-9xl group-hover:scale-110 transition-transform duration-700 filter drop-shadow-[0_0_30px_rgba(255,215,0,0.2)]">
+                  {idx === 0 && '🛡️'}
+                  {idx === 1 && '🔭'}
+                  {idx === 2 && '💎'}
+                  {idx === 3 && '🧬'}
+                  {idx === 4 && '🕸️'}
+                  {idx === 5 && '📈'}
+               </div>
+               <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+                  <div className="text-[10px] font-mono text-gray-600 uppercase tracking-[0.5em] whitespace-nowrap">Exobrain_Node_0{m_item.id}</div>
+               </div>
+            </m.div>
+          </div>
+        ))}
       </section>
 
-      {/* Terminal Experience */}
-      <section className="mt-16 md:mt-32 p-8 md:p-20 bg-black border border-white/10 rounded-3xl md:rounded-[64px] relative overflow-hidden mx-4 md:mx-0 shadow-2xl">
-        <div className="absolute top-2 right-2 md:top-6 md:right-6 font-mono text-[8px] md:text-[10px] text-gray-700">EXPERIENCE_V1</div>
-        <div className="max-w-3xl mx-auto space-y-8 md:space-y-12">
-          <div className="text-center">
-            <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4">什么是“SuperEgo”体验？</h3>
-            <p className="text-gray-500 text-[10px] md:text-sm">不仅是回复，而是编排全媒体资产。</p>
-          </div>
+      {/* Capstone Project Section */}
+      <section className="mb-40 px-4">
+        <m.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="max-w-6xl mx-auto p-12 md:p-24 bg-gradient-to-br from-yellow-500/10 via-brand-dark to-brand-dark border border-yellow-500/20 rounded-[80px] relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-yellow-500/5 blur-[150px] -translate-y-1/2 translate-x-1/2" />
           
-          <div className="space-y-6">
-            <div className="flex gap-3 md:gap-4 items-start">
-               <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-white/5 flex items-center justify-center text-base md:text-xl">👤</div>
-               <div className="p-4 md:p-6 bg-white/5 rounded-2xl text-gray-300 text-[11px] md:text-sm leading-relaxed border border-white/5 italic">
-                 “帮我做一个关于咖啡市场的视频，参考我之前的研报笔记。”
-               </div>
+          <div className="relative z-10 space-y-12">
+            <div className="text-center">
+              <span className="text-yellow-500 font-mono text-xs font-black uppercase tracking-[0.5em]">Ultimate Challenge</span>
+              <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter mt-4">
+                Capstone: The Second Cortex OS
+              </h2>
             </div>
-            <div className="flex gap-3 md:gap-4 items-start justify-end">
-               <div className="p-5 md:p-8 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl md:rounded-[32px] text-yellow-50 text-[11px] md:text-sm leading-relaxed max-w-[90%]">
-                 <div className="flex gap-2 mb-4">
-                    <span className="px-1.5 py-0.5 bg-yellow-500/20 text-[8px] md:text-[10px] font-mono text-yellow-500 rounded uppercase">Retrieving_RAG</span>
-                    <span className="px-1.5 py-0.5 bg-amber-500/20 text-[8px] md:text-[10px] font-mono text-amber-500 rounded uppercase">Agent_Sync</span>
-                 </div>
-                 <p className="mb-4">已调取 2023 年咖啡市场笔记。Agent A 已完成分镜图，Agent B 正在 Luma 进行合成...</p>
-                 <div className="flex gap-4 p-3 bg-black/40 rounded-xl border border-white/5 mt-4">
-                    <div className="flex items-center gap-2">🖼️ <span className="text-[8px] md:text-[10px] opacity-60">Poster.png</span></div>
-                    <div className="flex items-center gap-2">🎬 <span className="text-[8px] md:text-[10px] opacity-60">Draft.mp4</span></div>
-                 </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+               <div className="space-y-8">
+                  <div className="p-8 rounded-3xl bg-white/5 border border-white/5">
+                    <h4 className="text-xl font-bold text-white mb-4">挑战任务：跨越维度的决策</h4>
+                    <p className="text-gray-400 font-light leading-relaxed">
+                      面对一个完全陌生的复杂领域（如生物科技战略或伦理困境），你将调动整个 Exobrain 系统进行高维攻坚。
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    {[
+                      { step: 'Ingest', desc: '系统自动抓取并过滤 50+ 篇相关专业论文。' },
+                      { step: 'Synthesize', desc: '后台自动蒸馏出核心概念图谱与知识晶体。' },
+                      { step: 'Reason', desc: '调用微调后的“专家模型”，结合全知 RAG 检索。' },
+                      { step: 'Reflect', desc: '利用 Opik 追踪 Trace，确保推理逻辑严密无幻觉。' }
+                    ].map((s, i) => (
+                      <div key={i} className="flex gap-6 items-center">
+                         <div className="w-10 h-10 rounded-full bg-yellow-500/20 text-yellow-500 font-mono text-xs flex items-center justify-center flex-shrink-0 border border-yellow-500/20">
+                            0{i+1}
+                         </div>
+                         <div className="flex-1">
+                            <span className="text-white font-bold uppercase mr-2">{s.step}:</span>
+                            <span className="text-gray-500 text-sm">{s.desc}</span>
+                         </div>
+                      </div>
+                    ))}
+                  </div>
                </div>
-               <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-base md:text-xl">🧠</div>
+
+               <div className="bg-black/60 rounded-[48px] p-10 border border-white/5 shadow-inner">
+                  <div className="flex items-center gap-4 mb-8">
+                     <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                     <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                     <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                     <span className="text-[10px] font-mono text-gray-600 ml-4">Terminal: exobrain-cli v3.1</span>
+                  </div>
+                  <div className="font-mono text-sm space-y-4">
+                     <p className="text-blue-400">{'>>'} cortex.init(strategy_mode='munger')</p>
+                     <p className="text-gray-500">Initializing Salience Network... [OK]</p>
+                     <p className="text-gray-500">Injecting Context via Hybrid Search... [OK]</p>
+                     <p className="text-emerald-400">Loading Fine-tuned Adapter: Expert_V4</p>
+                     <p className="text-white">Reasoning Chain generated via LangGraph:</p>
+                     <div className="pl-4 border-l border-white/10 space-y-2">
+                        <p className="text-gray-500 italic">1. Inversion thinking active...</p>
+                        <p className="text-gray-500 italic">2. Synthesizing cross-domain variables...</p>
+                        <p className="text-gray-500 italic">3. Checking Trace via Metacognition...</p>
+                     </div>
+                     <p className="text-yellow-500 font-black animate-pulse">OUTPUT: DECISION_LOCKED_89.4%_CONFIDENCE</p>
+                  </div>
+               </div>
             </div>
           </div>
-        </div>
+        </m.div>
+      </section>
+
+      {/* Philosophy Callout */}
+      <section className="text-center py-20 bg-white/5 border-y border-white/10 mb-20">
+         <div className="max-w-5xl mx-auto px-6">
+            <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter mb-8">不仅仅是证书，而是终身进化的算法</h3>
+            <p className="text-gray-400 text-lg md:text-2xl font-extralight italic">
+              "本课程不教你如何成为更完美的'螺丝钉'，而是教你如何成为机器的'控制中枢'。你获得的将是一个能够伴随你终身进化、可代码化的第二大脑。"
+            </p>
+         </div>
       </section>
     </PlanetLayout>
   );

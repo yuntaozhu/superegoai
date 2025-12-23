@@ -7,6 +7,7 @@ interface MobiusGalaxyProps {
   orientation: 'horizontal' | 'vertical';
   isMobile?: boolean;
   courses?: Course[];
+  hoveredId?: string | null;
   onSelectCourse?: (course: Course) => void;
   onHoverCourse?: (course: Course | null) => void;
 }
@@ -15,11 +16,19 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
   orientation, 
   isMobile = false, 
   courses = [], 
+  hoveredId,
   onSelectCourse, 
   onHoverCourse 
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const planetsRef = useRef<{ mesh: THREE.Mesh; courseId: string; u: number; offset: number }[]>([]);
+  const planetsRef = useRef<{ 
+    mesh: THREE.Mesh; 
+    orbitRing: THREE.Mesh;
+    courseId: string; 
+    u: number; 
+    offset: number;
+    baseScale: number;
+  }[]>([]);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -39,7 +48,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     const radius = isMobile ? 8.0 : 11.0;
     const stripWidth = isMobile ? 2.5 : 4.0;
     
-    // 1. 背景微弱星辰
+    // 1. Background Stars
     const starGeo = new THREE.BufferGeometry();
     const starCoords = [];
     for (let i = 0; i < 2000; i++) {
@@ -52,7 +61,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
-    // 2. 莫比乌斯星云带 (Neural Cloud)
+    // 2. Neural Cloud (Mobius Strip)
     const nebulaGeo = new THREE.BufferGeometry();
     const nebulaCount = isMobile ? 10000 : 25000;
     const nebulaPos = new Float32Array(nebulaCount * 3);
@@ -73,11 +82,11 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     }
     nebulaGeo.setAttribute('position', new THREE.BufferAttribute(nebulaPos, 3));
     nebulaGeo.setAttribute('color', new THREE.BufferAttribute(nebulaColors, 3));
-    const nebulaMat = new THREE.PointsMaterial({ size: 0.03, vertexColors: true, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending });
+    const nebulaMat = new THREE.PointsMaterial({ size: 0.03, vertexColors: true, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending });
     const nebulaPoints = new THREE.Points(nebulaGeo, nebulaMat);
     scene.add(nebulaPoints);
 
-    // 3. 微缩行星系统 (The 6 Nodes)
+    // 3. Planet System
     const planetGroup = new THREE.Group();
     scene.add(planetGroup);
 
@@ -90,43 +99,48 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     
     courseIds.forEach((id, i) => {
       const hex = getHex(id);
-      const geometry = new THREE.SphereGeometry(0.12, 16, 16);
+      
+      // The Core Planet Mesh
+      const geometry = new THREE.SphereGeometry(0.15, 32, 32);
       const material = new THREE.MeshPhongMaterial({
         color: hex,
         emissive: hex,
-        emissiveIntensity: 2,
+        emissiveIntensity: 1.5,
         shininess: 100,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.95
       });
       const mesh = new THREE.Mesh(geometry, material);
       
-      // 添加内光晕
-      const auraGeo = new THREE.SphereGeometry(0.2, 8, 8);
-      const auraMat = new THREE.MeshBasicMaterial({ color: hex, transparent: true, opacity: 0.2 });
-      const aura = new THREE.Mesh(auraGeo, auraMat);
-      mesh.add(aura);
+      // Individual Orbital Ring (visible when planet is active/hovered)
+      const ringGeo = new THREE.TorusGeometry(0.4, 0.005, 16, 100);
+      const ringMat = new THREE.MeshBasicMaterial({ color: hex, transparent: true, opacity: 0.1 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      mesh.add(ring);
 
       planetsRef.current.push({ 
         mesh, 
+        orbitRing: ring,
         courseId: id, 
         u: (i / courseIds.length) * Math.PI * 2,
-        offset: Math.random() * 2 
+        offset: Math.random() * 2,
+        baseScale: 1
       });
       planetGroup.add(mesh);
     });
 
-    // 4. 神经连接线 (Neural Web)
+    // 4. Neural Connectivity Line System
     const lineGroup = new THREE.Group();
     scene.add(lineGroup);
     const lineMat = new THREE.LineBasicMaterial({ 
       color: 0xffffff, 
       transparent: true, 
-      opacity: 0.05, 
+      opacity: 0.03, 
       blending: THREE.AdditiveBlending 
     });
 
-    const updateNeuralWeb = () => {
+    const updateLines = () => {
       lineGroup.clear();
       const count = planetsRef.current.length;
       for (let i = 0; i < count; i++) {
@@ -142,27 +156,25 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
       }
     };
 
-    // 灯光
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-    const pl = new THREE.PointLight(0xffffff, 1.2);
-    pl.position.set(10, 10, 10);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    const pl = new THREE.PointLight(0xffffff, 2);
+    pl.position.set(15, 15, 15);
     scene.add(pl);
 
-    // 动画循环
     let globalRot = 0;
     const animate = () => {
       requestAnimationFrame(animate);
-      const time = Date.now() * 0.0008;
+      const time = Date.now() * 0.001;
       
-      globalRot += 0.0012;
+      globalRot += 0.0008;
       nebulaPoints.rotation.y = globalRot;
-      stars.rotation.y -= 0.00005;
+      stars.rotation.y -= 0.00002;
 
-      planetsRef.current.forEach((p, i) => {
-        // 让行星沿着带状轨道自主运动
-        p.u += 0.002; 
+      planetsRef.current.forEach((p) => {
+        // Orbit dynamics along the Mobius strip
+        p.u += 0.0015; 
         const u = p.u;
-        const v = Math.sin(time + p.offset) * 0.1; // 在轨道宽度内轻微漂浮
+        const v = Math.sin(time * 0.5 + p.offset) * 0.15; 
         
         const x = (radius + v * Math.cos(u / 2)) * Math.cos(u);
         const y = (radius + v * Math.cos(u / 2)) * Math.sin(u);
@@ -170,12 +182,26 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
 
         p.mesh.position.set(x, z, y);
         
-        // 呼吸脉冲效果
-        const s = 1 + Math.sin(time * 3 + p.offset) * 0.15;
-        p.mesh.scale.set(s, s, s);
+        // Handle dynamic scaling based on hoveredId prop
+        const isHovered = hoveredId === p.courseId || (p.courseId === 'data' && hoveredId === 'core');
+        const targetScale = isHovered ? 2.5 : 1.0;
+        const lerpFactor = 0.1;
+        
+        p.baseScale = THREE.MathUtils.lerp(p.baseScale, targetScale, lerpFactor);
+        
+        // Add breathing effect on top of base scale
+        const breath = Math.sin(time * 2 + p.offset) * 0.05;
+        p.mesh.scale.set(p.baseScale + breath, p.baseScale + breath, p.baseScale + breath);
+        
+        // Scale orbit ring and increase its visibility if hovered
+        p.orbitRing.scale.set(1.5, 1.5, 1.5);
+        // Fix: Cast material to MeshBasicMaterial to access opacity property which is not on the base Material type.
+        const ringMaterial = p.orbitRing.material as THREE.MeshBasicMaterial;
+        ringMaterial.opacity = THREE.MathUtils.lerp(ringMaterial.opacity, isHovered ? 0.6 : 0.1, lerpFactor);
+        p.orbitRing.rotation.z += 0.01;
       });
 
-      updateNeuralWeb();
+      updateLines();
       renderer.render(scene, camera);
     };
 
@@ -195,7 +221,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
       nebulaGeo.dispose(); nebulaMat.dispose();
       starGeo.dispose(); starMat.dispose();
     };
-  }, [isMobile]);
+  }, [isMobile, courses]);
 
   return <div ref={mountRef} className="w-full h-full" />;
 };

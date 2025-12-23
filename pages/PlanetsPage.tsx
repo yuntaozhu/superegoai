@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, Link } from '../context/LanguageContext';
 import BioCosmos from '../components/BioCosmos';
 import AnatomyCard, { AnatomyNode } from '../components/AnatomyCard';
@@ -17,12 +17,12 @@ const m = motion as any;
 const ANATOMY_DATA: AnatomyNode[] = [
   {
     id: 'core',
-    organ: 'The Core (核心)',
-    name: 'AI SuperEgo —— 构建主权第二大脑',
-    metaphor: 'Memory & Personality (记忆与人格). The Operating System of your life.',
-    target: 'Lifelong Learners, Knowledge Workers.',
-    method: '4 Weeks | Architecture Design | RAG Pipeline Setup.',
-    outcome: 'Build a private Vector Database and a "Chief of Staff" AI.',
+    organ: 'The Core (核心皮层)',
+    name: 'AI SuperEgo —— 认知外骨骼工程',
+    metaphor: 'Engineering Your Second Cortex. 能力平权的终极实践。',
+    target: '渴望跨越认知局限的开发者、决策者与终身学习者。',
+    method: '12 Weeks | Decoding AI Architecture | Neuro-Inference.',
+    outcome: '构建私有核心推理中枢，实现从“查阅资料”到“外挂前额叶”的质变。',
     link: '/course/data',
     color: '#FFD700',
     icon: '🧠'
@@ -89,6 +89,24 @@ const ANATOMY_DATA: AnatomyNode[] = [
   }
 ];
 
+const FloatingCard: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({ children, className, delay = 0 }) => (
+  <m.div
+    animate={{ 
+      y: [0, -10, 0],
+      rotate: [0, 0.5, -0.5, 0]
+    }}
+    transition={{ 
+      duration: 5, 
+      repeat: Infinity, 
+      ease: "easeInOut",
+      delay 
+    }}
+    className={className}
+  >
+    {children}
+  </m.div>
+);
+
 const PlanetsPage: React.FC = () => {
   const { language } = useLanguage();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -119,9 +137,12 @@ const PlanetsPage: React.FC = () => {
         isCore={hoveredId === 'core'}
       />
       
-      {/* 重构后的背景星系：完全置底但清晰可见 */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-60">
-        <MobiusGalaxy orientation="horizontal" />
+      {/* 3D MOBIUS GALAXY: Synchronized with hoveredId */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-80">
+        <MobiusGalaxy 
+          orientation="horizontal" 
+          hoveredId={hoveredId}
+        />
       </div>
 
       {/* HERO SECTION: THE GALAXY VIEW */}
@@ -143,91 +164,95 @@ const PlanetsPage: React.FC = () => {
             {language === 'zh' ? '数字生命体架构' : 'Digital Life Form'}
           </m.h1>
           <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.5em]">The Anatomy of a Super Individual</p>
-          <div className="pt-8 flex justify-center gap-4">
-             <m.div 
-               animate={{ y: [0, 8, 0] }}
-               transition={{ repeat: Infinity, duration: 2 }}
-             >
-               <ChevronDownIcon className="w-6 h-6 text-gray-700" />
-             </m.div>
-          </div>
         </div>
 
         {/* VITRUVIAN LAYOUT (DESKTOP) */}
         <div className="hidden lg:block relative w-full max-w-7xl min-h-[900px]">
           {/* CORE: SuperEgo */}
           <div 
-            className={`absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[420px] transition-all duration-500 ${hoveredId === 'core' ? 'z-[100]' : 'z-50'}`}
+            className={`absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[440px] transition-all duration-700 ${hoveredId === 'core' ? 'z-[100]' : 'z-50'}`}
           >
-            <AnatomyCard 
-              data={ANATOMY_DATA[0]} 
-              isCenter={true} 
-              onHover={(pos, color) => {
-                setHoverData({ pos, color });
-                setHoveredId(color ? 'core' : null);
-              }}
-              onClick={() => scrollToSection('core')}
-            />
+            <FloatingCard delay={0.2}>
+              <AnatomyCard 
+                data={ANATOMY_DATA[0]} 
+                isCenter={true} 
+                onHover={(pos, color) => {
+                  setHoverData({ pos, color });
+                  setHoveredId(color ? 'core' : null);
+                }}
+                onClick={() => scrollToSection('core')}
+              />
+            </FloatingCard>
           </div>
 
           {/* LOGIC */}
-          <div className={`absolute left-[12%] top-[5%] w-[320px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[101]' : 'z-10'}`}>
-            <AnatomyCard 
-              data={ANATOMY_DATA[1]} 
-              onHover={(pos, color) => {
-                setHoverData({ pos, color });
-                setHoveredId(color ? 'logic' : null);
-              }}
-              onClick={() => scrollToSection('logic')}
-            />
+          <div className={`absolute left-[12%] top-[5%] w-[330px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[101]' : 'z-10'}`}>
+            <FloatingCard delay={0.5}>
+              <AnatomyCard 
+                data={ANATOMY_DATA[1]} 
+                onHover={(pos, color) => {
+                  setHoverData({ pos, color });
+                  setHoveredId(color ? 'logic' : null);
+                }}
+                onClick={() => scrollToSection('logic')}
+              />
+            </FloatingCard>
           </div>
 
           {/* SENSES */}
-          <div className={`absolute right-[12%] top-[5%] w-[320px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[101]' : 'z-10'}`}>
-            <AnatomyCard 
-              data={ANATOMY_DATA[2]} 
-              onHover={(pos, color) => {
-                setHoverData({ pos, color });
-                setHoveredId(color ? 'senses' : null);
-              }}
-              onClick={() => scrollToSection('senses')}
-            />
+          <div className={`absolute right-[12%] top-[5%] w-[330px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[101]' : 'z-10'}`}>
+            <FloatingCard delay={0.8}>
+              <AnatomyCard 
+                data={ANATOMY_DATA[2]} 
+                onHover={(pos, color) => {
+                  setHoverData({ pos, color });
+                  setHoveredId(color ? 'senses' : null);
+                }}
+                onClick={() => scrollToSection('senses')}
+              />
+            </FloatingCard>
           </div>
 
           {/* BODY */}
-          <div className={`absolute left-[2%] top-[45%] w-[320px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[101]' : 'z-10'}`}>
-            <AnatomyCard 
-              data={ANATOMY_DATA[3]} 
-              onHover={(pos, color) => {
-                setHoverData({ pos, color });
-                setHoveredId(color ? 'body' : null);
-              }}
-              onClick={() => scrollToSection('body')}
-            />
+          <div className={`absolute left-[2%] top-[45%] w-[330px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[101]' : 'z-10'}`}>
+            <FloatingCard delay={1.1}>
+              <AnatomyCard 
+                data={ANATOMY_DATA[3]} 
+                onHover={(pos, color) => {
+                  setHoverData({ pos, color });
+                  setHoveredId(color ? 'body' : null);
+                }}
+                onClick={() => scrollToSection('body')}
+              />
+            </FloatingCard>
           </div>
 
           {/* HANDS */}
-          <div className={`absolute right-[2%] top-[45%] w-[320px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[101]' : 'z-10'}`}>
-            <AnatomyCard 
-              data={ANATOMY_DATA[4]} 
-              onHover={(pos, color) => {
-                setHoverData({ pos, color });
-                setHoveredId(color ? 'hands' : null);
-              }}
-              onClick={() => scrollToSection('hands')}
-            />
+          <div className={`absolute right-[2%] top-[45%] w-[330px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[101]' : 'z-10'}`}>
+            <FloatingCard delay={1.4}>
+              <AnatomyCard 
+                data={ANATOMY_DATA[4]} 
+                onHover={(pos, color) => {
+                  setHoverData({ pos, color });
+                  setHoveredId(color ? 'hands' : null);
+                }}
+                onClick={() => scrollToSection('hands')}
+              />
+            </FloatingCard>
           </div>
 
           {/* WILL */}
-          <div className={`absolute left-1/2 bottom-[2%] -translate-x-1/2 w-[320px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[101]' : 'z-10'}`}>
-            <AnatomyCard 
-              data={ANATOMY_DATA[5]} 
-              onHover={(pos, color) => {
-                setHoverData({ pos, color });
-                setHoveredId(color ? 'will' : null);
-              }}
-              onClick={() => scrollToSection('will')}
-            />
+          <div className={`absolute left-1/2 bottom-[2%] -translate-x-1/2 w-[330px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[101]' : 'z-10'}`}>
+            <FloatingCard delay={1.7}>
+              <AnatomyCard 
+                data={ANATOMY_DATA[5]} 
+                onHover={(pos, color) => {
+                  setHoverData({ pos, color });
+                  setHoveredId(color ? 'will' : null);
+                }}
+                onClick={() => scrollToSection('will')}
+              />
+            </FloatingCard>
           </div>
           
           <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-10">
@@ -243,7 +268,7 @@ const PlanetsPage: React.FC = () => {
 
         {/* MOBILE HERO VIEW */}
         <div className="lg:hidden space-y-10 relative mt-16 px-2 w-full">
-          {ANATOMY_DATA.map((node) => (
+          {ANATOMY_DATA.map((node, i) => (
             <AnatomyCard 
               key={node.id}
               data={node} 
@@ -258,7 +283,7 @@ const PlanetsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 1: PHILOSOPHY - THE CLOSED LOOP */}
+      {/* SECTION 1: PHILOSOPHY */}
       <section className="relative z-10 py-32 px-6 bg-black/40">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24">
@@ -277,7 +302,6 @@ const PlanetsPage: React.FC = () => {
           </div>
 
           <div className="relative h-[400px] md:h-[600px] flex items-center justify-center">
-            {/* LOOP DIAGRAM COMPONENT */}
             <div className="relative w-full max-w-4xl h-full border border-white/5 rounded-[40px] bg-[#05060f] shadow-2xl flex items-center justify-center overflow-hidden">
                <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none" />
                
@@ -290,7 +314,6 @@ const PlanetsPage: React.FC = () => {
                    </linearGradient>
                  </defs>
                  
-                 {/* Connection Paths */}
                  <m.path 
                    d="M 100 200 Q 250 50 400 200 T 700 200" 
                    stroke="url(#flow-gradient)" 
@@ -310,7 +333,6 @@ const PlanetsPage: React.FC = () => {
                    transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
                  />
 
-                 {/* Labels */}
                  <g className="text-[10px] font-mono fill-gray-500 font-bold uppercase tracking-widest">
                    <text x="80" y="230">Senses (Input)</text>
                    <text x="360" y="230" fill="#FFD700">Core (Memory)</text>
@@ -326,7 +348,7 @@ const PlanetsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 2: ANATOMY DEEP DIVE */}
+      {/* DEEP DIVE SECTION */}
       <section className="relative z-10 py-32 space-y-40">
         <div className="max-w-7xl mx-auto px-6">
            <div className="text-center mb-32">
@@ -401,70 +423,7 @@ const PlanetsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 3: TRANSFORMATION TABLE */}
-      <section className="relative z-10 py-32 px-6 bg-[#05060f]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">从“碳基人类”到“数字超我”</h2>
-            <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.3em]">Phase Shift: Evolution Comparison</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10 border border-white/10 rounded-[40px] overflow-hidden shadow-2xl backdrop-blur-3xl">
-             <div className="p-10 md:p-16 bg-black/40 space-y-10">
-                <div className="flex items-center gap-4 text-red-500">
-                   <Layers className="w-6 h-6" />
-                   <h4 className="text-2xl font-black uppercase">Before // 旧世界</h4>
-                </div>
-                <ul className="space-y-6 text-gray-500 font-light">
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500" />
-                      被动接收信息，陷入信息茧房
-                   </li>
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500" />
-                      重复造轮子 (Coding from scratch)
-                   </li>
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500" />
-                      情绪化决策，受 FOMO驱动
-                   </li>
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500" />
-                      灵感随生随灭，资产无法复利
-                   </li>
-                </ul>
-             </div>
-
-             <div className="p-10 md:p-16 bg-blue-600/10 space-y-10 border-l border-white/5 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent pointer-events-none" />
-                <div className="flex items-center gap-4 text-blue-400">
-                   <Zap className="w-6 h-6" />
-                   <h4 className="text-2xl font-black uppercase">After // 超级个体</h4>
-                </div>
-                <ul className="space-y-6 text-gray-200 font-bold">
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa]" />
-                      Deep Research Agent 自动扫描全球
-                   </li>
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa]" />
-                      Orchestrator (指挥 AI 军团快速构建)
-                   </li>
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa]" />
-                      量化策略 24/7 自动风险套利
-                   </li>
-                   <li className="flex items-start gap-4">
-                      <span className="mt-1 w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa]" />
-                      第二大脑 (知识库资产永生与复利)
-                   </li>
-                </ul>
-             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 4: TECH STACK MARQUEE */}
+      {/* TECH STACK MARQUEE */}
       <section className="relative z-10 py-32 overflow-hidden border-y border-white/5 bg-black/60">
         <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
            <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">
@@ -496,60 +455,6 @@ const PlanetsPage: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION 5: THE OFFER & CTA */}
-      <section className="relative z-10 py-48 px-6 overflow-hidden">
-        {/* Dynamic Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-yellow-500/10 blur-[180px] rounded-full pointer-events-none" />
-        
-        <div className="max-w-4xl mx-auto text-center space-y-16">
-          <m.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            className="space-y-6"
-          >
-             <h2 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none">
-               {language === 'zh' ? '准备好启动你的第一次进化了吗？' : 'Ready to Initiate Your First Evolution?'}
-             </h2>
-             <p className="text-xl md:text-3xl text-gray-400 font-light italic">
-               {language === 'zh' ? '六大行星，一个闭环。构建属于你的 AI SuperEgo。' : '6 Planets, 1 Loop. Build Your AI SuperEgo.'}
-             </p>
-          </m.div>
-
-          <div className="relative group p-10 md:p-20 bg-white/5 border border-white/10 rounded-[60px] backdrop-blur-3xl shadow-[0_0_100px_rgba(255,215,0,0.05)] overflow-hidden">
-             <div className="absolute top-0 right-0 p-10 opacity-5">
-                <Fingerprint className="w-32 h-32 text-white" />
-             </div>
-             
-             <div className="relative z-10 space-y-10">
-                <div className="space-y-2">
-                   <div className="text-[10px] font-mono text-yellow-500 uppercase tracking-[0.5em] font-black">Limited Founders Pass</div>
-                   <h4 className="text-5xl font-black text-white uppercase tracking-tighter">Full Access Pass</h4>
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-left border-y border-white/5 py-10">
-                   {[
-                     "6 Organs Full Access", "All Source Code", "Private Community", 
-                     "Vector DB Templates", "Quant Strategy Gene", "Life OS Blueprints"
-                   ].map((feature, i) => (
-                     <div key={i} className="flex items-center gap-3 text-xs text-gray-400">
-                        <CheckCircleIcon className="w-4 h-4 text-green-500" />
-                        {feature}
-                     </div>
-                   ))}
-                </div>
-
-                <button className="relative w-full group overflow-hidden">
-                   <div className="absolute inset-0 bg-white group-hover:bg-blue-500 transition-colors duration-300 rounded-2xl" />
-                   <span className="relative z-10 flex items-center justify-center gap-4 py-6 font-black text-black group-hover:text-white uppercase tracking-[0.3em] text-sm animate-glitch transition-all">
-                      {language === 'zh' ? '立即获取通行证' : 'Get Access Now'}
-                      <ArrowRight className="w-5 h-5" />
-                   </span>
-                </button>
-             </div>
-          </div>
-        </div>
-      </section>
-
       {/* FOOTER RESET */}
       <div className="mt-40 text-center pb-20 relative z-10">
         <Link to="/" className="inline-flex items-center gap-3 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-gray-500 hover:text-white hover:bg-white/10 transition-all font-mono text-[10px] uppercase tracking-widest group">
@@ -564,19 +469,6 @@ const PlanetsPage: React.FC = () => {
                             linear-gradient(to bottom, #ffffff10 1px, transparent 1px);
           background-size: 40px 40px;
         }
-
-        @keyframes glitch {
-          0% { transform: translate(0); }
-          20% { transform: translate(-2px, 1px); }
-          40% { transform: translate(-2px, -1px); }
-          60% { transform: translate(2px, 1px); }
-          80% { transform: translate(2px, -1px); }
-          100% { transform: translate(0); }
-        }
-
-        .animate-glitch:hover {
-          animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
-        }
       `}</style>
     </div>
   );
@@ -585,12 +477,6 @@ const PlanetsPage: React.FC = () => {
 const ChevronDownIcon = (props: any) => (
   <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-  </svg>
-);
-
-const CheckCircleIcon = (props: any) => (
-  <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
   </svg>
 );
 
