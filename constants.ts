@@ -25,7 +25,7 @@ const CONTENT_ZH: ContentData = {
       tagline: "构建第二外脑 —— 基于 Decoding AI 架构与认知神经科学的全栈实战",
       description: "跨越生物大脑局限，通过构建 FTI 架构的数字外脑，实现专家级的决策与进化能力。经验不再是限制，代码质量与思维深度才是。",
       icon: "🧠",
-      color: "from-[#FFD700] to-[#B8860B]", // Gold
+      color: "from-[#FFD700] to-[#B8860B]", 
       target: "渴望获得超凡认知力的超级个体",
       format: "Decoding AI 全栈实战",
       duration: "12 周深度研习",
@@ -45,7 +45,7 @@ const CONTENT_ZH: ContentData = {
       tagline: "理性驱动的建模引擎",
       description: "将复杂世界抽象为数学模型。不仅仅是编程，而是构建能够模拟真实世界的逻辑中台。",
       icon: "🧬",
-      color: "from-[#00BFFF] to-[#1E90FF]", // Electric Blue
+      color: "from-[#00BFFF] to-[#1E90FF]", 
       target: "逻辑思维模块",
       format: "深度研究",
       duration: "6-8 周",
@@ -65,7 +65,7 @@ const CONTENT_ZH: ContentData = {
       tagline: "全方位的信息传感器",
       description: "训练审美与抽象能力。AI 不只是画图工具，而是将历史文脉转化为数学逻辑的翻译官。",
       icon: "🎨",
-      color: "from-[#8A2BE2] to-[#4B0082]", // Violet
+      color: "from-[#8A2BE2] to-[#4B0082]", 
       target: "审美与感知模块",
       format: "项目制学习",
       duration: "8 周",
@@ -85,7 +85,7 @@ const CONTENT_ZH: ContentData = {
       tagline: "视觉与物理的探测器",
       description: "构建一个“AI 私人教练”，在现实世界中分析并纠正动作，将人体关节转化为数学矢量。",
       icon: "🏃",
-      color: "from-[#FF4500] to-[#FF0000]", // Vital Orange
+      color: "from-[#FF4500] to-[#FF0000]", 
       target: "物理执行模块",
       format: "软硬件结合",
       duration: "8 周",
@@ -105,7 +105,7 @@ const CONTENT_ZH: ContentData = {
       tagline: "不仅是编程，更是编排",
       description: "全栈开发流。你向 AI 提的需求清不清晰，是本课程的唯一考核标准。构建属于你的商业流水线。",
       icon: "🚀",
-      color: "from-[#00FFFF] to-[#008B8B]", // Cyan
+      color: "from-[#00FFFF] to-[#008B8B]", 
       target: "工具创造模块",
       format: "商业落地实战",
       duration: "10 周",
@@ -125,7 +125,7 @@ const CONTENT_ZH: ContentData = {
       tagline: "进化的决策核心",
       description: "我们不写算法，我们构建能够自我进化的多智能体。在风险与概率中锻造钢铁般的意志。",
       icon: "📈",
-      color: "from-[#2E8B57] to-[#006400]", // Matrix Green
+      color: "from-[#2E8B57] to-[#006400]", 
       target: "风险决策模块",
       format: "实战模拟",
       duration: "12 周",
