@@ -33,37 +33,42 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
   useEffect(() => {
     if (!mountRef.current) return;
 
-    const width = mountRef.current.clientWidth || window.innerWidth;
-    const height = mountRef.current.clientHeight || window.innerHeight;
+    // 获取实际尺寸
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
-    camera.position.z = isMobile ? 18 : 22;
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    camera.position.z = isMobile ? 16 : 20;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: !isMobile, // 移动端关闭抗锯齿提升性能
+      alpha: true,
+      powerPreference: "high-performance" 
+    });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mountRef.current.appendChild(renderer.domElement);
 
-    const radius = isMobile ? 8.0 : 11.0;
-    const stripWidth = isMobile ? 2.5 : 4.0;
+    const radius = isMobile ? 6.0 : 10.0;
+    const stripWidth = isMobile ? 2.0 : 3.5;
     
-    // 1. Background Stars
+    // 1. 优化背景星空 - 减少点数
     const starGeo = new THREE.BufferGeometry();
     const starCoords = [];
-    for (let i = 0; i < 2000; i++) {
-      starCoords.push(THREE.MathUtils.randFloatSpread(1000));
-      starCoords.push(THREE.MathUtils.randFloatSpread(1000));
-      starCoords.push(THREE.MathUtils.randFloatSpread(1000));
+    for (let i = 0; i < (isMobile ? 300 : 800); i++) {
+      starCoords.push(THREE.MathUtils.randFloatSpread(800));
+      starCoords.push(THREE.MathUtils.randFloatSpread(800));
+      starCoords.push(THREE.MathUtils.randFloatSpread(800));
     }
     starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, transparent: true, opacity: 0.1 });
+    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8, transparent: true, opacity: 0.2 });
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
-    // 2. Neural Cloud (Mobius Strip)
+    // 2. 优化莫比乌斯星云 - 降低粒子数量 (从 25000 降至 5000)
     const nebulaGeo = new THREE.BufferGeometry();
-    const nebulaCount = isMobile ? 10000 : 25000;
+    const nebulaCount = isMobile ? 2000 : 5000;
     const nebulaPos = new Float32Array(nebulaCount * 3);
     const nebulaColors = new Float32Array(nebulaCount * 3);
     const palette = [new THREE.Color(0x3b82f6), new THREE.Color(0x8b5cf6), new THREE.Color(0x06b6d4)];
@@ -82,11 +87,17 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     }
     nebulaGeo.setAttribute('position', new THREE.BufferAttribute(nebulaPos, 3));
     nebulaGeo.setAttribute('color', new THREE.BufferAttribute(nebulaColors, 3));
-    const nebulaMat = new THREE.PointsMaterial({ size: 0.03, vertexColors: true, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending });
+    const nebulaMat = new THREE.PointsMaterial({ 
+      size: 0.05, 
+      vertexColors: true, 
+      transparent: true, 
+      opacity: 0.15, 
+      blending: THREE.AdditiveBlending 
+    });
     const nebulaPoints = new THREE.Points(nebulaGeo, nebulaMat);
     scene.add(nebulaPoints);
 
-    // 3. Planet System
+    // 3. 核心行星系统
     const planetGroup = new THREE.Group();
     scene.add(planetGroup);
 
@@ -96,25 +107,21 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     };
 
     const courseIds = ['data', 'digital-twin', 'art', 'sports', 'solopreneur', 'quant'];
-    
     courseIds.forEach((id, i) => {
       const hex = getHex(id);
-      
-      // The Core Planet Mesh
-      const geometry = new THREE.SphereGeometry(0.15, 32, 32);
+      const geometry = new THREE.SphereGeometry(isMobile ? 0.12 : 0.18, 16, 16); // 降低分段数
       const material = new THREE.MeshPhongMaterial({
         color: hex,
         emissive: hex,
-        emissiveIntensity: 1.5,
-        shininess: 100,
+        emissiveIntensity: 1.0,
+        shininess: 30,
         transparent: true,
-        opacity: 0.95
+        opacity: 0.9
       });
       const mesh = new THREE.Mesh(geometry, material);
       
-      // Individual Orbital Ring (visible when planet is active/hovered)
-      const ringGeo = new THREE.TorusGeometry(0.4, 0.005, 16, 100);
-      const ringMat = new THREE.MeshBasicMaterial({ color: hex, transparent: true, opacity: 0.1 });
+      const ringGeo = new THREE.TorusGeometry(0.4, 0.005, 8, 50); // 降低复杂度
+      const ringMat = new THREE.MeshBasicMaterial({ color: hex, transparent: true, opacity: 0.05 });
       const ring = new THREE.Mesh(ringGeo, ringMat);
       ring.rotation.x = Math.PI / 2;
       mesh.add(ring);
@@ -130,100 +137,92 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
       planetGroup.add(mesh);
     });
 
-    // 4. Neural Connectivity Line System
+    // 4. 优化连线系统 - 移动端直接关闭以省电
     const lineGroup = new THREE.Group();
-    scene.add(lineGroup);
+    if (!isMobile) {
+      scene.add(lineGroup);
+    }
     const lineMat = new THREE.LineBasicMaterial({ 
       color: 0xffffff, 
       transparent: true, 
-      opacity: 0.03, 
+      opacity: 0.02, 
       blending: THREE.AdditiveBlending 
     });
 
     const updateLines = () => {
+      if (isMobile) return; // 移动端跳过
       lineGroup.clear();
       const count = planetsRef.current.length;
       for (let i = 0; i < count; i++) {
         for (let j = i + 1; j < count; j++) {
-          const points = [
-            planetsRef.current[i].mesh.position,
-            planetsRef.current[j].mesh.position
-          ];
+          const points = [planetsRef.current[i].mesh.position, planetsRef.current[j].mesh.position];
           const geometry = new THREE.BufferGeometry().setFromPoints(points);
-          const line = new THREE.Line(geometry, lineMat);
-          lineGroup.add(line);
+          lineGroup.add(new THREE.Line(geometry, lineMat));
         }
       }
     };
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-    const pl = new THREE.PointLight(0xffffff, 2);
-    pl.position.set(15, 15, 15);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const pl = new THREE.PointLight(0xffffff, 1.5);
+    pl.position.set(10, 10, 10);
     scene.add(pl);
 
-    let globalRot = 0;
+    let frame = 0;
     const animate = () => {
-      requestAnimationFrame(animate);
+      const requestID = requestAnimationFrame(animate);
       const time = Date.now() * 0.001;
-      
-      globalRot += 0.0008;
-      nebulaPoints.rotation.y = globalRot;
-      stars.rotation.y -= 0.00002;
+      frame++;
+
+      nebulaPoints.rotation.y += 0.0005;
+      stars.rotation.y -= 0.00001;
 
       planetsRef.current.forEach((p) => {
-        // Orbit dynamics along the Mobius strip
-        p.u += 0.0015; 
+        p.u += 0.001; 
         const u = p.u;
-        const v = Math.sin(time * 0.5 + p.offset) * 0.15; 
-        
+        const v = Math.sin(time * 0.4 + p.offset) * 0.1; 
         const x = (radius + v * Math.cos(u / 2)) * Math.cos(u);
         const y = (radius + v * Math.cos(u / 2)) * Math.sin(u);
         const z = v * Math.sin(u / 2);
-
         p.mesh.position.set(x, z, y);
         
-        // Handle dynamic scaling based on hoveredId prop
         const isHovered = hoveredId === p.courseId || (p.courseId === 'data' && hoveredId === 'core');
-        const targetScale = isHovered ? 2.5 : 1.0;
-        const lerpFactor = 0.1;
+        const targetScale = isHovered ? (isMobile ? 1.8 : 2.5) : 1.0;
+        p.baseScale = THREE.MathUtils.lerp(p.baseScale, targetScale, 0.08);
+        p.mesh.scale.setScalar(p.baseScale);
         
-        p.baseScale = THREE.MathUtils.lerp(p.baseScale, targetScale, lerpFactor);
-        
-        // Add breathing effect on top of base scale
-        const breath = Math.sin(time * 2 + p.offset) * 0.05;
-        p.mesh.scale.set(p.baseScale + breath, p.baseScale + breath, p.baseScale + breath);
-        
-        // Scale orbit ring and increase its visibility if hovered
-        p.orbitRing.scale.set(1.5, 1.5, 1.5);
-        // Fix: Cast material to MeshBasicMaterial to access opacity property which is not on the base Material type.
         const ringMaterial = p.orbitRing.material as THREE.MeshBasicMaterial;
-        ringMaterial.opacity = THREE.MathUtils.lerp(ringMaterial.opacity, isHovered ? 0.6 : 0.1, lerpFactor);
+        ringMaterial.opacity = THREE.MathUtils.lerp(ringMaterial.opacity, isHovered ? 0.5 : 0.05, 0.1);
         p.orbitRing.rotation.z += 0.01;
       });
 
-      updateLines();
+      // 每 2 帧更新一次连线，降低 CPU 压力
+      if (frame % 2 === 0) updateLines();
+      
       renderer.render(scene, camera);
     };
 
     animate();
 
     const onResize = () => {
-      if (!mountRef.current) return;
-      camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
+      camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+      renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener('resize', onResize);
 
     return () => {
       window.removeEventListener('resize', onResize);
       renderer.dispose();
-      nebulaGeo.dispose(); nebulaMat.dispose();
-      starGeo.dispose(); starMat.dispose();
+      nebulaGeo.dispose();
+      starGeo.dispose();
+      planetsRef.current.forEach(p => {
+        p.mesh.geometry.dispose();
+        (p.mesh.material as THREE.Material).dispose();
+      });
     };
-  }, [isMobile, courses]);
+  }, [isMobile, courses, hoveredId]);
 
-  return <div ref={mountRef} className="w-full h-full" />;
+  return <div ref={mountRef} className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }} />;
 };
 
 export default MobiusGalaxy;
