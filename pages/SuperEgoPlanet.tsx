@@ -152,7 +152,7 @@ const SuperEgoPlanet: React.FC = () => {
                   <p className="text-gray-400 font-light">面对陌生领域（如生物科技战略），调动 Exobrain 系统进行高维攻坚。从摄取、蒸馏、推理到元认知反思，完成全链路自动化决策。</p>
                </div>
                <div className="bg-black/60 rounded-[48px] p-10 border border-white/5 font-mono text-xs text-gray-500">
-                  <p className="text-blue-400">>> exobrain.init(strategy='munger')</p>
+                  <p className="text-blue-400">{'>>'} exobrain.init(strategy='munger')</p>
                   <p>Initializing Salience Network... [OK]</p>
                   <p className="text-emerald-400">Loading Fine-tuned Adapter: Expert_V4</p>
                   <p className="text-yellow-500 font-black animate-pulse">OUTPUT: DECISION_LOCKED_89.4%_CONFIDENCE</p>
