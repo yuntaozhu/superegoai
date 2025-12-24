@@ -1,4 +1,3 @@
-
 /**
  * ContentService: Knowledge Indexer & Audit Manager
  * 
@@ -8,9 +7,9 @@
  * 2. Serve content to React components
  */
 
-// Use a relative path to avoid potential resolution issues with aliases in some environments
+// Use the robust root alias configured in the index.html import map
 // @ts-ignore
-import knowledgeBaseData from '../generated/knowledge_base.json' with { type: 'json' };
+import knowledgeBaseData from '@/generated/knowledge_base.json' with { type: 'json' };
 
 // Safety check for environments where JSON import might be problematic
 const knowledgeBase = knowledgeBaseData || { navigationTree: [], entries: [] };
@@ -69,7 +68,9 @@ export const ContentService = {
     return rawTree.map((node: any) => mapTreeNode(node, lang));
   },
 
-  // Fix: Completed implementation of getBlogPosts to correctly filter and map blog entries
+  /**
+   * Fetches all entries belonging to the 'blog' category
+   */
   getBlogPosts: (lang: 'en' | 'zh' = 'zh'): PageMeta[] => {
     const entries = (knowledgeBase as any)?.entries || [];
     return entries
@@ -86,17 +87,20 @@ export const ContentService = {
           tags: locale?.frontmatter?.tags || [],
           author: locale?.frontmatter?.author || '',
         };
-      });
+      })
+      .sort((a: PageMeta, b: PageMeta) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime());
   },
 
-  // Fix: Added missing getPage method used by BlogPage and PromptGuide
+  /**
+   * Retrieves content for a specific module or post by its virtual path
+   */
   getPage: async (path: string, lang: 'en' | 'zh' = 'zh'): Promise<PageContent | null> => {
     const entries = (knowledgeBase as any)?.entries || [];
     const entry = entries.find((e: any) => e.path === path);
     if (!entry) return null;
 
     const isFallback = !entry.locales?.[lang];
-    const localeData = entry.locales?.[lang] || entry.locales?.['en'];
+    const localeData = entry.locales?.[lang] || entry.locales?.['en'] || entry.locales?.['zh'];
     
     if (!localeData) return null;
 
@@ -104,7 +108,7 @@ export const ContentService = {
       content: localeData.content,
       frontmatter: localeData.frontmatter || { title: localeData.title },
       title: localeData.title,
-      lang: isFallback ? 'en' : lang,
+      lang: isFallback ? (entry.locales?.en ? 'en' : 'zh') : lang,
       filePath: entry.path,
       isFallback,
       availableLanguages: Object.keys(entry.locales || {}) as ('en' | 'zh')[],
@@ -112,18 +116,24 @@ export const ContentService = {
     };
   },
 
-  // Fix: Added missing getSyncReport method used by PromptGuide auditing
+  /**
+   * Generates a status report of i18n synchronization for all content nodes
+   */
   getSyncReport: (): SyncStatus[] => {
     const entries = (knowledgeBase as any)?.entries || [];
     return entries.map((e: any) => {
       let status: SyncStatus['status'] = 'synced';
-      if (!e.locales?.zh) status = 'missing_zh';
-      else if (!e.locales?.en) status = 'missing_en';
+      const hasZh = !!e.locales?.zh;
+      const hasEn = !!e.locales?.en;
+
+      if (hasZh && !hasEn) status = 'missing_en';
+      else if (!hasZh && hasEn) status = 'missing_zh';
+      else if (!hasZh && !hasEn) status = 'orphan';
       
       return {
-        id: e.id,
-        enTitle: e.locales?.en?.title || 'N/A',
-        zhTitle: e.locales?.zh?.title || 'N/A',
+        id: e.path || e.id,
+        enTitle: e.locales?.en?.title || '---',
+        zhTitle: e.locales?.zh?.title || '---',
         status
       };
     });
