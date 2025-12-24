@@ -74,7 +74,7 @@ const ANATOMY_DATA: AnatomyNode[] = [
   {
     id: 'will',
     organ: 'The Will (意志)',
-    name: 'AI Quant —— 从论文到利润的进化机器',
+    name: 'AI Quant —— 量化交易：AI 驱动的决策核心',
     metaphor: 'Decision & Game Theory (决策与博弈). The evolving mind.',
     target: 'Investors, Traders, System Architects.',
     method: '12 Weeks | Agent Swarm | LangGraph Evolution.',
@@ -84,16 +84,6 @@ const ANATOMY_DATA: AnatomyNode[] = [
     icon: '📈'
   }
 ];
-
-const FloatingCard: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({ children, className, delay = 0 }) => (
-  <m.div
-    animate={{ y: [0, -10, 0], rotate: [0, 0.5, -0.5, 0] }}
-    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay }}
-    className={className}
-  >
-    {children}
-  </m.div>
-);
 
 const PlanetsPage: React.FC = () => {
   const { language } = useLanguage();
@@ -123,63 +113,63 @@ const PlanetsPage: React.FC = () => {
         isMobile={isMobile}
       />
 
-      {/* Content Container - No fixed heights to allow scrolling */}
       <div className="relative z-10 w-full">
         
-        {/* 1. HERO SECTION */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-32 pb-20">
-          <div className="text-center mb-16 space-y-6">
-            <m.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[9px] font-black uppercase tracking-widest">
+        {/* 1. HERO SECTION - Simplified for performance */}
+        <section className="min-h-[70vh] flex flex-col items-center justify-center px-4 pt-32 pb-12">
+          <div className="text-center mb-8 space-y-6">
+            <m.div 
+              initial={{ opacity: 0, y: -10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[9px] font-black uppercase tracking-widest"
+            >
               <Activity className="w-3 h-3" /> BIOLOGICAL DIGITAL EVOLUTION PROTOCOL
             </m.div>
-            <m.h1 initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none">
+            <m.h1 
+              initial={{ opacity: 0, scale: 0.95 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none"
+            >
               {language === 'zh' ? '数字生命体架构' : 'Digital Life Form'}
             </m.h1>
             <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.5em]">The Anatomy of a Super Individual</p>
           </div>
+          
+          {/* Scroll Indicator */}
+          <m.div 
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="mt-12 text-blue-500/50"
+          >
+            <Activity className="w-8 h-8 rotate-90" />
+          </m.div>
+        </section>
 
-          {/* Desktop Vitruvian Layout */}
-          {!isMobile ? (
-            <div className="relative w-full max-w-7xl min-h-[850px] mb-20">
-              <div className={`absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[440px] transition-all duration-700 ${hoveredId === 'core' ? 'z-[100]' : 'z-50'}`}>
-                <FloatingCard delay={0.2}>
-                  <AnatomyCard data={ANATOMY_DATA[0]} isCenter={true} onHover={(pos, color) => setHoveredId(color ? 'core' : null)} onClick={() => scrollToSection('core')} />
-                </FloatingCard>
-              </div>
-              <div className={`absolute left-[12%] top-[5%] w-[330px] transition-all duration-300 ${hoveredId === 'logic' ? 'z-[101]' : 'z-10'}`}>
-                <FloatingCard delay={0.5}><AnatomyCard data={ANATOMY_DATA[1]} onHover={(pos, color) => setHoveredId(color ? 'logic' : null)} onClick={() => scrollToSection('logic')} /></FloatingCard>
-              </div>
-              <div className={`absolute right-[12%] top-[5%] w-[330px] transition-all duration-300 ${hoveredId === 'senses' ? 'z-[101]' : 'z-10'}`}>
-                <FloatingCard delay={0.8}><AnatomyCard data={ANATOMY_DATA[2]} onHover={(pos, color) => setHoveredId(color ? 'senses' : null)} onClick={() => scrollToSection('senses')} /></FloatingCard>
-              </div>
-              <div className={`absolute left-[2%] top-[45%] w-[330px] transition-all duration-300 ${hoveredId === 'body' ? 'z-[101]' : 'z-10'}`}>
-                <FloatingCard delay={1.1}><AnatomyCard data={ANATOMY_DATA[3]} onHover={(pos, color) => setHoveredId(color ? 'body' : null)} onClick={() => scrollToSection('body')} /></FloatingCard>
-              </div>
-              <div className={`absolute right-[2%] top-[45%] w-[330px] transition-all duration-300 ${hoveredId === 'hands' ? 'z-[101]' : 'z-10'}`}>
-                <FloatingCard delay={1.4}><AnatomyCard data={ANATOMY_DATA[4]} onHover={(pos, color) => setHoveredId(color ? 'hands' : null)} onClick={() => scrollToSection('hands')} /></FloatingCard>
-              </div>
-              <div className={`absolute left-1/2 bottom-[2%] -translate-x-1/2 w-[330px] transition-all duration-300 ${hoveredId === 'will' ? 'z-[101]' : 'z-10'}`}>
-                <FloatingCard delay={1.7}><AnatomyCard data={ANATOMY_DATA[5]} onHover={(pos, color) => setHoveredId(color ? 'will' : null)} onClick={() => scrollToSection('will')} /></FloatingCard>
-              </div>
-            </div>
-          ) : (
-            /* Mobile Vertical List - Ensure full visibility */
-            <div className="flex flex-col gap-10 w-full max-w-md mx-auto mb-20">
-              {ANATOMY_DATA.map((node) => (
-                <m.div key={node.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+        {/* 2. MAIN GRID SECTION - Replaced absolute Vitruvian positioning for performance and visibility */}
+        <section className="px-6 pb-32">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+              {ANATOMY_DATA.map((node, idx) => (
+                <m.div 
+                  key={node.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: idx * 0.1 }}
+                >
                   <AnatomyCard 
                     data={node} 
                     isCenter={node.id === 'core'} 
-                    onHover={() => setHoveredId(node.id)} 
+                    onHover={(pos, color) => setHoveredId(color ? node.id : null)} 
                     onClick={() => scrollToSection(node.id)} 
                   />
                 </m.div>
               ))}
             </div>
-          )}
+          </div>
         </section>
 
-        {/* 2. PHILOSOPHY SECTION */}
+        {/* 3. PHILOSOPHY SECTION */}
         <section className="py-32 px-6 bg-black/60 border-y border-white/5">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-24">
@@ -203,7 +193,7 @@ const PlanetsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 3. ANATOMY DEEP DIVE - Fixed scrolling & display */}
+        {/* 4. ANATOMY DEEP DIVE */}
         <section className="py-32 px-6 bg-[#020308]/40">
           <div className="max-w-7xl mx-auto">
              <div className="text-center mb-32">
@@ -230,7 +220,7 @@ const PlanetsPage: React.FC = () => {
                         </div>
                         <div className="p-8 rounded-[32px] bg-green-500/5 border border-green-500/10 space-y-4">
                            <div className="text-[10px] font-black uppercase tracking-widest text-green-500">The Evolution // 进化</div>
-                           <p className="text-gray-300 text-base leading-relaxed">{item.id === 'core' ? "构建私有外脑，让灵感永存。" : "一人即公司。一周上线商业产品。"}</p>
+                           <p className="text-gray-300 text-base leading-relaxed">{item.id === 'core' ? "构建私有外脑，让灵感永存。" : "核心驱动力，赋能所有器官共同进化。"}</p>
                         </div>
                      </div>
                      <Link to={item.link} className="inline-flex items-center gap-6 px-10 py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-xs group rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-xl">
@@ -243,7 +233,7 @@ const PlanetsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 4. TECH STACK */}
+        {/* 5. TECH STACK */}
         <section className="py-40 overflow-hidden border-t border-white/5 bg-black/80">
           <div className="text-center mb-16">
             <span className="text-blue-500 font-mono text-xs uppercase tracking-widest">Sovereign Ecosystem</span>
@@ -258,7 +248,7 @@ const PlanetsPage: React.FC = () => {
           </div>
         </section>
 
-        {/* 5. FOOTER */}
+        {/* 6. FOOTER */}
         <div className="py-32 text-center bg-black">
           <Link to="/" className="inline-flex items-center gap-4 px-10 py-4 rounded-full bg-white/5 border border-white/10 text-gray-500 hover:text-white hover:border-white/30 transition-all font-mono text-xs uppercase tracking-widest group">
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" /> Back to Biological Home

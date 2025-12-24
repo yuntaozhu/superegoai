@@ -84,7 +84,7 @@ const CONTENT_ZH: ContentData = {
       organRole: "Perception / Health",
       tagline: "视觉与物理的探测器",
       description: "构建一个“AI 私人教练”，在现实世界中分析并纠正动作，将人体关节转化为数学矢量。",
-      icon: "🏃",
+      icon: "跑",
       color: "from-[#FF4500] to-[#FF0000]", 
       target: "物理执行模块",
       format: "软硬件结合",
@@ -118,7 +118,7 @@ const CONTENT_ZH: ContentData = {
     },
     {
       id: "quant",
-      title: "量化交易：AI 驱动的进化机器",
+      title: "量化交易：AI 驱动的决策核心",
       shortTitle: "意志：决策",
       organ: "THE WILL",
       organRole: "Decision / Risk",
@@ -149,7 +149,7 @@ const CONTENT_EN: ContentData = {
   blogPosts: [],
   courses: CONTENT_ZH.courses.map(course => ({
     ...course,
-    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : (course.id === 'quant' ? "AI Quant: The Evolving Machine" : course.shortTitle.split('：')[1]),
+    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : (course.id === 'quant' ? "AI Quant: The Evolving Decision Machine" : course.shortTitle.split('：')[1]),
     description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : course.description,
     outcome: course.id === 'quant' ? "A fully autonomous AI Hedge Fund factory with self-evolution capabilities." : course.outcome
   }))
