@@ -118,21 +118,21 @@ const CONTENT_ZH: ContentData = {
     },
     {
       id: "quant",
-      title: "量化交易：AI 驱动的决策核心",
+      title: "量化交易：AI 驱动的进化机器",
       shortTitle: "意志：决策",
       organ: "THE WILL",
       organRole: "Decision / Risk",
-      tagline: "进化的决策核心",
-      description: "我们不写算法，我们构建能够自我进化的多智能体。在风险与概率中锻造钢铁般的意志。",
+      tagline: "From Paper To Profit —— 构建自我进化的投研工厂",
+      description: "跨越经验主义。构建由 Gemini 3 驱动的 Agent Swarm 系统，从解析顶级论文到回测优化，再到实盘部署的全链路自动化实战。",
       icon: "📈",
-      color: "from-[#2E8B57] to-[#006400]", 
-      target: "风险决策模块",
-      format: "实战模拟",
-      duration: "12 周",
-      outcome: "构建自我进化的AI交易Agent。",
+      color: "from-[#10B981] to-[#059669]", 
+      target: "风险决策与系统架构模块",
+      format: "Agent Swarm 实战",
+      duration: "12 周深度实战",
+      outcome: "构建一套全自动的、具备自我杂交进化能力的 AI 投研工厂流水线。",
       philosophyMap: {
-        title: "进化机制",
-        points: ["策略基因库", "Critic Agent", "反脆弱系统"]
+        title: "投研平权宣言",
+        points: ["系统优于直觉", "代码即阿尔法", "Agent 军团化作战"]
       },
       syllabus: []
     }
@@ -149,9 +149,9 @@ const CONTENT_EN: ContentData = {
   blogPosts: [],
   courses: CONTENT_ZH.courses.map(course => ({
     ...course,
-    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : course.shortTitle.split('：')[1],
-    description: course.id === 'data' ? "A full-stack implementation based on Decoding AI architecture and Cognitive Neuroscience. Build your own Second Brain." : "Master the architecture of AI orchestration and build your unique Second Brain assets.",
-    outcome: "Build a persistent, self-evolving Second Brain system with metacognitive monitoring."
+    title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : (course.id === 'quant' ? "AI Quant: The Evolving Machine" : course.shortTitle.split('：')[1]),
+    description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : course.description,
+    outcome: course.id === 'quant' ? "A fully autonomous AI Hedge Fund factory with self-evolution capabilities." : course.outcome
   }))
 };
 

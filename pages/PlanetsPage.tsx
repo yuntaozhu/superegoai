@@ -74,13 +74,13 @@ const ANATOMY_DATA: AnatomyNode[] = [
   {
     id: 'will',
     organ: 'The Will (意志)',
-    name: 'AI Quant Trading —— 不确定性中的决策',
-    metaphor: 'Decision & Game Theory (决策与博弈). The prefrontal cortex.',
-    target: 'Investors, Finance-focused Learners.',
-    method: '12 Weeks | Simulation & Live Trading | Strategy Coding.',
-    outcome: 'Build self-evolving trading agents and master risk control.',
+    name: 'AI Quant —— 从论文到利润的进化机器',
+    metaphor: 'Decision & Game Theory (决策与博弈). The evolving mind.',
+    target: 'Investors, Traders, System Architects.',
+    method: '12 Weeks | Agent Swarm | LangGraph Evolution.',
+    outcome: 'Build a self-evolving Hedge Fund factory and master automated risk.',
     link: '/course/quant',
-    color: '#2E8B57',
+    color: '#10B981',
     icon: '📈'
   }
 ];
