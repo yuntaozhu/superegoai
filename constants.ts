@@ -89,7 +89,7 @@ const CONTENT_ZH: ContentData = {
       target: "物理执行模块",
       format: "软硬件结合",
       duration: "8 周",
-      outcome: "开发专属的AI动作纠正教练。",
+      outcome: "开发专属的AI动作纠正教练。Develop a personalized AI coach that provides real-time feedback on form and technique.",
       philosophyMap: {
         title: "物理 AI",
         points: ["边缘部署", "生物力学建模", "人机回环"]
@@ -151,7 +151,11 @@ const CONTENT_EN: ContentData = {
     ...course,
     title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : (course.id === 'quant' ? "AI Quant: The Evolving Decision Machine" : course.shortTitle.split('：')[1]),
     description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : course.description,
-    outcome: course.id === 'quant' ? "A fully autonomous AI Hedge Fund factory with self-evolution capabilities." : course.outcome
+    outcome: course.id === 'quant' 
+      ? "A fully autonomous AI Hedge Fund factory with self-evolution capabilities." 
+      : (course.id === 'sports' 
+          ? "Develop a personalized AI coach that provides real-time feedback on form and technique." 
+          : course.outcome)
   }))
 };
 
