@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -24,6 +24,13 @@ import { PromptRegistryProvider } from './context/PromptRegistryContext';
 import { ThemeProvider } from './context/ThemeContext';
 import P5Background from './components/P5Background';
 
+const LoadingScreen = () => (
+  <div className="min-h-screen bg-brand-dark flex flex-col items-center justify-center gap-6">
+    <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin" />
+    <div className="text-[10px] font-mono text-gray-500 uppercase tracking-[0.5em] animate-pulse">Syncing_Nodes...</div>
+  </div>
+);
+
 const App: React.FC = () => {
   return (
     <LanguageProvider>
@@ -34,23 +41,25 @@ const App: React.FC = () => {
               <P5Background />
               <Navbar />
               <main className="flex-grow z-10">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/planets" element={<PlanetsPage />} />
-                  <Route path="/studio" element={<Studio />} />
-                  <Route path="/consulting" element={<Consulting />} />
-                  <Route path="/blog" element={<BlogPage />} />
-                  <Route path="/prompt-guide" element={<PromptGuide />} />
-                  
-                  {/* Refactored Specific Planet Routes */}
-                  <Route path="/course/art" element={<ArtPlanet />} />
-                  <Route path="/course/sports" element={<SportsPlanet />} />
-                  <Route path="/course/data" element={<SuperEgoPlanet />} />
-                  <Route path="/course/quant" element={<QuantPlanet />} />
-                  <Route path="/course/solopreneur" element={<CodePlanet />} />
-                  <Route path="/course/digital-twin" element={<ResearchPlanet />} />
-                </Routes>
+                <Suspense fallback={<LoadingScreen />}>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/planets" element={<PlanetsPage />} />
+                    <Route path="/studio" element={<Studio />} />
+                    <Route path="/consulting" element={<Consulting />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/prompt-guide" element={<PromptGuide />} />
+                    
+                    {/* Planet Routes */}
+                    <Route path="/course/art" element={<ArtPlanet />} />
+                    <Route path="/course/sports" element={<SportsPlanet />} />
+                    <Route path="/course/data" element={<SuperEgoPlanet />} />
+                    <Route path="/course/quant" element={<QuantPlanet />} />
+                    <Route path="/course/solopreneur" element={<CodePlanet />} />
+                    <Route path="/course/digital-twin" element={<ResearchPlanet />} />
+                  </Routes>
+                </Suspense>
               </main>
               <ChatAssistant />
               <Footer />

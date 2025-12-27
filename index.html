@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,21 +14,32 @@
           extend: {
             colors: {
               brand: {
-                dark: '#0f172a',
+                dark: '#020308',
                 light: '#f8fafc',
                 primary: '#3b82f6',
                 accent: '#8b5cf6',
-                surface: '#1e293b',
+                surface: '#0b1026',
                 surfaceLight: '#ffffff'
               }
             },
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              mono: ['Fira Code', 'monospace'],
+            },
+            animation: {
+              'spin-slow': 'spin 12s linear infinite',
+              'spin-reverse-slow': 'spin-reverse 15s linear infinite',
+            },
+            keyframes: {
+              'spin-reverse': {
+                from: { transform: 'rotate(360deg)' },
+                to: { transform: 'rotate(0deg)' },
+              }
             },
             typography: (theme) => ({
               DEFAULT: {
                 css: {
-                  color: theme('colors.gray.600'), // Default to light mode text
+                  color: theme('colors.gray.600'),
                   maxWidth: 'none',
                   a: {
                     color: theme('colors.blue.600'),
@@ -37,21 +49,20 @@
                       textDecoration: 'underline',
                     },
                   },
-                  'h1, h2, h3, h4': { color: theme('colors.slate.900') },
+                  'h1, h2, h3, h4': { color: theme('colors.slate.900'), fontWeight: '900' },
                   code: { 
-                    color: theme('colors.pink.500'),
-                    backgroundColor: 'rgba(0,0,0,0.05)',
+                    color: theme('colors.blue.500'),
+                    backgroundColor: 'rgba(59,130,246,0.05)',
                     padding: '0.2em 0.4em',
                     borderRadius: '0.25rem',
                     fontWeight: '400',
                   },
-                  // Dark mode overrides
                   '.dark &': {
                     color: theme('colors.gray.300'),
                     'h1, h2, h3, h4': { color: theme('colors.white') },
                     code: {
-                      color: theme('colors.pink.400'),
-                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      color: theme('colors.blue.400'),
+                      backgroundColor: 'rgba(255,255,255,0.05)',
                     }
                   }
                 },
@@ -62,12 +73,16 @@
       }
     </script>
     <style>
-      /* Base styles handle transition */
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@400;600&display=swap');
+
       body {
         transition: background-color 0.3s ease, color 0.3s ease;
+        background-color: #f8fafc;
+      }
+      .dark body {
+        background-color: #020308;
       }
       
-      /* Custom scrollbar for webkit */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -79,13 +94,12 @@
         border-radius: 4px;
       }
       .dark ::-webkit-scrollbar-thumb {
-        background: #334155; 
+        background: #1e293b; 
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #64748b; 
       }
       
-      /* Prism Overrides */
       pre[class*="language-"] {
         margin: 0 !important;
         padding: 0 !important;
@@ -94,22 +108,28 @@
       code[class*="language-"] {
         text-shadow: none !important;
       }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(59, 130, 246, 0.4);
+      }
     </style>
     <!-- Medium Editor CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/themes/beagle.min.css" type="text/css" media="screen" charset="utf-8">
-    <!-- Medium Editor JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/medium-editor.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/themes/beagle.min.css">
     <script src="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/js/medium-editor.min.js"></script>
 
-    <!-- Prism Syntax Highlighting -->
+    <!-- Prism -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markdown.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
 
 <script type="importmap">
 {
@@ -138,7 +158,7 @@
 }
 </script>
 </head>
-  <body>
+  <body class="selection:bg-blue-500/30">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
   </body>

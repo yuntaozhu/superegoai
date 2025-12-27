@@ -1,0 +1,82 @@
+
+{
+  "generated_at": "2025-05-20T10:00:00.000Z",
+  "total_entries": 8,
+  "navigationTree": [
+    {
+      "id": "introduction",
+      "titles": { "en": "Introduction", "zh": "基础入门" },
+      "type": "category",
+      "children": [
+        { "id": "basics", "titles": { "en": "Prompt Engineering Basics", "zh": "提示工程基础" }, "type": "page", "path": "introduction/basics" },
+        { "id": "elements", "titles": { "en": "Elements of a Prompt", "zh": "提示词要素" }, "type": "page", "path": "introduction/elements" }
+      ]
+    },
+    {
+      "id": "techniques",
+      "titles": { "en": "Techniques", "zh": "核心技术" },
+      "type": "category",
+      "children": [
+        { "id": "zeroshot", "titles": { "en": "Zero-shot Prompting", "zh": "零样本提示" }, "type": "page", "path": "techniques/zeroshot" },
+        { "id": "fewshot", "titles": { "en": "Few-shot Prompting", "zh": "少样本提示" }, "type": "page", "path": "techniques/fewshot" },
+        { "id": "cot", "titles": { "en": "Chain-of-Thought", "zh": "思维链 (CoT)" }, "type": "page", "path": "techniques/cot" }
+      ]
+    },
+    {
+      "id": "applications",
+      "titles": { "en": "Applications", "zh": "实战应用" },
+      "type": "category",
+      "children": [
+        { "id": "coding", "titles": { "en": "Code Generation", "zh": "代码生成" }, "type": "page", "path": "applications/coding" }
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "basics",
+      "path": "introduction/basics",
+      "category": "introduction",
+      "locales": {
+        "en": {
+          "title": "Prompt Engineering Basics",
+          "content": "# Prompt Engineering Basics\n\nPrompt engineering is a relatively new discipline for developing and optimizing prompts to efficiently use language models.\n\n### Core Principles\n- **Be specific:** Provide as much detail as possible.\n- **Guide the model:** Use step-by-step instructions.\n- **Iteration is key:** Refine your prompts based on output.",
+          "headers": ["Prompt Engineering Basics", "Core Principles"]
+        },
+        "zh": {
+          "title": "提示工程基础",
+          "content": "# 提示工程基础\n\n提示工程是一门较新的学科，旨在通过开发和优化提示，高效地使用语言模型。\n\n### 核心原则\n- **具体性：** 提供尽可能多的细节。\n- **引导模型：** 使用分步指令。\n- **迭代是关键：** 根据输出改进提示。",
+          "headers": ["提示工程基础", "核心原则"]
+        }
+      }
+    },
+    {
+      "id": "zeroshot",
+      "path": "techniques/zeroshot",
+      "category": "techniques",
+      "locales": {
+        "en": {
+          "title": "Zero-shot Prompting",
+          "content": "# Zero-shot Prompting\n\nZero-shot prompting involves presenting a task to a model without any examples.\n\n```text\nClassify the following text into Positive or Negative: \"I love this course!\"\n```",
+          "headers": ["Zero-shot Prompting"]
+        }
+      }
+    },
+    {
+      "id": "welcome",
+      "path": "blog/welcome",
+      "category": "blog",
+      "locales": {
+        "en": {
+          "title": "The Dawn of SuperEgo AI",
+          "content": "# The Dawn of SuperEgo AI\n\nWelcome to the first signal from the SuperEgo Second Brain. We are entering an era where biological intelligence is augmented by digital orchestration.",
+          "frontmatter": { "date": "2025-05-01", "author": "Zhu", "tags": ["Vision", "AI"] }
+        },
+        "zh": {
+          "title": "超我 AI 的黎明",
+          "content": "# 超我 AI 的黎明\n\n欢迎来到来自“超我第二大脑”的第一个信号。我们正在进入一个生物智能由数字编排增强的时代。",
+          "frontmatter": { "date": "2025-05-01", "author": "朱云涛", "tags": ["愿景", "AI"] }
+        }
+      }
+    }
+  ]
+}

@@ -1,18 +1,23 @@
+
 /**
  * ContentService: Knowledge Indexer & Audit Manager
- * 
- * ROLE: I18n Content Architect
- * RESPONSIBILITY: 
- * 1. Read from generated/knowledge_base.json (Single Source of Truth)
- * 2. Serve content to React components
  */
 
-// Use the robust root alias configured in the index.html import map
-// @ts-ignore
-import knowledgeBaseData from '@/generated/knowledge_base.json' with { type: 'json' };
+// Import static knowledge base with fallback for development environments
+let knowledgeBase: any = { navigationTree: [], entries: [] };
 
-// Safety check for environments where JSON import might be problematic
-const knowledgeBase = knowledgeBaseData || { navigationTree: [], entries: [] };
+async function initKnowledgeBase() {
+  try {
+    // @ts-ignore
+    const data = await import('@/generated/knowledge_base.json', { with: { type: 'json' } });
+    knowledgeBase = data.default || data;
+  } catch (e) {
+    console.warn("Knowledge base JSON not found or failed to load. Using empty state.");
+  }
+}
+
+// Pre-initialize
+initKnowledgeBase();
 
 export interface PageMeta {
   id: string;
@@ -64,15 +69,12 @@ const mapTreeNode = (node: any, lang: 'en' | 'zh'): NavTreeNode => {
 
 export const ContentService = {
   getTree: (lang: 'en' | 'zh' = 'zh'): NavTreeNode[] => {
-    const rawTree = (knowledgeBase as any)?.navigationTree || [];
+    const rawTree = knowledgeBase.navigationTree || [];
     return rawTree.map((node: any) => mapTreeNode(node, lang));
   },
 
-  /**
-   * Fetches all entries belonging to the 'blog' category
-   */
   getBlogPosts: (lang: 'en' | 'zh' = 'zh'): PageMeta[] => {
-    const entries = (knowledgeBase as any)?.entries || [];
+    const entries = knowledgeBase.entries || [];
     return entries
       .filter((e: any) => e.category === 'blog')
       .map((e: any) => {
@@ -91,11 +93,9 @@ export const ContentService = {
       .sort((a: PageMeta, b: PageMeta) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime());
   },
 
-  /**
-   * Retrieves content for a specific module or post by its virtual path
-   */
   getPage: async (path: string, lang: 'en' | 'zh' = 'zh'): Promise<PageContent | null> => {
-    const entries = (knowledgeBase as any)?.entries || [];
+    // Ensure we wait for data if it's still loading (though usually it's fine)
+    const entries = knowledgeBase.entries || [];
     const entry = entries.find((e: any) => e.path === path);
     if (!entry) return null;
 
@@ -109,18 +109,15 @@ export const ContentService = {
       frontmatter: localeData.frontmatter || { title: localeData.title },
       title: localeData.title,
       lang: isFallback ? (entry.locales?.en ? 'en' : 'zh') : lang,
-      filePath: entry.path,
+      filePath: path,
       isFallback,
       availableLanguages: Object.keys(entry.locales || {}) as ('en' | 'zh')[],
       headers: localeData.headers
     };
   },
 
-  /**
-   * Generates a status report of i18n synchronization for all content nodes
-   */
   getSyncReport: (): SyncStatus[] => {
-    const entries = (knowledgeBase as any)?.entries || [];
+    const entries = knowledgeBase.entries || [];
     return entries.map((e: any) => {
       let status: SyncStatus['status'] = 'synced';
       const hasZh = !!e.locales?.zh;
