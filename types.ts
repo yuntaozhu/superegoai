@@ -16,6 +16,7 @@ export interface Course {
   shortTitle: string;
   tagline: string;
   description: string;
+  takeaway: string; // Engaging key takeaway
   icon: string;
   color: string;
   organ: string;      // 闭环生命体：器官名称

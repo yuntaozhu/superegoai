@@ -49,11 +49,12 @@ const GalaxySection: React.FC = () => {
               </h3>
               
               <div className="space-y-3 md:space-y-4 mb-6 md:mb-8 flex-grow">
-                 <div className="flex items-center gap-2 md:gap-3">
-                    <span className="text-[8px] md:text-[10px] font-mono text-blue-500 uppercase tracking-widest opacity-60">Target</span>
-                    <span className="text-xs md:text-sm text-slate-700 dark:text-gray-300 font-bold">{course.target}</span>
+                 <div className="p-4 bg-gray-50 dark:bg-black/20 rounded-2xl border border-gray-100 dark:border-white/5 group-hover:border-blue-500/20 transition-all">
+                    <p className="text-xs md:text-sm text-slate-800 dark:text-blue-200 font-bold leading-relaxed">
+                      "{course.takeaway}"
+                    </p>
                  </div>
-                 <p className="text-[13px] md:text-sm text-slate-500 dark:text-gray-400 leading-relaxed font-light line-clamp-3">
+                 <p className="text-[13px] md:text-sm text-slate-500 dark:text-gray-400 leading-relaxed font-light line-clamp-2">
                    {course.description}
                  </p>
               </div>

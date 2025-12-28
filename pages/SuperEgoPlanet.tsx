@@ -21,7 +21,7 @@ const SuperEgoPlanet: React.FC = () => {
       theory: 'Extended Mind Thesis (延展心智)',
       tech: ['LangChain', 'Qdrant Setup', 'System Blueprint', 'FTI Flow'],
       mission: '夺回对信息的控制权。建立一套完全属于你的第二外脑操作系统。',
-      deliverable: '第二外脑系统蓝图',
+      deliverable: '具备 FTI 主权数据闭环的个性化认知系统架构协议 (Sovereign FTI Cognitive Architecture)',
       icon: <Shield className="w-6 h-6" />,
       color: 'from-yellow-500 to-amber-600'
     },

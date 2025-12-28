@@ -1,15 +1,22 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Sparkles, Brain, Loader2, AlertTriangle } from 'lucide-react';
+import { X, Send, Sparkles, Brain, Loader2, Info } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { useLanguage } from '../context/LanguageContext';
+import GroundingSources from './GroundingSources';
 
 const m = motion as any;
 
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+  sources?: { title: string; url: string }[];
+}
+
 const ChatAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { language } = useLanguage();
@@ -25,13 +32,12 @@ const ChatAssistant: React.FC = () => {
   // Reset chat session when language changes to switch system instruction language
   useEffect(() => {
     chatSessionRef.current = null;
-    setMessages([]); // Optional: clear history on language switch
+    setMessages([]);
   }, [language]);
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
-    // 1. Check for API Key presence
     if (!process.env.API_KEY) {
         setMessages(prev => [...prev, { role: 'assistant', content: language === 'zh' ? "⚠️ 系统错误：未配置 API Key。请在环境变量中设置。" : "⚠️ System Error: API Key not configured. Please check your environment variables." }]);
         return;
@@ -43,25 +49,27 @@ const ChatAssistant: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // 2. Initialize Chat Session if needed
       if (!chatSessionRef.current) {
         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
         
         const systemPromptZh = `你是 "AI First Course" 的 SuperEgo AI 助手。
         你的任务是解释课程理念（编排 vs 执行）并帮助用户理解星系模型。
         平台拥有6颗行星：艺术、运动、数据（核心）、量化、代码（超级个体）和科研。
+        你可以使用 Google 搜索来获取最新的 AI 趋势和实时信息。
         请保持回答简洁、具有未来感且充满鼓励。用中文回答。`;
 
         const systemPromptEn = `You are the SuperEgo AI Assistant for "AI First Course". 
         Your mission is to explain the course philosophy (Orchestration vs Execution) and help users understand the Galaxy Model.
         The platform offers 6 planets: Art, Sports, Data (The Core), Quant, Code (Solopreneur), and Research.
+        You can use Google Search to fetch the latest AI trends and real-time information.
         Keep answers concise, futuristic, and encouraging. Respond in English.`;
 
         chatSessionRef.current = ai.chats.create({
           model: 'gemini-3-flash-preview',
           config: {
             systemInstruction: language === 'zh' ? systemPromptZh : systemPromptEn,
-            temperature: 0.7
+            temperature: 0.7,
+            tools: [{ googleSearch: {} }]
           }
         });
       }
@@ -71,7 +79,18 @@ const ChatAssistant: React.FC = () => {
       });
 
       const assistantReply = response.text || (language === 'zh' ? "信号干扰... 请重试。" : "Signal interference... Please try again.");
-      setMessages(prev => [...prev, { role: 'assistant', content: assistantReply }]);
+      
+      // Extract grounding sources
+      const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      const sources = groundingChunks
+        .map((chunk: any) => chunk.web)
+        .filter((web: any) => web && web.uri && web.title)
+        .map((web: any) => ({ title: web.title, url: web.uri }));
+      
+      // Deduplicate sources
+      const uniqueSources = Array.from(new Map(sources.map((s: any) => [s.url, s])).values()) as { title: string; url: string }[];
+
+      setMessages(prev => [...prev, { role: 'assistant', content: assistantReply, sources: uniqueSources }]);
     } catch (error: any) {
       console.error("SuperEgo Assistant Error:", error);
       
@@ -79,20 +98,13 @@ const ChatAssistant: React.FC = () => {
         ? "连接中断。请验证您的 API 状态或网络连接。" 
         : "Node connection lost. Please verify your API status or network connection.";
 
-      // Check for specific API errors
       if (error.message?.includes('403') || error.message?.includes('401')) {
          errorMessage = language === 'zh' 
            ? "鉴权失败：API Key 无效或过期。" 
            : "Authentication Failed: Invalid or expired API Key.";
-      } else if (error.message?.includes('404')) {
-         errorMessage = language === 'zh' 
-           ? "模型未找到：请检查模型名称配置。" 
-           : "Model Not Found: Please check model configuration.";
       }
 
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${errorMessage}` }]);
-      
-      // Reset session to force re-initialization on next attempt
       chatSessionRef.current = null;
     } finally {
       setIsLoading(false);
@@ -101,7 +113,6 @@ const ChatAssistant: React.FC = () => {
 
   return (
     <>
-      {/* Trigger Button */}
       <m.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -117,16 +128,14 @@ const ChatAssistant: React.FC = () => {
         </AnimatePresence>
       </m.button>
 
-      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <m.div
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-24 right-6 z-[100] w-[350px] sm:w-[400px] h-[500px] bg-brand-surface/95 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+            className="fixed bottom-24 right-6 z-[100] w-[350px] sm:w-[400px] h-[600px] bg-brand-surface/95 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
           >
-            {/* Header */}
             <div className="p-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
@@ -136,7 +145,7 @@ const ChatAssistant: React.FC = () => {
                   <h4 className="text-xs font-black text-white uppercase tracking-widest">SuperEgo Assistant</h4>
                   <p className="text-[10px] text-emerald-500 font-mono flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    STATUS: ONLINE
+                    GROUNDING ENABLED
                   </p>
                 </div>
               </div>
@@ -145,29 +154,69 @@ const ChatAssistant: React.FC = () => {
               </button>
             </div>
 
-            {/* Messages */}
-            <div ref={scrollRef} className="flex-grow overflow-y-auto custom-scrollbar p-6 space-y-4">
+            <div ref={scrollRef} className="flex-grow overflow-y-auto custom-scrollbar p-6 space-y-6">
               {messages.length === 0 && (
-                <div className="text-center py-10 opacity-40">
-                  <Brain className="w-12 h-12 mx-auto mb-4 text-blue-500" />
-                  <p className="text-sm text-gray-400">
-                    {language === 'zh' ? '询问关于“第二大脑”或星系模型的问题。' : 'Ask me about the Second Brain or our Galaxy Model.'}
+                <m.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
+                      <Brain className="w-8 h-8 text-blue-400" />
+                    </div>
+                    <h3 className="text-white font-black uppercase tracking-tight text-lg mb-2">
+                      {language === 'zh' ? '欢迎来到超我助手' : 'Welcome to SuperEgo Assistant'}
+                    </h3>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-4">
+                    <div className="flex gap-3">
+                      <Info className="w-4 h-4 text-blue-500 shrink-0 mt-1" />
+                      <p className="text-sm text-gray-300 leading-relaxed">
+                        {language === 'zh' 
+                          ? '我是您的 AI 导航员。我的职责是帮助您理解我们的“编排而非执行”的课程理念以及独特的“星系模型”。' 
+                          : 'I am your AI Navigator. My role is to help you understand our "Orchestration, Not Execution" philosophy and the unique Galaxy Model.'}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 border-t border-white/5">
+                      <p className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-3">
+                        {language === 'zh' ? '您可以询问关于 6 颗行星的信息：' : 'Inquire about our 6 specialized planets:'}
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {['Art', 'Sports', 'Data', 'Quant', 'Code', 'Research'].map(planet => (
+                          <button 
+                            key={planet}
+                            onClick={() => setInput(language === 'zh' ? `告诉我关于${planet}行星的信息` : `Tell me about the ${planet} planet`)}
+                            className="px-3 py-2 bg-white/5 border border-white/5 rounded-xl text-[10px] text-gray-400 hover:bg-blue-600/20 hover:text-blue-300 hover:border-blue-500/30 transition-all text-left uppercase font-bold"
+                          >
+                            • {planet}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-gray-500 text-center italic">
+                    {language === 'zh' ? '在下方输入您的问题开始对话...' : 'Type your question below to begin...'}
                   </p>
-                </div>
+                </m.div>
               )}
               {messages.map((msg, i) => (
                 <m.div
                   initial={{ opacity: 0, x: msg.role === 'user' ? 10 : -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   key={i}
-                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
-                  <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
+                  <div className={`max-w-[90%] p-3 rounded-2xl text-sm ${
                     msg.role === 'user' 
                     ? 'bg-blue-600 text-white rounded-tr-none' 
                     : 'bg-white/5 border border-white/10 text-gray-300 rounded-tl-none'
                   }`}>
                     {msg.content}
+                    <GroundingSources sources={msg.sources || []} />
                   </div>
                 </m.div>
               ))}
@@ -175,13 +224,12 @@ const ChatAssistant: React.FC = () => {
                 <div className="flex justify-start">
                   <div className="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-tl-none flex gap-2 items-center">
                     <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
-                    <span className="text-xs text-gray-500 font-mono">Thinking...</span>
+                    <span className="text-xs text-gray-500 font-mono">Real-time Search...</span>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Input */}
             <div className="p-4 bg-brand-dark/50 border-t border-white/5">
               <form 
                 onSubmit={(e) => { e.preventDefault(); handleSend(); }}

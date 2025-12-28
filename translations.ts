@@ -9,6 +9,20 @@ export const translations = {
       studio: 'Prompt Lab',
       about: 'Mission',
       prompt_guide: 'Prompt Guide',
+      dashboard: 'Dashboard',
+    },
+    dashboard: {
+      title: 'Orchestrator Dashboard',
+      subtitle: 'Real-time synchronization of your Second Brain nodes.',
+      growth_title: 'Neural Sync Activity',
+      progress_title: 'Planet Mastery',
+      skills_title: 'Cognitive Distribution',
+      metrics: {
+        brain_syncs: 'Total Syncs',
+        active_hours: 'Neural Hours',
+        knowledge_nodes: 'Knowledge Nodes',
+        orchestration_level: 'Sync Level'
+      }
     },
     prompt_guide: {
       title: 'Prompt Engineering Guide',
@@ -128,6 +142,20 @@ export const translations = {
       studio: '提示词实验室',
       about: '愿景',
       prompt_guide: '提示词指南',
+      dashboard: '仪表盘',
+    },
+    dashboard: {
+      title: '编排者仪表盘',
+      subtitle: '实时同步您的第二大脑节点。',
+      growth_title: '神经同步活动',
+      progress_title: '星球掌控进度',
+      skills_title: '认知资产分布',
+      metrics: {
+        brain_syncs: '总同步次数',
+        active_hours: '神经活跃时长',
+        knowledge_nodes: '知识节点数',
+        orchestration_level: '编排等级'
+      }
     },
     prompt_guide: {
       title: '提示词工程指南',

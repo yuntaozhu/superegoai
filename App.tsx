@@ -1,5 +1,5 @@
 
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -10,6 +10,9 @@ import Studio from './pages/Studio';
 import AboutPage from './pages/AboutPage';
 import PromptGuide from './pages/PromptGuide';
 import ChatAssistant from './components/ChatAssistant';
+
+// Lazy load Dashboard for performance
+const Dashboard = lazy(() => import('./pages/Dashboard'));
 
 // Import specific planet pages
 import ArtPlanet from './pages/ArtPlanet';
@@ -50,6 +53,7 @@ const App: React.FC = () => {
                     <Route path="/consulting" element={<Consulting />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/prompt-guide" element={<PromptGuide />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     
                     {/* Planet Routes */}
                     <Route path="/course/art" element={<ArtPlanet />} />

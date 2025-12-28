@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { getContent } from '../constants';
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, LayoutDashboard } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,6 +56,18 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
+                to="/dashboard"
+                className={`px-5 py-2 rounded-lg text-base font-bold transition-all flex items-center gap-2 ${
+                  location.pathname === '/dashboard' 
+                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                  : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                {t('nav.dashboard')}
+              </Link>
+
+              <Link
                 to="/prompt-guide"
                 className={`px-5 py-2 rounded-lg text-base font-bold transition-all flex items-center gap-2 ${
                   location.pathname === '/prompt-guide' 
@@ -65,39 +77,6 @@ const Navbar: React.FC = () => {
               >
                 {t('nav.prompt_guide')}
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-              </Link>
-
-              <Link
-                to="/about"
-                className={`px-5 py-2 rounded-lg text-base font-bold transition-all ${
-                  location.pathname === '/about' 
-                  ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' 
-                  : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
-                }`}
-              >
-                {t('nav.about')}
-              </Link>
-
-              <Link
-                to="/consulting"
-                className={`px-5 py-2 rounded-lg text-base font-bold transition-all ${
-                  location.pathname === '/consulting' 
-                  ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' 
-                  : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
-                }`}
-              >
-                {t('nav.consulting')}
-              </Link>
-
-              <Link
-                to="/blog"
-                className={`px-5 py-2 rounded-lg text-base font-bold transition-all ${
-                  location.pathname === '/blog' 
-                  ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' 
-                  : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
-                }`}
-              >
-                {t('nav.blog')}
               </Link>
 
               <Link
@@ -170,70 +149,14 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay - Portaled to avoid stacking context issues */}
+      {/* Mobile Menu Overlay */}
       {isOpen && createPortal(
         <div className="md:hidden fixed inset-0 top-[64px] z-[999] bg-white dark:bg-brand-dark/95 backdrop-blur-3xl animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto">
           <div className="px-6 py-10 space-y-2 flex flex-col min-h-full">
-            <Link 
-              to="/" 
-              onClick={() => setIsOpen(false)} 
-              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/' ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'}`}
-            >
-              {t('nav.home')}
-            </Link>
-            <Link 
-              to="/prompt-guide" 
-              onClick={() => setIsOpen(false)} 
-              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/prompt-guide' ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'}`}
-            >
-              {t('nav.prompt_guide')}
-            </Link>
-            <Link 
-              to="/about" 
-              onClick={() => setIsOpen(false)} 
-              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/about' ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'}`}
-            >
-              {t('nav.about')}
-            </Link>
-            <Link 
-              to="/consulting" 
-              onClick={() => setIsOpen(false)} 
-              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/consulting' ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'}`}
-            >
-              {t('nav.consulting')}
-            </Link>
-            <Link 
-              to="/blog" 
-              onClick={() => setIsOpen(false)} 
-              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${location.pathname === '/blog' ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'}`}
-            >
-              {t('nav.blog')}
-            </Link>
-            <Link 
-              to="/planets" 
-              onClick={() => setIsOpen(false)} 
-              className={`block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight transition-colors ${isActive('/planets') ? 'bg-gray-100 dark:bg-white/10 text-slate-900 dark:text-white' : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'}`}
-            >
-              {t('nav.planets')}
-            </Link>
-
-            <div className="mt-auto pb-10">
-              <div className="h-[1px] bg-gray-200 dark:bg-white/10 mb-8 mx-4"></div>
-              <div className="flex gap-4 px-4">
-                <button 
-                  onClick={() => { setLanguage('en'); setIsOpen(false); }} 
-                  className={`flex-1 py-4 rounded-2xl font-black text-lg transition-all ${language === 'en' ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'bg-gray-100 dark:bg-white/5 text-slate-500 dark:text-gray-500'}`}
-                >
-                  ENGLISH
-                </button>
-                <button 
-                  onClick={() => { setLanguage('zh'); setIsOpen(false); }} 
-                  className={`flex-1 py-4 rounded-2xl font-black text-lg transition-all ${language === 'zh' ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'bg-gray-100 dark:bg-white/5 text-slate-500 dark:text-gray-500'}`}
-                >
-                  中文
-                </button>
-              </div>
-            </div>
+            <Link to="/" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight">{t('nav.home')}</Link>
+            <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight text-blue-600">{t('nav.dashboard')}</Link>
+            <Link to="/prompt-guide" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight">{t('nav.prompt_guide')}</Link>
+            <Link to="/planets" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight">{t('nav.planets')}</Link>
           </div>
         </div>,
         document.body
