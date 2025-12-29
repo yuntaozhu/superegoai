@@ -86,7 +86,7 @@ const SportsPlanet: React.FC = () => {
     },
     {
       id: 'M3',
-      title: '模块三：智能教练与姿态实时校正',
+      title: '模块三：智能反馈系统构建',
       period: '17 - 24 周',
       goal: '构建闭环纠正性反馈系统，实时指导动作细节。',
       tech: ['运动解剖学', '逻辑引擎', 'Streamlit', 'RAG'],
@@ -95,7 +95,7 @@ const SportsPlanet: React.FC = () => {
         { title: '专家级反馈建议', desc: '根据动作轨迹偏差，利用大模型生成个性化的纠错指令与改进计划。' },
         { title: 'UI 设计与整合', desc: '使用 Streamlit 打造拥有 GUI 界面的一体化应用终端。' }
       ],
-      outcome: '最终项目：AI 私人教练 V1.0 (AI Private Coach)',
+      outcome: '最终项目：AI 私人教练 V1.0 (含姿态校正与自动计数)',
       gradient: 'from-indigo-600 to-blue-600',
       icon: '💪'
     }
