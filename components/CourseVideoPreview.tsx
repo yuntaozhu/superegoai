@@ -4,16 +4,6 @@ import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Loader2, X, AlertCircle, Film, Sparkles, Terminal } from 'lucide-react';
 
-// Declaration for AI Studio key selection API to prevent TS context confusion
-declare global {
-  interface Window {
-    aistudio: {
-      hasSelectedApiKey: () => Promise<boolean>;
-      openSelectKey: () => Promise<void>;
-    };
-  }
-}
-
 const m = motion as any;
 
 interface CourseVideoPreviewProps {
@@ -60,9 +50,9 @@ const CourseVideoPreview: React.FC<CourseVideoPreviewProps> = ({ courseId, takea
       setStatus('checking_key');
       
       // GUIDELINE: Check for selected API key via provided window API
-      const hasKey = await window.aistudio.hasSelectedApiKey();
+      const hasKey = await (window as any).aistudio.hasSelectedApiKey();
       if (!hasKey) {
-        await window.aistudio.openSelectKey();
+        await (window as any).aistudio.openSelectKey();
         // GUIDELINE: Assume success and proceed after triggering key selection
       }
 
@@ -112,7 +102,7 @@ const CourseVideoPreview: React.FC<CourseVideoPreviewProps> = ({ courseId, takea
       // GUIDELINE: Reset key selection state if error contains specific message
       if (err.message?.includes("Requested entity was not found")) {
         setError("API Key Error: Requested entity not found. Please ensure your API key is from a paid GCP project.");
-        window.aistudio.openSelectKey();
+        (window as any).aistudio.openSelectKey();
       } else {
         setError(err.message || "An unexpected error occurred during generation.");
       }

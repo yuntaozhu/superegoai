@@ -107,6 +107,9 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     };
 
     const courseIds = ['data', 'digital-twin', 'art', 'sports', 'solopreneur', 'quant'];
+    // Clear refs before populating to avoid duplicates on strict mode remounts
+    planetsRef.current = [];
+    
     courseIds.forEach((id, i) => {
       const hex = getHex(id);
       const geometry = new THREE.SphereGeometry(isMobile ? 0.12 : 0.18, 16, 16); // 降低分段数
@@ -168,8 +171,10 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     scene.add(pl);
 
     let frame = 0;
+    let requestID: number;
+
     const animate = () => {
-      const requestID = requestAnimationFrame(animate);
+      requestID = requestAnimationFrame(animate);
       const time = Date.now() * 0.001;
       frame++;
 
@@ -211,14 +216,34 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     window.addEventListener('resize', onResize);
 
     return () => {
+      // STOP THE LOOP
+      cancelAnimationFrame(requestID);
+      
       window.removeEventListener('resize', onResize);
+      
+      // DISPOSE RESOURCES
       renderer.dispose();
+      
       nebulaGeo.dispose();
+      nebulaMat.dispose();
+      
       starGeo.dispose();
+      starMat.dispose();
+      
+      lineMat.dispose();
+      
       planetsRef.current.forEach(p => {
         p.mesh.geometry.dispose();
-        (p.mesh.material as THREE.Material).dispose();
+        if (p.mesh.material instanceof THREE.Material) p.mesh.material.dispose();
+        
+        p.orbitRing.geometry.dispose();
+        if (p.orbitRing.material instanceof THREE.Material) p.orbitRing.material.dispose();
       });
+      
+      // Remove canvas
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
     };
   }, [isMobile, courses, hoveredId]);
 

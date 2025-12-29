@@ -10,8 +10,11 @@ interface BioCosmosProps {
 const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos, isCore }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const p5Instance = useRef<any>(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
+    isMountedRef.current = true;
+    
     if (!containerRef.current) return;
 
     const sketch = (p: any) => {
@@ -129,18 +132,26 @@ const BioCosmos: React.FC<BioCosmosProps> = ({ activeColor, activePos, isCore })
         const script = document.createElement('script');
         script.src = 'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js';
         script.onload = () => {
-          p5Instance.current = new (window as any).p5(sketch);
+          if (isMountedRef.current) {
+             p5Instance.current = new (window as any).p5(sketch);
+          }
         };
         document.body.appendChild(script);
       } else {
-        p5Instance.current = new (window as any).p5(sketch);
+        if (isMountedRef.current) {
+           p5Instance.current = new (window as any).p5(sketch);
+        }
       }
     };
 
     loadP5();
 
     return () => {
-      if (p5Instance.current) p5Instance.current.remove();
+      isMountedRef.current = false;
+      if (p5Instance.current) {
+        p5Instance.current.remove();
+        p5Instance.current = null;
+      }
     };
   }, [isCore]);
 

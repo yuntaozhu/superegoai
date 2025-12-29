@@ -42,7 +42,15 @@ const Studio: React.FC = () => {
 
   useEffect(() => {
     const savedHistory = localStorage.getItem('prompt_history');
-    if (savedHistory) setHistory(JSON.parse(savedHistory));
+    if (savedHistory) {
+      try {
+        setHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.warn('Failed to parse prompt history, resetting storage.', e);
+        localStorage.removeItem('prompt_history');
+        setHistory([]);
+      }
+    }
   }, []);
 
   const getErrorMessage = (error: any) => {
