@@ -21,6 +21,14 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
   onHoverCourse 
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  
+  // Use a ref for hoveredId so we can access the latest value in the animation loop
+  // without triggering the main useEffect to re-run and re-create the WebGL context.
+  const hoveredIdRef = useRef(hoveredId);
+  useEffect(() => {
+    hoveredIdRef.current = hoveredId;
+  }, [hoveredId]);
+
   const planetsRef = useRef<{ 
     mesh: THREE.Mesh; 
     orbitRing: THREE.Mesh;
@@ -56,7 +64,8 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
     // 1. 优化背景星空 - 减少点数
     const starGeo = new THREE.BufferGeometry();
     const starCoords = [];
-    for (let i = 0; i < (isMobile ? 300 : 800); i++) {
+    const starCount = isMobile ? 300 : 800;
+    for (let i = 0; i < starCount; i++) {
       starCoords.push(THREE.MathUtils.randFloatSpread(800));
       starCoords.push(THREE.MathUtils.randFloatSpread(800));
       starCoords.push(THREE.MathUtils.randFloatSpread(800));
@@ -190,7 +199,10 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
         const z = v * Math.sin(u / 2);
         p.mesh.position.set(x, z, y);
         
-        const isHovered = hoveredId === p.courseId || (p.courseId === 'data' && hoveredId === 'core');
+        // Use ref to check hovered status without re-triggering effects
+        const currentHoverId = hoveredIdRef.current;
+        const isHovered = currentHoverId === p.courseId || (p.courseId === 'data' && currentHoverId === 'core');
+        
         const targetScale = isHovered ? (isMobile ? 1.8 : 2.5) : 1.0;
         p.baseScale = THREE.MathUtils.lerp(p.baseScale, targetScale, 0.08);
         p.mesh.scale.setScalar(p.baseScale);
@@ -245,7 +257,7 @@ const MobiusGalaxy: React.FC<MobiusGalaxyProps> = ({
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [isMobile, courses, hoveredId]);
+  }, [isMobile, courses]); // Removed hoveredId from dependency array
 
   return <div ref={mountRef} className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }} />;
 };
