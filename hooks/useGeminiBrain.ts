@@ -4,121 +4,184 @@ import { FunctionDeclaration, Type } from "@google/genai";
 import { searchKnowledgeBase } from '../lib/secondBrainData';
 import { getGeminiClient } from '../api/client';
 import { GEMINI_CONFIG } from '../api/config';
+import { ActiveNodeType } from '../components/ArchitectureMap';
 
-export interface ThoughtLog {
+export interface TraceStep {
   id: string;
-  timestamp: string;
-  type: 'user' | 'agent_thought' | 'tool_call' | 'tool_result' | 'agent_response' | 'error';
+  name: string;
+  type: 'input' | 'reasoning' | 'tool_execution' | 'tool_result' | 'output';
   content: string;
+  latency?: number;
+  tokens?: number;
   metadata?: any;
+}
+
+export interface RAGConfig {
+  strategy: 'parent' | 'contextual';
+  topK: number;
+  temperature: number;
 }
 
 export const useGeminiBrain = () => {
   const [messages, setMessages] = useState<{role: string, content: string}[]>([]);
-  const [logs, setLogs] = useState<ThoughtLog[]>([]);
-  const [isThinking, setIsThinking] = useState(false);
+  const [traces, setTraces] = useState<TraceStep[]>([]);
+  const [activeNode, setActiveNode] = useState<ActiveNodeType>(null);
+  const [config, setConfig] = useState<RAGConfig>({
+    strategy: 'contextual',
+    topK: 3,
+    temperature: 0.2
+  });
+  
   const chatSessionRef = useRef<any>(null);
 
-  const addLog = (type: ThoughtLog['type'], content: string, metadata?: any) => {
-    setLogs(prev => [...prev, {
+  const addTrace = (step: Omit<TraceStep, 'id'>) => {
+    setTraces(prev => [...prev, {
       id: Date.now().toString() + Math.random(),
-      timestamp: new Date().toLocaleTimeString(),
-      type,
-      content,
-      metadata
+      ...step
     }]);
   };
 
+  // Tools Definition
   const tools: { functionDeclarations: FunctionDeclaration[] }[] = [{
     functionDeclarations: [
       {
-        name: "search_knowledge_base",
-        description: "Search the 'Second Brain' course database for concepts, techniques, or lessons. Use this when the user asks about course content (e.g., RAG, LoRA, FTI).",
+        name: "retrieve_chunks",
+        description: "Fetch relevant knowledge chunks from the Vector Database.",
         parameters: {
           type: Type.OBJECT,
           properties: {
-            query: { type: Type.STRING, description: "The search keyword or concept." }
+            query: { type: Type.STRING, description: "The semantic search query." },
           },
           required: ["query"]
         }
       },
       {
-        name: "get_agent_capabilities",
-        description: "Returns a list of what this agent can do. Call this when the user asks 'What can you do?' or 'Help'.",
+        name: "summarize_document",
+        description: "Summarize a long retrieved document to fit into context window.",
         parameters: {
           type: Type.OBJECT,
-          properties: {},
+          properties: {
+            content: { type: Type.STRING, description: "Text to summarize." },
+            focus: { type: Type.STRING, description: "Specific focus for summary." }
+          },
+          required: ["content"]
         }
       }
     ]
   }];
 
   const initializeSession = () => {
-    const apiKey = process.env.API_KEY;
-    if (!apiKey) return null;
-    
     const ai = getGeminiClient();
-    
     return ai.chats.create({
-      model: GEMINI_CONFIG.models.default, // Use centralized model config
+      model: GEMINI_CONFIG.models.default,
       config: {
-        systemInstruction: `You are the "Second Brain Teaching Assistant". 
-        Your goal is to help students understand the AI First Course content.
+        systemInstruction: `You are the "Second Brain Agent". You are an Agentic RAG system.
         
-        CRITICAL RULES:
-        1. You are a "Glass Box" agent. You MUST use tools to retrieve information. Do not answer from your own memory if it's about course specifics (LoRA, RAG, FTI).
-        2. When you use a tool, you are demonstrating "Agentic RAG". 
-        3. Be concise and educational. 
-        4. If the user asks a general question unrelated to the course, answer politely but steer them back to Second Brain topics.
+        ARCHITECTURE:
+        1. PLAN: Receive user input, reason about what information is needed.
+        2. ACT: Use 'retrieve_chunks' to search the vector database.
+        3. OBSERVE: Analyze results. If too long, use 'summarize_document'.
+        4. ANSWER: Synthesize final answer based ONLY on retrieved data.
+
+        STRATEGY:
+        - If the user asks about course content (FTI, LoRA, Agents), you MUST use tools.
+        - Be transparent about your process.
         `,
         tools: tools,
-        temperature: 0.2, // Lower temp for more deterministic tool use
+        temperature: config.temperature,
       }
     });
   };
 
   const sendMessage = async (text: string) => {
-    if (!process.env.API_KEY) {
-      addLog('error', "API Key missing. Please check your system configuration.");
-      return;
-    }
+    if (!process.env.API_KEY) return;
 
     if (!chatSessionRef.current) {
       chatSessionRef.current = initializeSession();
     }
 
-    // 1. User Message
+    // 1. User Input Trace
+    setTraces([]); // Clear previous traces for new request
+    setActiveNode('user');
     setMessages(prev => [...prev, { role: 'user', content: text }]);
-    addLog('user', text);
-    setIsThinking(true);
-    addLog('agent_thought', "Analyzing user intent...");
+    addTrace({ name: 'User Input', type: 'input', content: text });
+
+    setTimeout(() => setActiveNode('agent'), 500); // Simulate network to agent
 
     try {
+      // 2. Agent Reasoning
+      const startTime = Date.now();
       let response = await chatSessionRef.current.sendMessage({ message: text });
+      
+      addTrace({ 
+        name: 'Agent Reasoning', 
+        type: 'reasoning', 
+        content: 'Analyzing intent & selecting tools...',
+        latency: Date.now() - startTime,
+        tokens: 15
+      });
+
       let functionCalls = response.functionCalls;
 
-      // 2. Loop for Tool Calls (Agentic Loop)
+      // 3. Tool Loop
       while (functionCalls && functionCalls.length > 0) {
-        setIsThinking(true);
-        const call = functionCalls[0]; // Handle first call for simplicity
+        const call = functionCalls[0];
+        const toolStart = Date.now();
         
-        addLog('tool_call', `Invoking tool: ${call.name}`, { args: call.args });
+        // VISUALIZATION: Switch Active Node based on tool
+        if (call.name === 'retrieve_chunks') setActiveNode('retriever');
+        if (call.name === 'summarize_document') setActiveNode('summarizer');
+
+        addTrace({ 
+          name: `Tool Call: ${call.name}`, 
+          type: 'tool_execution', 
+          content: call.name,
+          metadata: call.args
+        });
+
+        // Simulate Latency for Effect
+        await new Promise(r => setTimeout(r, 800));
 
         let toolResult = {};
-        
-        // Execute Tool
-        if (call.name === 'search_knowledge_base') {
+
+        // --- EXECUTE TOOLS ---
+        if (call.name === 'retrieve_chunks') {
+          setActiveNode('vector_db'); // Move to DB
+          await new Promise(r => setTimeout(r, 600)); // DB Latency
+
           const query = (call.args as any).query;
-          addLog('agent_thought', `Searching vector database for: "${query}"...`);
-          const results = searchKnowledgeBase(query);
-          toolResult = { results: results.length > 0 ? results : "No records found." };
-          addLog('tool_result', `Found ${results.length} documents`, { results });
-        } else if (call.name === 'get_agent_capabilities') {
-          toolResult = { capabilities: ["Search Course Content", "Explain RAG Concepts", "Summarize Lessons"] };
-          addLog('tool_result', "Capabilities retrieved");
+          const results = searchKnowledgeBase(query, config.topK);
+          
+          // Apply Strategy
+          const processedResults = results.map(r => ({
+            title: r.title,
+            content: config.strategy === 'parent' ? r.parentDoc || r.content : `${r.context || ''}\n${r.content}`,
+            score: r.score
+          }));
+
+          toolResult = { results: processedResults };
+          
+          addTrace({ 
+            name: 'Vector DB Result', 
+            type: 'tool_result', 
+            content: `Retrieved ${results.length} chunks`, 
+            latency: Date.now() - toolStart,
+            metadata: toolResult
+          });
+        } 
+        else if (call.name === 'summarize_document') {
+           toolResult = { summary: "Content condensed for context window optimization." };
+           addTrace({
+             name: 'Summarizer Output',
+             type: 'tool_result',
+             content: 'Document compressed',
+             latency: Date.now() - toolStart
+           });
         }
 
-        // Send Tool Result back to model
+        // Return to Agent
+        setActiveNode('agent');
+        
         response = await chatSessionRef.current.sendMessage({
           functionResponses: [{
             name: call.name,
@@ -129,22 +192,25 @@ export const useGeminiBrain = () => {
         functionCalls = response.functionCalls;
       }
 
-      // 3. Final Response
+      // 4. Final Output
+      setActiveNode('observability');
       const modelText = response.text;
       setMessages(prev => [...prev, { role: 'model', content: modelText }]);
-      addLog('agent_response', "Response generated.");
-      
+      addTrace({ 
+        name: 'Final Response', 
+        type: 'output', 
+        content: modelText,
+        tokens: 150
+      });
+
+      setTimeout(() => setActiveNode(null), 2000); // Reset
+
     } catch (error: any) {
       console.error(error);
-      const errorMsg = error.message?.includes('API key expired') 
-        ? "API Key Expired. Please update your configuration." 
-        : `Error: ${error.message}`;
-      addLog('error', errorMsg);
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Neural link unstable. " + errorMsg }]);
-    } finally {
-      setIsThinking(false);
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop." }]);
+      setActiveNode(null);
     }
   };
 
-  return { messages, logs, sendMessage, isThinking };
+  return { messages, traces, activeNode, config, setConfig, sendMessage };
 };
