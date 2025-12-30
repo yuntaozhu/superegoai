@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useConfigStore } from '../lib/store/configStore';
-import { Settings, X, Cpu, Database, Sparkles, Sliders } from 'lucide-react';
+import { X, Cpu, Database, Sparkles, Sliders } from 'lucide-react';
 
 const ConfigPanel: React.FC = () => {
   const { config, setConfig, applyPreset, isPanelOpen, togglePanel } = useConfigStore();
