@@ -30,8 +30,9 @@ const contentWatcher = () => ({
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, '');
 
-  // FORCE USE of the new valid key provided by the user
+  // FORCE USE of the valid keys provided by the user
   const validApiKey = 'AIzaSyA_35waukTHMicsuwDLkMICXBdF6L4K668';
+  const firecrawlKey = 'fc-6ed314db151b46a79b39e3d2dcf78b4c';
 
   return {
     plugins: [
@@ -44,7 +45,8 @@ export default defineConfig(({ mode }) => {
       ],
     },
     define: {
-      'process.env.API_KEY': JSON.stringify(validApiKey)
+      'process.env.API_KEY': JSON.stringify(validApiKey),
+      'process.env.FIRECRAWL_KEY': JSON.stringify(firecrawlKey)
     }
   };
 });
