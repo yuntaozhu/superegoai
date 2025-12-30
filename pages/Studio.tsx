@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from "@google/genai";
-import { useLanguage, Link, useLocation } from '../context/LanguageContext';
-import { ArrowLeft, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, Search, Trash2, FileText, Globe, Layers, Loader2, AlertCircle } from 'lucide-react';
+import { useLanguage, Link } from '../context/LanguageContext';
+import { ArrowLeft, Trash2, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History, Layers, Loader2, AlertCircle, FileText, Search } from 'lucide-react';
+import { PROMPT_GUIDE_DATA, PromptNode } from '../features/prompts/promptData';
 import { PROMPT_REGISTRY } from '../constants/promptRegistry';
+import { getGeminiClient } from '../api/client';
+import { GEMINI_CONFIG } from '../api/config';
 import GroundingSources from '../components/GroundingSources';
 
 const m = motion as any;
@@ -60,20 +62,11 @@ const Studio: React.FC = () => {
 
   const getErrorMessage = (error: any) => {
     const msg = error?.message || String(error);
-    if (msg.includes('API_KEY_INVALID') || msg.includes('401') || msg.includes('403')) {
-      return language === 'zh' ? "❌ API Key 无效或未授权。请检查系统配置。" : "❌ API Key is invalid or unauthorized. Please check system configuration.";
+    if (msg.includes('API_KEY_INVALID') || msg.includes('401') || msg.includes('403') || msg.includes('expired')) {
+      return language === 'zh' ? "❌ API Key 无效、过期或未授权。请检查配置。" : "❌ API Key is invalid, expired or unauthorized. Please check configuration.";
     }
     if (msg.includes('exhausted') || msg.includes('429')) {
       return language === 'zh' ? "❌ API 额度已耗尽。请稍后再试。" : "❌ API Quota exhausted. Please try again later.";
-    }
-    if (msg.includes('fetch') || msg.includes('network')) {
-      return language === 'zh' ? "❌ 网络连接错误。请检查您的互联网连接。" : "❌ Network connection error. Please check your internet connection.";
-    }
-    if (msg.includes('safety') || msg.includes('blocked')) {
-      return language === 'zh' ? "⚠️ 响应因安全过滤器被拦截。" : "⚠️ Response blocked by safety filters.";
-    }
-    if (msg.includes('not found')) {
-      return language === 'zh' ? "❌ 未找到请求的资源或模型。" : "❌ Requested resource or model not found.";
     }
     return language === 'zh' ? `❌ 发生错误: ${msg}` : `❌ Error occurred: ${msg}`;
   };
@@ -88,7 +81,6 @@ const Studio: React.FC = () => {
   const handleGenerate = async (input: string, isComparison: boolean = false) => {
     if (!input.trim()) return;
 
-    // Reset states
     if (isComparison) {
       setComparisonResult('');
       setComparisonError(null);
@@ -108,13 +100,13 @@ const Studio: React.FC = () => {
     setIsLoading(true);
     addToHistory(input);
     
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     try {
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
+        model: GEMINI_CONFIG.models.pro,
         contents: input,
         config: {
-          thinkingConfig: { thinkingBudget: 4096 },
+          thinkingConfig: { thinkingBudget: GEMINI_CONFIG.thinkingBudget.complex },
           tools: [{ googleSearch: {} }]
         }
       });
@@ -147,17 +139,13 @@ const Studio: React.FC = () => {
 
   const generateVariations = async () => {
     if (!prompt.trim()) return;
-    if (!process.env.API_KEY) {
-      setError(language === 'zh' ? "⚠️ 未配置 API Key。" : "⚠️ API Key missing.");
-      return;
-    }
-
     setIsGeneratingVariations(true);
     setError(null);
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     try {
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
+        model: GEMINI_CONFIG.models.default,
         contents: `Given the following prompt: "${prompt}", create three distinct variations. 
         1. Concise: Extremely brief, core meaning only.
         2. Detailed: Highly specific, including tech requirements and visual guidelines.
@@ -177,20 +165,15 @@ const Studio: React.FC = () => {
 
   const optimizePrompt = async () => {
     if (!prompt.trim()) return;
-    
-    if (!process.env.API_KEY) {
-      setError(language === 'zh' ? "⚠️ 系统错误：未配置 API Key。" : "⚠️ System Error: API Key not configured.");
-      return;
-    }
-
     setIsOptimizing(true);
     setError(null);
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     try {
+      const ai = getGeminiClient();
       const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
+        model: GEMINI_CONFIG.models.pro,
         contents: `你是一名提示词工程专家。请根据 Prompt Engineering Guide 原则，将以下原始 Prompt 优化为具备角色 (Role)、背景 (Context)、任务 (Task)、限制 (Constraints) 和输出示例 (Examples) 的结构化格式。仅输出优化后的提示词内容。\n\n原始 Prompt: "${prompt}"`,
-        config: { thinkingConfig: { thinkingBudget: 2048 } }
+        config: { thinkingConfig: { thinkingBudget: GEMINI_CONFIG.thinkingBudget.default } }
       });
       setPrompt(response.text || '');
     } catch (err) {
@@ -210,7 +193,6 @@ const Studio: React.FC = () => {
   };
 
   const categories = Array.from(new Set(PROMPT_REGISTRY.map(p => p.category)));
-  
   const filteredRegistry = PROMPT_REGISTRY.filter(node => 
     node.title.zh.toLowerCase().includes(sidebarSearch.toLowerCase()) || 
     node.title.en.toLowerCase().includes(sidebarSearch.toLowerCase())
@@ -226,7 +208,7 @@ const Studio: React.FC = () => {
           <div className="h-4 w-px bg-white/10" />
           <h1 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
             <Zap className="w-4 h-4 text-blue-500" />
-            SuperEgo Prompt Lab <span className="text-[10px] text-gray-500 font-mono">v5.1_Variations_Enabled</span>
+            SuperEgo Prompt Lab <span className="text-[10px] text-gray-500 font-mono">v5.2_Configured</span>
           </h1>
         </div>
         <div className="flex items-center gap-3">
@@ -348,11 +330,11 @@ const Studio: React.FC = () => {
                   {Object.entries(variations).map(([key, val]) => (
                     <button
                       key={key}
-                      onClick={() => setPrompt(val)}
+                      onClick={() => setPrompt(val as string)}
                       className="p-3 bg-white/5 border border-white/10 rounded-xl text-left hover:border-blue-500/50 transition-all group"
                     >
                       <div className="text-[8px] font-black uppercase text-blue-500 mb-1">{key}</div>
-                      <p className="text-[10px] text-gray-400 line-clamp-2 leading-relaxed group-hover:text-gray-200">{val}</p>
+                      <p className="text-[10px] text-gray-400 line-clamp-2 leading-relaxed group-hover:text-gray-200">{val as string}</p>
                     </button>
                   ))}
                 </m.div>

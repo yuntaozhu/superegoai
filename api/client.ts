@@ -4,6 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 /**
  * Centralized client initialization for Google GenAI.
  * Ensures consistent API key usage from environment variables.
+ * Creates a new instance on every call to support dynamic key switching (e.g. Veo).
  */
 export const getGeminiClient = (): GoogleGenAI => {
   const apiKey = process.env.API_KEY;

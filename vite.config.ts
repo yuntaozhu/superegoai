@@ -43,9 +43,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, '');
 
   // Aggressively sanitize the API key
-  // 1. Trim whitespace
-  // 2. Remove any non-printable ASCII characters (fixes issues with ^M, hidden chars, copy-paste artifacts)
-  const rawApiKey = env.API_KEY || '';
+  // Fallback to the provided key if env.API_KEY is missing
+  const rawApiKey = env.API_KEY || 'AIzaSyA_35waukTHMicsuwDLkMICXBdF6L4K668';
   const sanitizedApiKey = rawApiKey.replace(/[^\x20-\x7E]/g, '').trim();
 
   return {
