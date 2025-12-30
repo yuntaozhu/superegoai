@@ -1,8 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { GoogleGenAI } from "@google/genai";
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Loader2, X, AlertCircle, Film, Sparkles, Terminal } from 'lucide-react';
+import { getGeminiClient } from '../api/client';
+import { GEMINI_CONFIG } from '../api/config';
 
 const m = motion as any;
 
@@ -59,8 +60,8 @@ const CourseVideoPreview: React.FC<CourseVideoPreviewProps> = ({ courseId, takea
       setStatus('generating');
       setError(null);
 
-      // GUIDELINE: Create fresh instance right before making an API call
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      // GUIDELINE: Create fresh instance right before making an API call using centralized client
+      const ai = getGeminiClient();
       
       const prompt = `Futuristic educational trailer for a course about "${takeaway}". 
       Cinematic style, abstract 3D visuals representing high-level human-AI collaboration, 
@@ -69,7 +70,7 @@ const CourseVideoPreview: React.FC<CourseVideoPreviewProps> = ({ courseId, takea
 
       // GUIDELINE: Use veo-3.1-fast-generate-preview for video generation
       let operation = await ai.models.generateVideos({
-        model: 'veo-3.1-fast-generate-preview',
+        model: GEMINI_CONFIG.models.video,
         prompt: prompt,
         config: {
           numberOfVideos: 1,
@@ -103,6 +104,8 @@ const CourseVideoPreview: React.FC<CourseVideoPreviewProps> = ({ courseId, takea
       if (err.message?.includes("Requested entity was not found")) {
         setError("API Key Error: Requested entity not found. Please ensure your API key is from a paid GCP project.");
         (window as any).aistudio.openSelectKey();
+      } else if (err.message?.includes('expired')) {
+        setError("API Key Expired. Please refresh the page and update your key.");
       } else {
         setError(err.message || "An unexpected error occurred during generation.");
       }
@@ -241,7 +244,6 @@ const CourseVideoPreview: React.FC<CourseVideoPreviewProps> = ({ courseId, takea
             </AnimatePresence>
           </div>
 
-          {/* Fix: Clarifying JSX nesting to resolve "Cannot find name 'div'" confusion */}
           <div className="mt-8 flex flex-col items-center gap-4">
             <div className="h-px w-20 bg-white/10"></div>
             <div className="flex gap-6 text-[9px] text-gray-600 font-mono uppercase tracking-[0.2em]">

@@ -65,7 +65,7 @@ const LogItem = ({ log }: { log: ThoughtLog }) => {
 
 const SecondBrainPage: React.FC = () => {
   const [input, setInput] = useState('');
-  const { messages, logs, sendMessage, isThinking } = useGeminiBrain(process.env.API_KEY);
+  const { messages, logs, sendMessage, isThinking } = useGeminiBrain();
   const scrollRef = useRef<HTMLDivElement>(null);
   const logScrollRef = useRef<HTMLDivElement>(null);
 

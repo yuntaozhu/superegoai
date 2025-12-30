@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from "@google/genai";
 import { useLanguage, Link } from './context/LanguageContext';
 import { ArrowLeft, Trash2, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, History } from 'lucide-react';
 import { PROMPT_GUIDE_DATA, PromptNode } from './features/prompts/promptData';
+import { getGeminiClient } from './api/client';
+import { GEMINI_CONFIG } from './api/config';
 
 // Using any to bypass framer-motion type mismatch in the current environment
 const m = motion as any;
@@ -39,13 +40,13 @@ const Studio: React.FC = () => {
     setIsLoading(true);
     addToHistory(input);
     
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = getGeminiClient();
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
+        model: GEMINI_CONFIG.models.pro,
         contents: input,
         config: {
-          thinkingConfig: { thinkingBudget: 4096 } // Reasonable budget for reasoning
+          thinkingConfig: { thinkingBudget: GEMINI_CONFIG.thinkingBudget.complex }
         }
       });
       targetSetter(response.text || '');
@@ -60,12 +61,12 @@ const Studio: React.FC = () => {
   const optimizePrompt = async () => {
     if (!prompt.trim()) return;
     setIsOptimizing(true);
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = getGeminiClient();
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
+        model: GEMINI_CONFIG.models.pro,
         contents: `You are an expert prompt engineer. Please optimize the following prompt according to the dair-ai Prompt Engineering Guide principles. Use the structure: Role, Context, Task, Constraints, and Examples. Output ONLY the optimized prompt.\n\nOriginal Prompt: "${prompt}"`,
-        config: { thinkingConfig: { thinkingBudget: 2048 } }
+        config: { thinkingConfig: { thinkingBudget: GEMINI_CONFIG.thinkingBudget.default } }
       });
       setPrompt(response.text || '');
     } catch (err) {
@@ -240,7 +241,7 @@ const Studio: React.FC = () => {
                 <button 
                   onClick={() => handleGenerate(comparisonPrompt, setComparisonResult)}
                   disabled={isLoading || !comparisonPrompt.trim()}
-                  className="w-full py-3 bg-purple-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-purple-500 transition-all shadow-xl"
+                  className="w-full py-3 bg-purple-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-purple-50 transition-all shadow-xl"
                 >
                   Execute Comparison
                 </button>

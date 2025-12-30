@@ -2,9 +2,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Sparkles, Brain, Loader2, Info } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 import { useLanguage } from '../context/LanguageContext';
 import GroundingSources from './GroundingSources';
+import { getGeminiClient } from '../api/client';
+import { GEMINI_CONFIG } from '../api/config';
 
 const m = motion as any;
 
@@ -50,7 +51,7 @@ const ChatAssistant: React.FC = () => {
 
     try {
       if (!chatSessionRef.current) {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        const ai = getGeminiClient();
         
         const systemPromptZh = `你是 "AI First Course" 的 SuperEgo AI 助手。
         你的任务是解释课程理念（编排 vs 执行）并帮助用户理解星系模型。
@@ -65,7 +66,7 @@ const ChatAssistant: React.FC = () => {
         Keep answers concise, futuristic, and encouraging. Respond in English.`;
 
         chatSessionRef.current = ai.chats.create({
-          model: 'gemini-3-flash-preview',
+          model: GEMINI_CONFIG.models.default,
           config: {
             systemInstruction: language === 'zh' ? systemPromptZh : systemPromptEn,
             temperature: 0.7,
@@ -98,10 +99,10 @@ const ChatAssistant: React.FC = () => {
         ? "连接中断。请验证您的 API 状态或网络连接。" 
         : "Node connection lost. Please verify your API status or network connection.";
 
-      if (error.message?.includes('403') || error.message?.includes('401')) {
+      if (error.message?.includes('403') || error.message?.includes('401') || error.message?.includes('expired')) {
          errorMessage = language === 'zh' 
-           ? "鉴权失败：API Key 无效或过期。" 
-           : "Authentication Failed: Invalid or expired API Key.";
+           ? "鉴权失败：API Key 无效或过期。请检查 .env 配置。" 
+           : "Authentication Failed: Invalid or expired API Key. Check .env config.";
       }
 
       setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${errorMessage}` }]);

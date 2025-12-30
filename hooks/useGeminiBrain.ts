@@ -1,7 +1,9 @@
 
 import { useState, useRef } from 'react';
-import { GoogleGenAI, FunctionDeclaration, Type } from "@google/genai";
-import { searchKnowledgeBase, KnowledgeChunk } from '../lib/secondBrainData';
+import { FunctionDeclaration, Type } from "@google/genai";
+import { searchKnowledgeBase } from '../lib/secondBrainData';
+import { getGeminiClient } from '../api/client';
+import { GEMINI_CONFIG } from '../api/config';
 
 export interface ThoughtLog {
   id: string;
@@ -11,7 +13,7 @@ export interface ThoughtLog {
   metadata?: any;
 }
 
-export const useGeminiBrain = (apiKey: string | undefined) => {
+export const useGeminiBrain = () => {
   const [messages, setMessages] = useState<{role: string, content: string}[]>([]);
   const [logs, setLogs] = useState<ThoughtLog[]>([]);
   const [isThinking, setIsThinking] = useState(false);
@@ -52,10 +54,13 @@ export const useGeminiBrain = (apiKey: string | undefined) => {
   }];
 
   const initializeSession = () => {
+    const apiKey = process.env.API_KEY;
     if (!apiKey) return null;
-    const ai = new GoogleGenAI({ apiKey });
+    
+    const ai = getGeminiClient();
+    
     return ai.chats.create({
-      model: 'gemini-2.5-flash-latest', // Fast model for interactive agents
+      model: GEMINI_CONFIG.models.default, // Use centralized model config
       config: {
         systemInstruction: `You are the "Second Brain Teaching Assistant". 
         Your goal is to help students understand the AI First Course content.
@@ -73,8 +78,8 @@ export const useGeminiBrain = (apiKey: string | undefined) => {
   };
 
   const sendMessage = async (text: string) => {
-    if (!apiKey) {
-      addLog('error', "API Key missing");
+    if (!process.env.API_KEY) {
+      addLog('error', "API Key missing. Please check your system configuration.");
       return;
     }
 
@@ -131,8 +136,11 @@ export const useGeminiBrain = (apiKey: string | undefined) => {
       
     } catch (error: any) {
       console.error(error);
-      addLog('error', `Error: ${error.message}`);
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Neural link unstable. Please try again." }]);
+      const errorMsg = error.message?.includes('API key expired') 
+        ? "API Key Expired. Please update your configuration." 
+        : `Error: ${error.message}`;
+      addLog('error', errorMsg);
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Neural link unstable. " + errorMsg }]);
     } finally {
       setIsThinking(false);
     }
