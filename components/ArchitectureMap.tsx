@@ -30,10 +30,10 @@ const Node = ({
       borderColor: isActive ? color : 'rgba(255,255,255,0.1)'
     }}
     transition={{ duration: 0.3 }}
-    className={`flex flex-col items-center justify-center p-4 rounded-2xl bg-[#0B1026] border border-white/10 w-24 h-24 md:w-32 md:h-32 relative z-10`}
+    className={`flex flex-col items-center justify-center p-4 rounded-2xl bg-[#0B1026] border border-white/10 w-24 h-24 md:w-32 md:h-32 relative z-10 transition-colors`}
   >
-    <Icon className={`w-8 h-8 mb-2 ${isActive ? 'text-white' : 'text-gray-500'}`} style={{ color: isActive ? color : undefined }} />
-    <span className={`text-[10px] font-mono uppercase tracking-widest text-center ${isActive ? 'text-white' : 'text-gray-600'}`}>{label}</span>
+    <Icon className={`w-8 h-8 mb-2 transition-colors ${isActive ? 'text-white' : 'text-gray-500'}`} style={{ color: isActive ? color : undefined }} />
+    <span className={`text-[10px] font-mono uppercase tracking-widest text-center transition-colors ${isActive ? 'text-white' : 'text-gray-600'}`}>{label}</span>
     
     {isActive && (
       <motion.div 

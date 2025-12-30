@@ -207,7 +207,7 @@ export const useGeminiBrain = () => {
 
     } catch (error: any) {
       console.error(error);
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop." }]);
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop: " + error.message }]);
       setActiveNode(null);
     }
   };

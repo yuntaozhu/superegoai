@@ -82,7 +82,7 @@ const TraceItem = ({ step, index }: { step: TraceStep, index: number }) => {
 
 const TraceInspector: React.FC<TraceInspectorProps> = ({ traces }) => {
   return (
-    <div className="flex flex-col h-full bg-[#020205] border-l border-white/5">
+    <div className="flex flex-col h-full bg-[#020205] border-l border-white/10">
       <div className="p-3 border-b border-white/5 bg-white/5 flex items-center justify-between">
         <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 flex items-center gap-2">
           <Activity className="w-3 h-3 text-emerald-500" /> Live Traces

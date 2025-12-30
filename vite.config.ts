@@ -11,9 +11,7 @@ const __dirname = path.dirname(__filename);
 // Custom Plugin to Watch Content Directory
 const contentWatcher = () => ({
   name: 'content-watcher',
-  // Hook into HMR update
   handleHotUpdate({ file, server }: { file: string; server: any }) {
-    // Check if the modified file is inside the prompt-engineering/pages or blog/posts directory
     const isContentFile = (
       file.includes('prompt-engineering/pages') || 
       file.includes('blog/posts')
@@ -21,31 +19,19 @@ const contentWatcher = () => ({
 
     if (isContentFile) {
       console.log(`\n📝 Content change detected: ${path.basename(file)}`);
-      console.log('🔄 Re-indexing knowledge base...');
-      
       exec('npm run index-content', (err, stdout, stderr) => {
-        if (err) {
-          console.error('❌ Indexing failed:', stderr);
-        } else {
-          console.log('✅ Indexing complete.');
-          // Optional: You could trigger a custom full-reload here if HMR doesn't pick up the JSON change
-          // server.ws.send({ type: 'full-reload' }); 
-        }
+        if (err) console.error('❌ Indexing failed:', stderr);
+        else console.log('✅ Indexing complete.');
       });
     }
   }
 });
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
   const env = loadEnv(mode, __dirname, '');
 
-  // Aggressively sanitize the API key
-  // Fallback to the provided key if env.API_KEY is missing
-  const rawApiKey = env.API_KEY || 'AIzaSyA_35waukTHMicsuwDLkMICXBdF6L4K668';
-  const sanitizedApiKey = rawApiKey.replace(/[^\x20-\x7E]/g, '').trim();
+  // FORCE USE of the new valid key provided by the user
+  const validApiKey = 'AIzaSyA_35waukTHMicsuwDLkMICXBdF6L4K668';
 
   return {
     plugins: [
@@ -58,8 +44,7 @@ export default defineConfig(({ mode }) => {
       ],
     },
     define: {
-      // Inject API_KEY specifically to avoid overwriting the entire process.env object
-      'process.env.API_KEY': JSON.stringify(sanitizedApiKey)
+      'process.env.API_KEY': JSON.stringify(validApiKey)
     }
   };
 });
