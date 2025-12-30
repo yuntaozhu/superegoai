@@ -3,13 +3,15 @@ import React, { useRef, useEffect } from 'react';
 import { useGeminiBrain } from '../hooks/useGeminiBrain';
 import ArchitectureMap from '../components/ArchitectureMap';
 import TraceInspector from '../components/TraceInspector';
-import RagSettings from '../components/RagSettings';
-import { Send, ChevronRight, Zap } from 'lucide-react';
+import ConfigPanel from '../components/ConfigPanel';
+import { useConfigStore } from '../lib/store/configStore';
+import { Send, ChevronRight, Zap, Settings } from 'lucide-react';
 import { Link } from '../context/LanguageContext';
 
 const SecondBrainPage: React.FC = () => {
   const [input, setInput] = React.useState('');
-  const { messages, traces, activeNode, config, setConfig, sendMessage } = useGeminiBrain();
+  const { messages, traces, activeNode, sendMessage } = useGeminiBrain();
+  const { togglePanel } = useConfigStore();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,7 +26,8 @@ const SecondBrainPage: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-[#020308] text-white flex flex-col pt-16 overflow-hidden">
+    <div className="h-screen bg-[#020308] text-white flex flex-col pt-16 overflow-hidden relative">
+      <ConfigPanel />
       
       {/* 1. Header & Architecture Map */}
       <div className="flex-shrink-0 bg-[#05060f] border-b border-white/10 z-20 shadow-xl">
@@ -33,9 +36,14 @@ const SecondBrainPage: React.FC = () => {
               <Link to="/" className="text-gray-500 hover:text-white"><ChevronRight className="w-5 h-5 rotate-180" /></Link>
               <h1 className="text-sm font-black uppercase tracking-widest text-white">Brain OS <span className="text-purple-500">Kernel v2.0</span></h1>
            </div>
-           <div className="text-[10px] font-mono text-gray-500 flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${activeNode ? 'bg-green-500 animate-pulse' : 'bg-gray-700'}`} />
-              {activeNode ? `PROCESSING: ${activeNode.toUpperCase()}` : 'SYSTEM IDLE'}
+           <div className="flex items-center gap-4">
+             <div className="text-[10px] font-mono text-gray-500 flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${activeNode ? 'bg-green-500 animate-pulse' : 'bg-gray-700'}`} />
+                {activeNode ? `PROCESSING: ${activeNode.toUpperCase()}` : 'SYSTEM IDLE'}
+             </div>
+             <button onClick={togglePanel} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-blue-400">
+               <Settings className="w-4 h-4" />
+             </button>
            </div>
         </div>
         <ArchitectureMap activeNode={activeNode} />
@@ -100,12 +108,11 @@ const SecondBrainPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Trace Inspector & Settings */}
+        {/* Right: Trace Inspector */}
         <div className="w-[400px] bg-[#020205] flex flex-col border-l border-white/10">
            <div className="flex-grow overflow-hidden">
               <TraceInspector traces={traces} />
            </div>
-           <RagSettings config={config} setConfig={setConfig} />
         </div>
 
       </div>
