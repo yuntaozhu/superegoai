@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { FunctionDeclaration, Type } from "@google/genai";
 import { searchKnowledgeBase, addKnowledge } from '../lib/secondBrainData';
-import { crawlUrl, searchWeb } from '../lib/firecrawl';
+import { crawlUrl } from '../lib/firecrawl';
 import { getGeminiClient } from '../api/client';
 import { GEMINI_CONFIG } from '../api/config';
 import { ActiveNodeType } from '../components/ArchitectureMap';
@@ -44,7 +44,8 @@ export const useGeminiBrain = () => {
 
   // Tools Definition
   const tools: any[] = [
-    // Native googleSearch removed to prevent conflict with functionDeclarations
+    // We use a custom search_web tool that proxies to Google Grounding internally
+    // This avoids the "Tool use with function calling is unsupported" API error
     {
       functionDeclarations: [
         {
@@ -60,7 +61,7 @@ export const useGeminiBrain = () => {
         },
         {
           name: "search_web",
-          description: "Search the live internet for information when the internal database (retrieve_chunks) is insufficient. Returns a list of URLs and snippets.",
+          description: "Search the live internet for information when the internal database (retrieve_chunks) is insufficient. Returns a summary and list of sources.",
           parameters: {
             type: Type.OBJECT,
             properties: {
@@ -176,23 +177,42 @@ export const useGeminiBrain = () => {
           });
         } 
         
-        // --- 2. SEARCH WEB (FIRECRAWL) ---
+        // --- 2. SEARCH WEB (VIA GOOGLE GROUNDING PROXY) ---
         else if (call.name === 'search_web') {
             setActiveNode('retriever');
             const query = (call.args as any).query;
             
             try {
                 addTrace({ name: 'Searching Web', type: 'tool_execution', content: `Query: ${query}` });
-                const searchResults = await searchWeb(query);
                 
-                toolResult = { results: searchResults };
+                // Use a separate Gemini call for Grounding to avoid tool conflicts and Firecrawl 402 errors
+                const searchClient = getGeminiClient();
+                const searchResponse = await searchClient.models.generateContent({
+                    model: 'gemini-3-flash-preview',
+                    contents: query,
+                    config: {
+                        tools: [{ googleSearch: {} }]
+                    }
+                });
+
+                const searchSummary = searchResponse.text || "No relevant results found.";
+                // Extract sources from grounding metadata
+                const sources = searchResponse.candidates?.[0]?.groundingMetadata?.groundingChunks
+                    ?.map((c: any) => c.web)
+                    .filter((w: any) => w)
+                    .map((w: any) => ({ title: w.title, url: w.uri })) || [];
+                
+                toolResult = { 
+                    result: searchSummary,
+                    sources: sources.slice(0, 5) 
+                };
                 
                 addTrace({
                     name: 'Search Results',
                     type: 'tool_result',
-                    content: `Found ${searchResults.length} links`,
+                    content: `Found ${sources.length} sources via Google`,
                     latency: Date.now() - toolStart,
-                    metadata: searchResults
+                    metadata: toolResult
                 });
             } catch (err: any) {
                 toolResult = { error: err.message };
