@@ -182,10 +182,13 @@ export const useGeminiBrain = () => {
         // Return to Agent
         setActiveNode('agent');
         
+        // FIX: Pass functionResponse inside the 'message' property array
         response = await chatSessionRef.current.sendMessage({
-          functionResponses: [{
-            name: call.name,
-            response: { result: toolResult }
+          message: [{
+            functionResponse: {
+              name: call.name,
+              response: { result: toolResult }
+            }
           }]
         });
         
@@ -206,8 +209,8 @@ export const useGeminiBrain = () => {
       setTimeout(() => setActiveNode(null), 2000); // Reset
 
     } catch (error: any) {
-      console.error(error);
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop: " + error.message }]);
+      console.error("Gemini Interaction Error:", error);
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop: " + (error.message || JSON.stringify(error)) }]);
       setActiveNode(null);
     }
   };
