@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react';
 import { FunctionDeclaration, Type } from "@google/genai";
 import { searchKnowledgeBase, addKnowledge } from '../lib/secondBrainData';
-import { crawlUrl } from '../lib/firecrawl';
+import { crawlUrl, searchWeb } from '../lib/firecrawl';
 import { getGeminiClient } from '../api/client';
 import { GEMINI_CONFIG } from '../api/config';
 import { ActiveNodeType } from '../components/ArchitectureMap';
@@ -44,9 +44,7 @@ export const useGeminiBrain = () => {
 
   // Tools Definition
   const tools: any[] = [
-    // 1. Google Search (Built-in)
-    { googleSearch: {} },
-    // 2. Custom Functions
+    // Native googleSearch removed to prevent conflict with functionDeclarations
     {
       functionDeclarations: [
         {
@@ -61,8 +59,19 @@ export const useGeminiBrain = () => {
           }
         },
         {
+          name: "search_web",
+          description: "Search the live internet for information when the internal database (retrieve_chunks) is insufficient. Returns a list of URLs and snippets.",
+          parameters: {
+            type: Type.OBJECT,
+            properties: {
+              query: { type: Type.STRING, description: "The search query." },
+            },
+            required: ["query"]
+          }
+        },
+        {
           name: "crawl_and_learn",
-          description: "Use Firecrawl to visit a URL, read its content, and add it to the Knowledge Base (Long-term memory). Use this when the user asks to 'learn' from a link or after finding a useful link via search.",
+          description: "Visit a specific URL found via 'search_web', read its full content, and add it to the Knowledge Base (Long-term memory).",
           parameters: {
             type: Type.OBJECT,
             properties: {
@@ -79,20 +88,19 @@ export const useGeminiBrain = () => {
   const initializeSession = () => {
     const ai = getGeminiClient();
     return ai.chats.create({
-      model: GEMINI_CONFIG.models.pro, // Upgrade to Pro for better agentic reasoning
+      model: GEMINI_CONFIG.models.pro,
       config: {
         systemInstruction: `You are the "Second Brain Agent". You manage a dynamic knowledge base.
         
         WORKFLOW:
         1. ANALYZE: Check if you have the answer in your internal memory first.
         2. RETRIEVE: Use 'retrieve_chunks' to search the internal database.
-        3. FALLBACK: If 'retrieve_chunks' yields no results or is insufficient, AUTOMATICALLY use 'googleSearch' to find live information.
-        4. LEARN: If you find a high-quality URL from Google Search, or if the user provides a URL, use 'crawl_and_learn' to ingest it into your memory. This makes you smarter for next time.
-        5. ANSWER: Synthesize the final answer based on what you retrieved or found.
+        3. FALLBACK: If 'retrieve_chunks' yields no results, use 'search_web' to find live information.
+        4. LEARN: If you find a highly relevant URL from 'search_web' that contains the detailed answer, use 'crawl_and_learn' to ingest it.
+        5. ANSWER: Synthesize the final answer.
 
         IMPORTANT:
-        - If the user asks about "Pricing Analysis" and you don't know, SEARCH GOOGLE immediately.
-        - After searching, if you find a good guide, ask the user if they want you to 'crawl and memorize' it, or just call 'crawl_and_learn' if they implied it.
+        - Do not hallucinate URLs. Only crawl URLs returned by 'search_web'.
         `,
         tools: tools,
         temperature: config.temperature,
@@ -119,7 +127,6 @@ export const useGeminiBrain = () => {
       // 2. Agent Reasoning
       const startTime = Date.now();
       
-      // Note: First call might contain tool calls OR simple text
       let response = await chatSessionRef.current.sendMessage({ message: text });
       
       addTrace({ 
@@ -133,17 +140,6 @@ export const useGeminiBrain = () => {
       // --- AGENT LOOP ---
       let functionCalls = response.functionCalls;
       
-      // Grounding Check (Google Search results come in text, not as a tool call in the loop usually, but as metadata)
-      const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
-      if (groundingMetadata && groundingMetadata.groundingChunks?.length > 0) {
-         addTrace({
-            name: 'Google Search',
-            type: 'tool_execution',
-            content: 'Executed Google Search Grounding',
-            metadata: groundingMetadata.groundingChunks.map((c: any) => c.web?.uri)
-         });
-      }
-
       // Loop for Function Calls
       while (functionCalls && functionCalls.length > 0) {
         const call = functionCalls[0];
@@ -162,13 +158,13 @@ export const useGeminiBrain = () => {
         if (call.name === 'retrieve_chunks') {
           setActiveNode('retriever');
           setActiveNode('vector_db');
-          await new Promise(r => setTimeout(r, 600)); // Sim Latency
+          await new Promise(r => setTimeout(r, 600)); 
 
           const query = (call.args as any).query;
           const results = searchKnowledgeBase(query, config.topK);
           
           toolResult = { 
-            results: results.length > 0 ? results : "No relevant local knowledge found. Please try Google Search." 
+            results: results.length > 0 ? results : "No relevant local knowledge found. Recommend using 'search_web'." 
           };
           
           addTrace({ 
@@ -180,9 +176,33 @@ export const useGeminiBrain = () => {
           });
         } 
         
-        // --- 2. CRAWL AND LEARN (FIRECRAWL) ---
+        // --- 2. SEARCH WEB (FIRECRAWL) ---
+        else if (call.name === 'search_web') {
+            setActiveNode('retriever');
+            const query = (call.args as any).query;
+            
+            try {
+                addTrace({ name: 'Searching Web', type: 'tool_execution', content: `Query: ${query}` });
+                const searchResults = await searchWeb(query);
+                
+                toolResult = { results: searchResults };
+                
+                addTrace({
+                    name: 'Search Results',
+                    type: 'tool_result',
+                    content: `Found ${searchResults.length} links`,
+                    latency: Date.now() - toolStart,
+                    metadata: searchResults
+                });
+            } catch (err: any) {
+                toolResult = { error: err.message };
+                addTrace({ name: 'Search Error', type: 'tool_result', content: err.message });
+            }
+        }
+
+        // --- 3. CRAWL AND LEARN (FIRECRAWL) ---
         else if (call.name === 'crawl_and_learn') {
-           setActiveNode('summarizer'); // Reusing summarizer node for "Ingestion" visual
+           setActiveNode('summarizer'); 
            const url = (call.args as any).url;
            const tag = (call.args as any).tag || 'General';
            
@@ -191,11 +211,10 @@ export const useGeminiBrain = () => {
              
              const scrapedData = await crawlUrl(url);
              
-             // Save to Brain
              const newChunk = addKnowledge({
                lesson: "External Web Knowledge",
                title: scrapedData.title,
-               content: scrapedData.content.substring(0, 2000), // Limit size for context window
+               content: scrapedData.content.substring(0, 2000), 
                context: scrapedData.description || "Ingested from Web",
                parentDoc: `Source: ${url}`,
                type: 'web_knowledge',
