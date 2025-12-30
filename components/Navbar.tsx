@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { getContent } from '../constants';
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { Sun, Moon, LayoutDashboard } from 'lucide-react';
+import { Sun, Moon, LayoutDashboard, BrainCircuit } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,6 +56,18 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
+                to="/tools/second-brain"
+                className={`px-5 py-2 rounded-lg text-base font-bold transition-all flex items-center gap-2 ${
+                  location.pathname === '/tools/second-brain' 
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20' 
+                  : 'text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5'
+                }`}
+              >
+                <BrainCircuit className="w-4 h-4" />
+                Brain OS
+              </Link>
+
+              <Link
                 to="/dashboard"
                 className={`px-5 py-2 rounded-lg text-base font-bold transition-all flex items-center gap-2 ${
                   location.pathname === '/dashboard' 
@@ -76,7 +88,6 @@ const Navbar: React.FC = () => {
                 }`}
               >
                 {t('nav.prompt_guide')}
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
               </Link>
 
               <Link
@@ -154,6 +165,7 @@ const Navbar: React.FC = () => {
         <div className="md:hidden fixed inset-0 top-[64px] z-[999] bg-white dark:bg-brand-dark/95 backdrop-blur-3xl animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto">
           <div className="px-6 py-10 space-y-2 flex flex-col min-h-full">
             <Link to="/" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight">{t('nav.home')}</Link>
+            <Link to="/tools/second-brain" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight text-purple-500">Brain OS</Link>
             <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight text-blue-600">{t('nav.dashboard')}</Link>
             <Link to="/prompt-guide" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight">{t('nav.prompt_guide')}</Link>
             <Link to="/planets" onClick={() => setIsOpen(false)} className="block px-4 py-4 rounded-2xl text-2xl font-black tracking-tight">{t('nav.planets')}</Link>

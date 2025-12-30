@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from "@google/genai";
 import { useLanguage, Link, useLocation } from '../context/LanguageContext';
-import { ArrowLeft, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, Search, Trash2, FileText, Globe, Layers, Loader2 } from 'lucide-react';
+import { ArrowLeft, SplitSquareVertical, Sidebar, Zap, Wand2, ChevronRight, Search, Trash2, FileText, Globe, Layers, Loader2, AlertCircle } from 'lucide-react';
 import { PROMPT_REGISTRY } from '../constants/promptRegistry';
 import GroundingSources from '../components/GroundingSources';
 
@@ -23,10 +23,15 @@ const Studio: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [isGeneratingVariations, setIsGeneratingVariations] = useState(false);
+  
   const [result, setResult] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [resultSources, setResultSources] = useState<GroundingSource[]>([]);
+  
   const [comparisonResult, setComparisonResult] = useState('');
+  const [comparisonError, setComparisonError] = useState<string | null>(null);
   const [comparisonSources, setComparisonSources] = useState<GroundingSource[]>([]);
+  
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [sidebarSearch, setSidebarSearch] = useState('');
@@ -80,11 +85,23 @@ const Studio: React.FC = () => {
     localStorage.setItem('prompt_history', JSON.stringify(newHistory));
   };
 
-  const handleGenerate = async (input: string, targetSetter: (val: string) => void) => {
+  const handleGenerate = async (input: string, isComparison: boolean = false) => {
     if (!input.trim()) return;
 
+    // Reset states
+    if (isComparison) {
+      setComparisonResult('');
+      setComparisonError(null);
+      setComparisonSources([]);
+    } else {
+      setResult('');
+      setError(null);
+      setResultSources([]);
+    }
+
     if (!process.env.API_KEY) {
-      targetSetter(language === 'zh' ? "⚠️ 系统错误：未配置 API Key。" : "⚠️ System Error: API Key not configured.");
+      const msg = language === 'zh' ? "⚠️ 系统错误：未配置 API Key。" : "⚠️ System Error: API Key not configured.";
+      if (isComparison) setComparisonError(msg); else setError(msg);
       return;
     }
 
@@ -102,7 +119,7 @@ const Studio: React.FC = () => {
         }
       });
       
-      targetSetter(response.text || '');
+      const text = response.text || '';
       
       const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
       const sources = groundingChunks
@@ -112,14 +129,17 @@ const Studio: React.FC = () => {
       
       const uniqueSources = Array.from(new Map(sources.map((s: any) => [s.url, s])).values()) as GroundingSource[];
       
-      if (targetSetter === setResult) {
-        setResultSources(uniqueSources);
-      } else {
+      if (isComparison) {
+        setComparisonResult(text);
         setComparisonSources(uniqueSources);
+      } else {
+        setResult(text);
+        setResultSources(uniqueSources);
       }
     } catch (err) {
       console.error(err);
-      targetSetter(getErrorMessage(err));
+      const msg = getErrorMessage(err);
+      if (isComparison) setComparisonError(msg); else setError(msg);
     } finally {
       setIsLoading(false);
     }
@@ -127,9 +147,13 @@ const Studio: React.FC = () => {
 
   const generateVariations = async () => {
     if (!prompt.trim()) return;
-    if (!process.env.API_KEY) return;
+    if (!process.env.API_KEY) {
+      setError(language === 'zh' ? "⚠️ 未配置 API Key。" : "⚠️ API Key missing.");
+      return;
+    }
 
     setIsGeneratingVariations(true);
+    setError(null);
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     try {
       const response = await ai.models.generateContent({
@@ -145,7 +169,7 @@ const Studio: React.FC = () => {
       setVariations(data);
     } catch (err) {
       console.error(err);
-      setResult(getErrorMessage(err));
+      setError(getErrorMessage(err));
     } finally {
       setIsGeneratingVariations(false);
     }
@@ -155,11 +179,12 @@ const Studio: React.FC = () => {
     if (!prompt.trim()) return;
     
     if (!process.env.API_KEY) {
-      setResult(language === 'zh' ? "⚠️ 系统错误：未配置 API Key。" : "⚠️ System Error: API Key not configured.");
+      setError(language === 'zh' ? "⚠️ 系统错误：未配置 API Key。" : "⚠️ System Error: API Key not configured.");
       return;
     }
 
     setIsOptimizing(true);
+    setError(null);
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     try {
       const response = await ai.models.generateContent({
@@ -170,7 +195,7 @@ const Studio: React.FC = () => {
       setPrompt(response.text || '');
     } catch (err) {
       console.error(err);
-      setResult(getErrorMessage(err));
+      setError(getErrorMessage(err));
     } finally {
       setIsOptimizing(false);
     }
@@ -180,6 +205,7 @@ const Studio: React.FC = () => {
     if (template) {
       setPrompt(template);
       setVariations(null);
+      setError(null);
     }
   };
 
@@ -300,7 +326,7 @@ const Studio: React.FC = () => {
                    <Wand2 className={`w-3 h-3 ${isOptimizing ? 'animate-spin' : ''}`} />
                    {isOptimizing ? 'Refining...' : 'Optimize'}
                  </button>
-                 <button onClick={() => { setPrompt(''); setResult(''); setResultSources([]); setVariations(null); }} className="p-1.5 text-gray-600 hover:text-red-500"><Trash2 className="w-3.5 h-3.5" /></button>
+                 <button onClick={() => { setPrompt(''); setResult(''); setError(null); setResultSources([]); setVariations(null); }} className="p-1.5 text-gray-600 hover:text-red-500"><Trash2 className="w-3.5 h-3.5" /></button>
               </div>
             </div>
             
@@ -334,7 +360,7 @@ const Studio: React.FC = () => {
             </AnimatePresence>
 
             <button 
-              onClick={() => handleGenerate(prompt, setResult)}
+              onClick={() => handleGenerate(prompt, false)}
               disabled={isLoading || !prompt.trim()}
               className="w-full py-3 bg-white text-brand-dark rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-50 transition-all shadow-xl flex items-center justify-center gap-2"
             >
@@ -343,7 +369,18 @@ const Studio: React.FC = () => {
             </button>
             <div className="flex-grow bg-black/40 border border-white/5 rounded-2xl p-6 font-light text-gray-300 text-sm overflow-y-auto custom-scrollbar min-h-[200px] leading-relaxed relative">
                <span className="absolute top-4 right-4 text-[8px] font-mono text-gray-700">OUTPUT</span>
-               {isLoading && !result && (
+               
+               {error && (
+                 <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 mb-4">
+                    <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
+                    <div>
+                      <h4 className="text-xs font-bold text-red-400 uppercase tracking-wide mb-1">Execution Error</h4>
+                      <p className="text-xs text-red-200/80">{error}</p>
+                    </div>
+                 </div>
+               )}
+
+               {isLoading && !result && !error && (
                  <div className="h-full flex flex-col items-center justify-center gap-4 py-12">
                    <div className="relative">
                       <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
@@ -361,7 +398,7 @@ const Studio: React.FC = () => {
                     </div>
                     <GroundingSources sources={resultSources} />
                  </div>
-               ) : !isLoading && <div className="h-full flex flex-col items-center justify-center opacity-20">
+               ) : !isLoading && !error && <div className="h-full flex flex-col items-center justify-center opacity-20">
                  <FileText className="w-10 h-10 mb-2" />
                  <span className="text-[10px] font-mono uppercase tracking-widest">Awaiting Input...</span>
                </div>}
@@ -378,7 +415,7 @@ const Studio: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-purple-500 uppercase tracking-widest">Comparison</span>
-                  <button onClick={() => { setComparisonPrompt(''); setComparisonResult(''); setComparisonSources([]); }} className="p-1.5 text-gray-600 hover:text-red-500"><Trash2 className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => { setComparisonPrompt(''); setComparisonResult(''); setComparisonError(null); setComparisonSources([]); }} className="p-1.5 text-gray-600 hover:text-red-500"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
                 <textarea
                   className="w-full h-48 md:h-64 bg-purple-500/5 border border-purple-500/10 rounded-2xl p-6 text-white text-sm focus:outline-none focus:border-purple-500/50 font-mono transition-all resize-none shadow-inner"
@@ -387,7 +424,7 @@ const Studio: React.FC = () => {
                   onChange={(e) => setComparisonPrompt(e.target.value)}
                 />
                 <button 
-                  onClick={() => handleGenerate(comparisonPrompt, setComparisonResult)}
+                  onClick={() => handleGenerate(comparisonPrompt, true)}
                   disabled={isLoading || !comparisonPrompt.trim()}
                   className="w-full py-3 bg-purple-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-purple-700 transition-all shadow-xl flex items-center justify-center gap-2"
                 >
@@ -396,7 +433,18 @@ const Studio: React.FC = () => {
                 </button>
                 <div className="flex-grow bg-black/40 border border-purple-500/5 rounded-2xl p-6 font-light text-gray-300 text-sm overflow-y-auto custom-scrollbar min-h-[200px] leading-relaxed relative">
                    <span className="absolute top-4 right-4 text-[8px] font-mono text-gray-700">VARIANT_OUTPUT</span>
-                   {isLoading && !comparisonResult && (
+                   
+                   {comparisonError && (
+                     <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 mb-4">
+                        <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
+                        <div>
+                          <h4 className="text-xs font-bold text-red-400 uppercase tracking-wide mb-1">Execution Error</h4>
+                          <p className="text-xs text-red-200/80">{comparisonError}</p>
+                        </div>
+                     </div>
+                   )}
+
+                   {isLoading && !comparisonResult && !comparisonError && (
                      <div className="h-full flex flex-col items-center justify-center gap-4 py-12">
                        <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
                        <div className="text-[10px] font-mono text-gray-700 uppercase tracking-widest">Generating Variant...</div>
@@ -409,7 +457,7 @@ const Studio: React.FC = () => {
                         </div>
                         <GroundingSources sources={comparisonSources} />
                      </div>
-                   ) : !isLoading && <span className="text-gray-700 font-mono opacity-20">Awaiting...</span>}
+                   ) : !isLoading && !comparisonError && <span className="text-gray-700 font-mono opacity-20">Awaiting...</span>}
                 </div>
               </m.div>
             )}

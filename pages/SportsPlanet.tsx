@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
@@ -8,7 +8,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, Area, ComposedChart, Cell 
 } from 'recharts';
-import { Activity, Target, Zap } from 'lucide-react';
+import { Activity, Target, Zap, CheckCircle, Circle } from 'lucide-react';
 
 const m = motion as any;
 
@@ -52,6 +52,33 @@ const SportsPlanet: React.FC = () => {
   const { language } = useLanguage();
   const content = getContent(language);
   const course = content.courses.find(c => c.id === 'sports')!;
+  
+  const [completedModules, setCompletedModules] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('sports_progress');
+    if (saved) {
+      try {
+        setCompletedModules(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse progress', e);
+      }
+    }
+  }, []);
+
+  const toggleModule = (id: string) => {
+    setCompletedModules(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      const newArray = Array.from(newSet);
+      localStorage.setItem('sports_progress', JSON.stringify(newArray));
+      return newArray;
+    });
+  };
 
   const modules = [
     {
@@ -100,6 +127,8 @@ const SportsPlanet: React.FC = () => {
       icon: '💪'
     }
   ];
+
+  const progressPercent = Math.round((completedModules.length / modules.length) * 100);
 
   return (
     <PlanetLayout course={course}>
@@ -224,7 +253,7 @@ const SportsPlanet: React.FC = () => {
              {[
                { label: 'Avg Accuracy', val: '94.2%', icon: Target },
                { label: 'Neural Hours', val: '128h', icon: Zap },
-               { label: 'Sync Status', val: 'Optimal', icon: Activity },
+               { label: 'Progress', val: `${progressPercent}%`, icon: Activity },
                { label: 'Complexity', val: 'Lv 09', icon: Activity }
              ].map((stat, i) => (
                <div key={i}>
@@ -251,7 +280,11 @@ const SportsPlanet: React.FC = () => {
                 visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
               }}
               viewport={{ once: true, margin: "-50px" }}
-              className="group relative bg-white/5 border border-white/10 rounded-[32px] md:rounded-[48px] overflow-hidden backdrop-blur-xl hover:border-orange-500/30 transition-all duration-300"
+              className={`group relative bg-white/5 border rounded-[32px] md:rounded-[48px] overflow-hidden backdrop-blur-xl transition-all duration-300 ${
+                completedModules.includes(module_item.id) 
+                  ? 'border-green-500/30 bg-green-500/5' 
+                  : 'border-white/10 hover:border-orange-500/30'
+              }`}
             >
               <div className={`absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b ${module_item.gradient}`} />
               <div className="p-6 sm:p-10 md:p-16 flex flex-col lg:flex-row gap-6 md:gap-12">
@@ -259,6 +292,27 @@ const SportsPlanet: React.FC = () => {
                     <m.span className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full font-mono text-[9px] md:text-xs text-orange-400 font-bold uppercase tracking-widest">{module_item.period}</m.span>
                     <m.h3 className="text-xl sm:text-2xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">{module_item.title}</m.h3>
                     <m.p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed font-light">{module_item.goal}</m.p>
+                    
+                    <button
+                      onClick={() => toggleModule(module_item.id)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all ${
+                        completedModules.includes(module_item.id)
+                          ? 'bg-green-500 text-white border-green-500 hover:bg-green-600'
+                          : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/30 hover:text-white'
+                      }`}
+                    >
+                      {completedModules.includes(module_item.id) ? (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          Completed
+                        </>
+                      ) : (
+                        <>
+                          <Circle className="w-4 h-4" />
+                          Mark Complete
+                        </>
+                      )}
+                    </button>
                  </div>
 
                  <div className="lg:w-2/3 flex flex-col gap-5 md:gap-8">

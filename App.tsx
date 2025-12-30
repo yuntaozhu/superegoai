@@ -21,6 +21,7 @@ import SuperEgoPlanet from './pages/SuperEgoPlanet';
 import QuantPlanet from './pages/QuantPlanet';
 import CodePlanet from './pages/CodePlanet';
 import ResearchPlanet from './pages/ResearchPlanet';
+import SecondBrainPage from './pages/SecondBrainPage';
 
 import { LanguageProvider, HashRouter as Router, Routes, Route } from './context/LanguageContext';
 import { PromptRegistryProvider } from './context/PromptRegistryContext';
@@ -54,6 +55,7 @@ const App: React.FC = () => {
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/prompt-guide" element={<PromptGuide />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/tools/second-brain" element={<SecondBrainPage />} />
                     
                     {/* Planet Routes */}
                     <Route path="/course/art" element={<ArtPlanet />} />
