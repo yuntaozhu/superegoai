@@ -138,7 +138,10 @@ export const useGeminiBrain = () => {
   };
 
   const sendMessage = async (text: string) => {
-    if (!process.env.API_KEY) return;
+    if (!process.env.API_KEY) {
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ API Key is missing. Please configure process.env.API_KEY." }]);
+      return;
+    }
 
     // Re-init if null (happens on config change)
     if (!chatSessionRef.current) {
@@ -331,7 +334,11 @@ export const useGeminiBrain = () => {
 
     } catch (error: any) {
       console.error("Agentic Loop Error:", error);
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop: " + (error.message || JSON.stringify(error)) }]);
+      let errorMessage = error.message || JSON.stringify(error);
+      if (errorMessage.includes("403") || errorMessage.includes("leaked") || errorMessage.includes("PERMISSION_DENIED")) {
+          errorMessage = "API Key Error: The provided key is invalid or leaked. Please use a valid API Key in your .env file.";
+      }
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop: " + errorMessage }]);
       setActiveNode(null);
     }
   };

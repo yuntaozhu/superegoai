@@ -1,4 +1,3 @@
-
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -28,11 +27,10 @@ const contentWatcher = () => ({
 });
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, __dirname, '');
-
-  // FORCE USE of the valid keys provided by the user
-  const validApiKey = 'AIzaSyA_35waukTHMicsuwDLkMICXBdF6L4K668';
-  const firecrawlKey = 'fc-6ed314db151b46a79b39e3d2dcf78b4c';
+  // Load env file based on `mode` in the current working directory.
+  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  // Using path.resolve() without args returns current working directory, avoiding 'process.cwd' type issues.
+  const env = loadEnv(mode, path.resolve(), '');
 
   return {
     plugins: [
@@ -45,8 +43,9 @@ export default defineConfig(({ mode }) => {
       ],
     },
     define: {
-      'process.env.API_KEY': JSON.stringify(validApiKey),
-      'process.env.FIRECRAWL_KEY': JSON.stringify(firecrawlKey)
+      // Securely map environment variables to process.env
+      'process.env.API_KEY': JSON.stringify(env.API_KEY),
+      'process.env.FIRECRAWL_KEY': JSON.stringify(env.FIRECRAWL_KEY)
     }
   };
 });
