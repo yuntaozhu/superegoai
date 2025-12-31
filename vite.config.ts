@@ -1,3 +1,4 @@
+
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -29,7 +30,6 @@ const contentWatcher = () => ({
 export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-  // Using path.resolve() without args returns current working directory, avoiding 'process.cwd' type issues.
   const env = loadEnv(mode, path.resolve(), '');
 
   return {

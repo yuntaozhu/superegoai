@@ -335,10 +335,15 @@ export const useGeminiBrain = () => {
     } catch (error: any) {
       console.error("Agentic Loop Error:", error);
       let errorMessage = error.message || JSON.stringify(error);
-      if (errorMessage.includes("403") || errorMessage.includes("leaked") || errorMessage.includes("PERMISSION_DENIED")) {
-          errorMessage = "API Key Error: The provided key is invalid or leaked. Please use a valid API Key in your .env file.";
+      
+      // Specifically catch the "leaked key" error
+      if (errorMessage.includes("leaked") || errorMessage.includes("403")) {
+          errorMessage = "API Key Error: Your API key has been flagged as leaked by Google. Please generate a new API key in Google AI Studio and update your .env file.";
+      } else if (errorMessage.includes("PERMISSION_DENIED")) {
+          errorMessage = "Permission Denied: Please check your API key.";
       }
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error in Agentic Loop: " + errorMessage }]);
+
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error: " + errorMessage }]);
       setActiveNode(null);
     }
   };
