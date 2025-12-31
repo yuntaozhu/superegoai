@@ -40,7 +40,7 @@ const ChatAssistant: React.FC = () => {
     if (!input.trim() || isLoading) return;
 
     if (!process.env.API_KEY) {
-        setMessages(prev => [...prev, { role: 'assistant', content: language === 'zh' ? "⚠️ 系统错误：未配置 API Key。请在环境变量中设置。" : "⚠️ System Error: API Key not configured. Please check your environment variables." }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: language === 'zh' ? "⚠️ 系统错误：未配置 API Key。请在项目根目录创建 .env 文件并设置 API_KEY。" : "⚠️ System Error: API Key not configured. Please create a .env file in the root directory with your API_KEY." }]);
         return;
     }
 
@@ -99,13 +99,19 @@ const ChatAssistant: React.FC = () => {
         ? "连接中断。请验证您的 API 状态或网络连接。" 
         : "Node connection lost. Please verify your API status or network connection.";
 
-      if (error.message?.includes('403') || error.message?.includes('401') || error.message?.includes('expired')) {
+      const errStr = error.message || error.toString();
+
+      if (errStr.includes('403') || errStr.includes('leaked') || errStr.includes('PERMISSION_DENIED')) {
          errorMessage = language === 'zh' 
-           ? "鉴权失败：API Key 无效或过期。请检查 .env 配置。" 
-           : "Authentication Failed: Invalid or expired API Key. Check .env config.";
+           ? "🛑 API Key 错误：您的密钥已被 Google 标记为泄露并禁用。请前往 Google AI Studio 删除旧密钥，生成新密钥，并更新您的 .env 文件。" 
+           : "🛑 API Key Alert: Your key was detected as leaked and blocked by Google. Please delete the old key in Google AI Studio, generate a new one, and update your .env file.";
+      } else if (errStr.includes('401') || errStr.includes('expired')) {
+         errorMessage = language === 'zh' 
+           ? "鉴权失败：API Key 无效。请检查 .env 配置。" 
+           : "Authentication Failed: Invalid API Key. Check .env config.";
       }
 
-      setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${errorMessage}` }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
       chatSessionRef.current = null;
     } finally {
       setIsLoading(false);
@@ -244,7 +250,7 @@ const ChatAssistant: React.FC = () => {
                   onChange={(e) => setInput(e.target.value)}
                 />
                 <button 
-                  type="submit"
+                  type="submit" 
                   disabled={isLoading || !input.trim()}
                   className="absolute right-2 p-2 text-blue-500 hover:text-blue-400 disabled:opacity-20 transition-all"
                 >
