@@ -10,85 +10,90 @@ import {
 
 const m = motion as any;
 
-const ANATOMY_DATA: AnatomyNode[] = [
-  {
-    id: 'core',
-    organ: 'The Core (核心枢纽)',
-    name: 'AI SuperEgo —— Engineering Your Second Brain 构建第二外脑',
-    metaphor: '主权认知架构的终极工程实战。实现能力平权的唯一路径。',
-    target: '渴望打破生物瓶颈、构建数字化认知资产的超级个体。',
-    method: '12 Weeks | Decoding AI Architecture | Neuro-Inference.',
-    outcome: '构建可代码化的私有外脑，实现从“算法受体”到“架构导演”的进化。',
-    link: '/course/data',
-    color: '#FFD700',
-    icon: '🧠'
-  },
-  {
-    id: 'logic',
-    organ: 'The Logic (左脑)',
-    name: 'AI Data Modeling —— 认知重构与系统思维',
-    metaphor: 'Thinking & Abstraction (思考与抽象). The logical processing unit.',
-    target: 'Analysts, Strategic Thinkers, HIMCM Students.',
-    method: '6 Weeks | Math Modeling | Python Pandas Agents.',
-    outcome: 'Master data-driven thinking and solve complex system problems.',
-    link: '/course/digital-twin',
-    color: '#00BFFF',
-    icon: '🧬'
-  },
-  {
-    id: 'senses',
-    organ: 'The Senses (五官)',
-    name: 'AI Deep Research —— 全域信息洞察',
-    metaphor: 'Input & Insight (输入与洞察). The eyes and ears of the SuperEgo.',
-    target: 'Researchers, Creators, Academic Students.',
-    method: '4 Weeks | Crawler Agents | Multi-source Verification.',
-    outcome: 'Build Deep Research Agents to generate expert reports automatically.',
-    link: '/course/art',
-    color: '#8A2BE2',
-    icon: '👁️'
-  },
-  {
-    id: 'body',
-    organ: 'The Body (躯干)',
-    name: 'AI Physical Awakening —— 从视觉到身心重塑',
-    metaphor: 'Perception & Health (感知与健康). Connecting digital to physical.',
-    target: 'Sports Enthusiasts, Teens, Bio-hackers.',
-    method: '8 Weeks | Computer Vision (CV) | IoT Data Analysis.',
-    outcome: 'Build a personal AI Coach using MediaPipe/OpenCV.',
-    link: '/course/sports',
-    color: '#FF4500',
-    icon: '🏃'
-  },
-  {
-    id: 'hands',
-    organ: 'The Hands (双手)',
-    name: 'AI Super Individual —— 全栈软件构建',
-    metaphor: 'Creation & Tools (创造与工具). The execution capability.',
-    target: 'Entrepreneurs, Indie Hackers, Solopreneurs.',
-    method: '10 Weeks | Project-Based (Cursor/v0) | Product Launch.',
-    outcome: 'Build and launch a commercial SaaS product solo.',
-    link: '/course/solopreneur',
-    color: '#00FFFF',
-    icon: '🚀'
-  },
-  {
-    id: 'will',
-    organ: 'The Will (意志)',
-    name: 'AI Quant —— 量化交易：AI 驱动的决策核心',
-    metaphor: 'Decision & Game Theory (决策与博弈). The evolving mind.',
-    target: 'Investors, Traders, System Architects.',
-    method: '12 Weeks | Agent Swarm | LangGraph Evolution.',
-    outcome: 'Build a self-evolving Hedge Fund factory and master automated risk.',
-    link: '/course/quant',
-    color: '#10B981',
-    icon: '📈'
-  }
-];
+const getAnatomyData = (language: 'zh' | 'en'): AnatomyNode[] => {
+  const isZh = language === 'zh';
+
+  return [
+    {
+      id: 'core',
+      organ: isZh ? 'The Core (核心)' : 'The Core',
+      name: isZh ? '第二大脑 OS —— 记忆与人格' : 'Second Brain OS — Memory & Personality',
+      metaphor: isZh ? '唤醒沉睡的个人知识库，打造完全隐私的AI参谋长。' : 'Awaken your dormant knowledge base. Build a fully private AI Chief of Staff.',
+      target: isZh ? '摆脱枯燥记忆，建立伴随一生的智慧外脑。' : 'Adults escaping rote memory; Kids building lifelong AI brains.',
+      method: '12 Weeks | Agentic RAG | Model Fine-tuning',
+      outcome: isZh ? '利用 Agentic RAG 与模型微调，将你过往的隐性知识转化为显性数字资产。' : 'Transform implicit knowledge into explicit digital assets using Agentic RAG & Fine-tuning.',
+      link: '/course/data',
+      color: '#FFD700',
+      icon: '🧠'
+    },
+    {
+      id: 'logic',
+      organ: isZh ? 'The Left Brain (左脑)' : 'The Logic',
+      name: isZh ? '数据建模 —— 思考与抽象' : 'Data Modeling — Thinking & Abstraction',
+      metaphor: isZh ? '驾驭AI时代的思维底层逻辑。' : 'Master the underlying logic of thinking in the AI era.',
+      target: isZh ? '成人重构思维，儿童备战 HIMCM 竞赛。' : 'Reconstruct thinking patterns; Prep for HIMCM.',
+      method: '6 Weeks | Math Modeling | Python Pandas',
+      outcome: isZh ? '通过数学建模与抽象思维训练，让大脑学会像算法一样思考。' : 'Train your brain to think like an algorithm through math modeling & abstraction.',
+      link: '/course/digital-twin',
+      color: '#00BFFF',
+      icon: '🧬'
+    },
+    {
+      id: 'senses',
+      organ: isZh ? 'The Senses (五官)' : 'The Senses',
+      name: isZh ? '深度研究 —— 输入与洞察' : 'Deep Research — Input & Insight',
+      metaphor: isZh ? '跨学科的感知与深度洞察。' : 'Interdisciplinary perception and deep insight.',
+      target: isZh ? '渴望提升感知颗粒度的研究者。' : 'Researchers seeking higher perception granularity.',
+      method: '4 Weeks | Crawler Agents | Multi-source Verification',
+      outcome: isZh ? '打破学科壁垒，利用AI融合艺术、数学、历史与哲学，形成独到见解。' : 'Break barriers. Fuse art, math, history & philosophy for unique insights.',
+      link: '/course/art',
+      color: '#8A2BE2',
+      icon: '👁️'
+    },
+    {
+      id: 'body',
+      organ: isZh ? 'The Body (躯干)' : 'The Body',
+      name: isZh ? '体能觉醒 —— 感知与健康' : 'Physical Awakening — Perception & Health',
+      metaphor: isZh ? '从身体到心灵的数字化链接。' : 'The digital link from body to mind.',
+      target: isZh ? '寻求身心平衡的生物黑客。' : 'Bio-hackers seeking mind-body balance.',
+      method: '8 Weeks | Computer Vision | Bio-feedback',
+      outcome: isZh ? '通过AI辅助与身体对话，实现身心释放与健康管理，连接物理与数字世界。' : 'Dialogue with your body via AI. Achieve release and manage health.',
+      link: '/course/sports',
+      color: '#FF4500',
+      icon: '🏃'
+    },
+    {
+      id: 'hands',
+      organ: isZh ? 'The Hands (双手)' : 'The Hands',
+      name: isZh ? '超级个体 —— 创造与工具' : 'Super Individual — Creation & Tools',
+      metaphor: isZh ? '人人都是产品经理。构建 SuperEgo Brain。' : 'Everyone is a Product Manager. Build the SuperEgo Brain.',
+      target: isZh ? '不仅想，更能做的实干家。' : 'Doers who want to build, not just think.',
+      method: '10 Weeks | Cursor/v0 | Product Launch',
+      outcome: isZh ? 'AI赋予每个人开发能力。将创意产品化、商业化，成为真正的“超级个体”。' : 'Commercialize ideas. Become a "Super Individual" who builds tools.',
+      link: '/course/solopreneur',
+      color: '#00FFFF',
+      icon: '🚀'
+    },
+    {
+      id: 'will',
+      organ: isZh ? 'The Will (意志)' : 'The Will',
+      name: isZh ? '量化交易 —— 决策与博弈' : 'AI Quant — Decision & Game Theory',
+      metaphor: isZh ? '不确定性中的决策艺术。' : 'The art of decision-making in uncertainty.',
+      target: isZh ? '寻求决策确定性的投资者。' : 'Investors seeking certainty in chaos.',
+      method: '12 Weeks | Agent Swarm | Risk Control',
+      outcome: isZh ? '利用AI进行量化分析，在复杂的博弈中寻找确定性，锻炼钢铁般的意志。' : 'Find certainty in complex games. Forge iron will through AI quant analysis.',
+      link: '/course/quant',
+      color: '#10B981',
+      icon: '📈'
+    }
+  ];
+};
 
 const PlanetsPage: React.FC = () => {
   const { language } = useLanguage();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const anatomyData = getAnatomyData(language);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -115,24 +120,37 @@ const PlanetsPage: React.FC = () => {
 
       <div className="relative z-10 w-full">
         
-        {/* 1. HERO SECTION - Simplified for performance */}
-        <section className="min-h-[70vh] flex flex-col items-center justify-center px-4 pt-32 pb-12">
-          <div className="text-center mb-8 space-y-6">
+        {/* 1. HERO SECTION - Updated Copy */}
+        <section className="min-h-[80vh] flex flex-col items-center justify-center px-4 pt-32 pb-12">
+          <div className="text-center mb-8 space-y-8 max-w-5xl mx-auto">
             <m.div 
               initial={{ opacity: 0, y: -10 }} 
               animate={{ opacity: 1, y: 0 }} 
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[9px] font-black uppercase tracking-widest"
             >
-              <Activity className="w-3 h-3" /> BIOLOGICAL DIGITAL EVOLUTION PROTOCOL
+              <Activity className="w-3 h-3" /> CLOSED-LOOP LIFE FORM
             </m.div>
             <m.h1 
               initial={{ opacity: 0, scale: 0.95 }} 
               animate={{ opacity: 1, scale: 1 }} 
-              className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none"
+              className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-tight"
             >
-              {language === 'zh' ? '数字生命体架构' : 'Digital Life Form'}
+              {language === 'zh' ? '构建你的数字生命体' : 'Build Your Digital Life Form'}
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500">
+                {language === 'zh' ? '外脑课程体系' : 'The External Brain System'}
+              </span>
             </m.h1>
-            <p className="text-gray-500 font-mono text-xs uppercase tracking-[0.5em]">The Anatomy of a Super Individual</p>
+            <m.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-gray-400 font-light text-base md:text-xl leading-relaxed max-w-3xl mx-auto"
+            >
+              {language === 'zh' 
+                ? '在AI时代，告别碎片化学习。我们将六大核心模块融合为一个“闭环生命体”，不仅仅是传授知识，更是为你构建一个具备记忆、思考、感知与决策能力的“第二大脑”。' 
+                : 'Say goodbye to fragmented learning. We fuse six core modules into a "closed-loop life form." We don\'t just teach knowledge; we build you a "Second Brain" capable of memory, thought, perception, and decision-making.'}
+            </m.p>
           </div>
           
           {/* Scroll Indicator */}
@@ -145,11 +163,11 @@ const PlanetsPage: React.FC = () => {
           </m.div>
         </section>
 
-        {/* 2. MAIN GRID SECTION - Replaced absolute Vitruvian positioning for performance and visibility */}
+        {/* 2. MAIN GRID SECTION - The Anatomy */}
         <section className="px-6 pb-32">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-              {ANATOMY_DATA.map((node, idx) => (
+              {anatomyData.map((node, idx) => (
                 <m.div 
                   key={node.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -185,9 +203,9 @@ const PlanetsPage: React.FC = () => {
                <svg viewBox="0 0 800 400" className="w-full h-full p-4 md:p-10">
                  <path d="M 100 200 Q 250 50 400 200 T 700 200" stroke="#3b82f6" strokeWidth="2" fill="none" className="opacity-40" />
                  <circle cx="400" cy="200" r="10" fill="#FFD700" className="animate-pulse" />
-                 <text x="80" y="230" fill="#555" fontSize="12" className="font-bold">INPUT</text>
-                 <text x="360" y="230" fill="#FFD700" fontSize="12" className="font-bold">CORE</text>
-                 <text x="640" y="230" fill="#555" fontSize="12" className="font-bold">OUTPUT</text>
+                 <text x="80" y="230" fill="#555" fontSize="12" className="font-bold">SENSES (INPUT)</text>
+                 <text x="360" y="230" fill="#FFD700" fontSize="12" className="font-bold">CORE (MEMORY)</text>
+                 <text x="640" y="230" fill="#555" fontSize="12" className="font-bold">HANDS (OUTPUT)</text>
                </svg>
             </div>
           </div>
@@ -197,9 +215,11 @@ const PlanetsPage: React.FC = () => {
         <section className="py-32 px-6 bg-[#020308]/40">
           <div className="max-w-7xl mx-auto">
              <div className="text-center mb-32">
-               <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter">器官解剖 // Anatomy Deep Dive</h2>
+               <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter">
+                 {language === 'zh' ? '器官解剖' : 'Anatomy Deep Dive'}
+               </h2>
              </div>
-             {ANATOMY_DATA.map((item, idx) => (
+             {anatomyData.map((item, idx) => (
                <div id={`deep-dive-${item.id}`} key={item.id} className={`flex flex-col lg:flex-row items-center gap-12 md:gap-32 mb-40 last:mb-0 ${idx % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
                   <div className="flex-1 w-full">
                      <m.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} className="relative aspect-square rounded-[40px] md:rounded-[60px] bg-white/5 border border-white/10 flex items-center justify-center text-8xl md:text-9xl group overflow-hidden shadow-2xl">
@@ -211,16 +231,18 @@ const PlanetsPage: React.FC = () => {
                   <div className="flex-1 space-y-10">
                      <div className="space-y-4">
                         <div className="w-16 h-1 bg-blue-500 rounded-full" style={{ backgroundColor: item.color }} />
-                        <h3 className="text-3xl md:text-6xl font-black text-white leading-tight uppercase tracking-tight">{item.name.includes(' —— ') ? item.name.split(' —— ')[1] : item.name}</h3>
+                        <h3 className="text-3xl md:text-6xl font-black text-white leading-tight uppercase tracking-tight">
+                          {item.name.includes(' —— ') ? item.name.split(' —— ')[1] : item.name}
+                        </h3>
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                        <div className="p-8 rounded-[32px] bg-red-500/5 border border-red-500/10 space-y-4">
-                           <div className="text-[10px] font-black uppercase tracking-widest text-red-500">The Pain // 现状</div>
-                           <p className="text-gray-300 text-base leading-relaxed">{item.id === 'core' ? "大脑遗忘，知识无法转化为生产力。" : "面对海量信息，缺乏系统化解构能力。"}</p>
+                        <div className="p-8 rounded-[32px] bg-blue-500/5 border border-blue-500/10 space-y-4">
+                           <div className="text-[10px] font-black uppercase tracking-widest text-blue-500">The Function</div>
+                           <p className="text-gray-300 text-base leading-relaxed">{item.metaphor}</p>
                         </div>
                         <div className="p-8 rounded-[32px] bg-green-500/5 border border-green-500/10 space-y-4">
-                           <div className="text-[10px] font-black uppercase tracking-widest text-green-500">The Evolution // 进化</div>
-                           <p className="text-gray-300 text-base leading-relaxed">{item.id === 'core' ? "构建私有外脑，让灵感永存。" : "核心驱动力，赋能所有器官共同进化。"}</p>
+                           <div className="text-[10px] font-black uppercase tracking-widest text-green-500">The Value</div>
+                           <p className="text-gray-300 text-base leading-relaxed">{item.outcome}</p>
                         </div>
                      </div>
                      <Link to={item.link} className="inline-flex items-center gap-6 px-10 py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-xs group rounded-full hover:bg-blue-600 hover:text-white transition-all shadow-xl">

@@ -8,7 +8,7 @@ interface TraceInspectorProps {
   traces: TraceStep[];
 }
 
-const TraceItem = ({ step, index }: { step: TraceStep, index: number }) => {
+const TraceItem: React.FC<{ step: TraceStep; index: number }> = ({ step, index }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getTypeColor = (type: string) => {
