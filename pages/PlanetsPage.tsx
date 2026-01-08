@@ -29,11 +29,11 @@ const getAnatomyData = (language: 'zh' | 'en'): AnatomyNode[] => {
     {
       id: 'logic',
       organ: isZh ? 'The Left Brain (左脑)' : 'The Logic',
-      name: isZh ? '数据建模 —— 思考与抽象' : 'Data Modeling — Thinking & Abstraction',
-      metaphor: isZh ? '驾驭AI时代的思维底层逻辑。' : 'Master the underlying logic of thinking in the AI era.',
-      target: isZh ? '成人重构思维，儿童备战 HIMCM 竞赛。' : 'Reconstruct thinking patterns; Prep for HIMCM.',
-      method: '6 Weeks | Math Modeling | Python Pandas',
-      outcome: isZh ? '通过数学建模与抽象思维训练，让大脑学会像算法一样思考。' : 'Train your brain to think like an algorithm through math modeling & abstraction.',
+      name: isZh ? '模型思维 —— 概率与仿真' : 'Model Thinking — Probability & Simulation',
+      metaphor: isZh ? '用贝叶斯更新认知，用 LLM 仿真推演未来。' : 'Update cognition with Bayesian logic; simulate the future with LLM Agents.',
+      target: isZh ? '渴望克服“直觉偏差”与“系统1”弱点的决策者。' : 'Decision-makers wanting to overcome "Intuitive Bias" and "System 1" weaknesses.',
+      method: '8 Weeks | Agent Simulation | Bayesian Inference',
+      outcome: isZh ? '构建你的“数字系统 2”。在投入真金白银前，先在虚拟世界中进行博弈推演。' : 'Build your "Digital System 2". Simulate games in a virtual world before risking real capital.',
       link: '/course/digital-twin',
       color: '#00BFFF',
       icon: '🧬'

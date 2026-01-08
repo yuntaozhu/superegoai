@@ -72,46 +72,54 @@ const CONTENT_ZH: ContentData = {
     },
     {
       id: "digital-twin",
-      title: "数据建模：AI 驱动的逻辑核心",
-      shortTitle: "左脑：数据",
+      title: "SuperEgo：AI 原生模型思维",
+      shortTitle: "左脑：模型思维",
       organ: "THE LOGIC",
-      organRole: "Reasoning / Abstraction",
-      tagline: "理性驱动的建模引擎",
-      description: "将复杂世界抽象为数学模型。不仅仅是编程，而是构建能够模拟真实世界的逻辑中台。",
-      takeaway: "将混沌的世界复杂性，转化为你私有的确定性逻辑引擎。",
+      organRole: "Reasoning / Simulation",
+      tagline: "构建你的概率型与生成式第二大脑",
+      description: "人类大脑有“快思考”（直觉），你需要构建一个“慢思考”（系统2）的数字替身。用贝叶斯更新认知，用 LLM Agent 仿真推演未来。",
+      takeaway: "从寻找确定性到拥抱概率。用 AI 仿真作为你的思维显微镜。",
       icon: "🧬",
       color: "from-blue-500 to-indigo-700", 
-      target: "逻辑思维模块",
-      format: "深度研究",
-      duration: "6-8 周",
-      outcome: "掌握Deep Research Agent构建，辅助完成顶级数学建模。",
+      target: "渴望突破直觉偏差的决策者/研究者",
+      format: "深度仿真与统计实战",
+      duration: "8 周",
+      outcome: "掌握贝叶斯推断与多智能体仿真 (LLM-Agent Simulation)，构建用于决策推演的“预言机”。",
       philosophyMap: {
-        title: "科研闭环",
-        points: ["费曼日志", "参数扫描", "Agent Swarm"]
+        title: "系统 2 思维觉醒",
+        points: ["直觉校准 (De-biasing)", "生成式仿真 (Generative Sim)", "概率世界观 (Bayesian)"]
       },
       syllabus: [
         {
-          title: "模块 1：AI 驱动的数学建模",
-          goal: "用 AI 重构问题求解流程。",
+          title: "模块 1：统计之眼 —— 降维打击与贝叶斯",
+          goal: "从“直觉偏差”到“统计学世界观”。",
           content: [
-            { title: "问题拆解与形式化", description: "利用 GPT-4 将模糊的商业/科研问题转化为精确的数学语言。" },
-            { title: "Python 求解器集成", description: "自动生成并执行 NumPy/SciPy 代码，求解复杂方程与优化问题。" }
+            { title: "贝叶斯更新器 (Bayesian Updater)", description: "编写 Python 工具，输入先验与新证据，让 AI 帮你科学地更新世界观，打破直觉错误。" },
+            { title: "降维打击 (PCA Agent)", description: "面对复杂数据，指挥 AI 进行主成分分析 (PCA)，从 100 个混乱变量中提取关键因子 (Signal)。" }
           ]
         },
         {
-          title: "模块 2：构建科研 Agent",
-          goal: "打造你的 24 小时科研助理。",
+          title: "模块 2：博弈之心 —— 活策略与系统 2",
+          goal: "战胜人性弱点，在博弈中寻找最优解。",
           content: [
-            { title: "文献综述 Agent", description: "自动检索 Arxiv，生成带引用的深度综述报告，快速掌握领域前沿。" },
-            { title: "数据清洗 Agent", description: "自动化处理脏数据，智能识别异常值与缺失值。" }
+            { title: "理性审查官 (Rational Check Agent)", description: "搭建专门“抬杠”的 AI。当你（系统1）冲动时，AI（系统2）列出 5 个反直觉概率理由阻拦你。" },
+            { title: "博弈论模拟器", description: "模拟多人竞争场景（如拍卖、定价），让 AI 计算纳什均衡与混合策略支付矩阵。" }
           ]
         },
         {
-          title: "模块 3：多智能体仿真",
-          goal: "模拟复杂系统演化。",
+          title: "模块 3：生成式社会 —— LLM Agent 动态仿真",
+          goal: "从“静态方程”到“智能体涌现”。",
           content: [
-            { title: "Agent Swarm 基础", description: "设计基于 LangGraph 的多智能体协作网络，实现角色扮演与博弈。" },
-            { title: "社会/经济系统模拟", description: "在沙盒中模拟市场博弈或传染病传播，预测涌现现象。" }
+            { title: "微型社会 (Mini-Society) 搭建", description: "定义 10 个拥有不同性格与记忆的 LLM Agents，构建虚拟村落或组织。" },
+            { title: "涌现现象观察", description: "设计实验（如“突发财富”），观察 Agent 间的谣言传播、结盟与交易行为。" }
+          ]
+        },
+        {
+          title: "模块 4：复杂系统 —— 演化与适应",
+          goal: "上帝视角，理解系统的生死。",
+          content: [
+            { title: "崎岖景观 (NK Model) 推演", description: "模拟创新与适应的本质，理解路径依赖与锁定效应。" },
+            { title: "Capstone: SuperEgo 预言机", description: "选择现实复杂问题，结合 PCA 分析变量与 Agent 仿真推演，产出深度策略报告。" }
           ]
         }
       ]
@@ -302,7 +310,7 @@ const CONTENT_ZH: ContentData = {
           title: "模块 3：风险控制与实盘",
           goal: "让 AI 掌管交易开关。",
           content: [
-            { title: "AI 风险守卫", description: "基于实时市场情绪的动态仓位管理与熔断机制。" },
+            { title: "AI Risk Guard", description: "基于实时市场情绪的动态仓位管理与熔断机制。" },
             { title: "实盘部署架构", description: "构建低延迟、高可靠的自动化交易系统，连接真实市场。" }
           ]
         }
@@ -360,27 +368,35 @@ const CONTENT_EN: ContentData = {
     } else if (course.id === 'digital-twin') {
       englishSyllabus = [
         {
-          title: "Module 1: AI-Driven Math Modeling",
-          goal: "Reconstruct problem solving with AI.",
+          title: "Module 1: The Eye of Statistics",
+          goal: "From Intuitive Bias to Statistical Worldview.",
           content: [
-            { title: "Decomposition & Formalization", description: "Translate vague problems into precise mathematical language using GPT-4." },
-            { title: "Python Solver Integration", description: "Auto-generate and execute NumPy/SciPy code for complex equations." }
+            { title: "Bayesian Updater", description: "Build tools to scientifically update beliefs with priors and likelihoods, breaking intuition errors." },
+            { title: "Dimensionality Reduction", description: "Use AI & PCA to extract key signals from chaotic, high-dimensional data." }
           ]
         },
         {
-          title: "Module 2: Building Research Agents",
-          goal: "Build your 24/7 Research Assistant.",
+          title: "Module 2: The Heart of Game Theory",
+          goal: "Overcoming human weakness via System 2.",
           content: [
-            { title: "Literature Review Agent", description: "Auto-search Arxiv and generate deep review reports with citations." },
-            { title: "Data Cleaning Agent", description: "Automate dirty data handling and anomaly detection." }
+            { title: "Rational Check Agent", description: "Build a 'Devil's Advocate' AI to block impulsive System 1 decisions with probability." },
+            { title: "Game Theory Simulator", description: "Simulate multi-party competition (e.g. auctions) to find Nash Equilibrium." }
           ]
         },
         {
-          title: "Module 3: Multi-Agent Simulation",
-          goal: "Simulate complex system evolution.",
+          title: "Module 3: Generative Society",
+          goal: "From Static Equations to Emergent Agents.",
           content: [
-            { title: "Agent Swarm Basics", description: "Design multi-agent collaboration networks based on LangGraph." },
-            { title: "Social/Eco Simulation", description: "Simulate market games or disease spread in a sandbox." }
+            { title: "Mini-Society Construction", description: "Define 10 LLM Agents with distinct personas and memories to form a virtual group." },
+            { title: "Emergence Observation", description: "Simulate scenarios (e.g., sudden wealth) to observe rumors, alliances, and trade." }
+          ]
+        },
+        {
+          title: "Module 4: Complex Systems",
+          goal: "God mode: Understanding evolution and adaptation.",
+          content: [
+            { title: "NK Model Simulation", description: "Simulate the essence of innovation and adaptation; understand path dependence." },
+            { title: "Capstone: SuperEgo Oracle", description: "Solve a real-world complex problem using PCA analysis and Agent Swarm simulation." }
           ]
         }
       ];
@@ -504,10 +520,14 @@ const CONTENT_EN: ContentData = {
 
     return {
       ...course,
-      title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : (course.id === 'quant' ? "AI Quant: The Evolving Decision Machine" : (course.id === 'sports' ? "AI Sports: Physical Perception" : course.shortTitle.split('：')[1])),
-      description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : course.description,
+      title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : 
+             (course.id === 'quant' ? "AI Quant: The Evolving Decision Machine" : 
+             (course.id === 'sports' ? "AI Sports: Physical Perception" : 
+             (course.id === 'digital-twin' ? "SuperEgo: AI Native Model Thinking" : course.shortTitle.split('：')[1]))),
+      description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : 
+                   (course.id === 'digital-twin' ? "Humans have 'Fast Thinking' (Intuition). You need to build a 'Slow Thinking' (System 2) digital double. Update cognition with Bayesian logic and simulate the future with LLM Agents." : course.description),
       takeaway: course.id === 'data' ? "Stop forgetting. Start orchestrating your intelligence legacy." :
-                course.id === 'digital-twin' ? "Transform the world's chaos into your private deterministic logic engine." :
+                course.id === 'digital-twin' ? "From seeking certainty to embracing probability. Use AI simulation as your microscope for thinking." :
                 course.id === 'art' ? "Transcend prompt magic. Code the mathematical foundation of human aesthetics." :
                 course.id === 'sports' ? "Bridge the gap between digital vision and physical mastery." :
                 course.id === 'solopreneur' ? "Don't just code. Orchestrate an AI army and build a 'Company of One'." :
@@ -516,7 +536,9 @@ const CONTENT_EN: ContentData = {
         ? "A fully autonomous AI Hedge Fund factory with self-evolution capabilities." 
         : (course.id === 'sports' 
             ? "Develop a personalized AI coach providing real-time feedback on form, technique, posture correction, and rep counting." 
-            : course.outcome),
+            : (course.id === 'digital-twin'
+                ? "Master Bayesian Inference & LLM-Agent Simulation to build a 'SuperEgo Oracle' for decision making."
+                : course.outcome)),
       syllabus: englishSyllabus
     };
   })

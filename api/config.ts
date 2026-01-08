@@ -10,6 +10,10 @@ export const GEMINI_CONFIG = {
     
     // Complex Text Tasks (e.g., reasoning, coding, STEM)
     pro: 'gemini-3-pro-preview',
+
+    // Agentic Tasks (Function Calling, Multi-step reasoning)
+    // using gemini-2.0-flash-exp for robust tool use support
+    agent: 'gemini-2.0-flash-exp',
     
     // High-Quality Image Generation
     image: 'gemini-3-pro-image-preview',

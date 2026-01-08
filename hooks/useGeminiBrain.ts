@@ -24,6 +24,11 @@ export interface TraceStep {
   metadata?: any;
 }
 
+const isFatalError = (err: any) => {
+  const msg = (err?.message || JSON.stringify(err)).toLowerCase();
+  return msg.includes('key') || msg.includes('expired') || msg.includes('403') || msg.includes('401') || msg.includes('permission_denied');
+};
+
 export const useGeminiBrain = () => {
   const [messages, setMessages] = useState<{role: string, content: string}[]>([]);
   const [traces, setTraces] = useState<TraceStep[]>([]);
@@ -38,11 +43,8 @@ export const useGeminiBrain = () => {
   // Update ref when config changes
   useEffect(() => {
     currentConfigRef.current = config;
-    // Note: In a real app, we might want to reset the chat if the Persona changes dramatically.
-    // For this simulation, we'll let the user continue, but the NEXT message will use the new system prompt logic if we re-init.
-    // To properly support hot-swapping System Prompts, we typically need to start a new chat.
     chatSessionRef.current = null; 
-  }, [config.persona, config.responseStyle]); // Only reset session if persona changes
+  }, [config.persona, config.responseStyle]); 
 
   const addTrace = (step: Omit<TraceStep, 'id'>) => {
     setTraces(prev => [...prev, {
@@ -104,7 +106,6 @@ export const useGeminiBrain = () => {
   const initializeSession = () => {
     const ai = getGeminiClient();
     
-    // Dynamic System Instruction based on Config
     let systemInstruction = `You are the "Second Brain Agent".
     
     PERSONA SETTINGS:
@@ -127,28 +128,27 @@ export const useGeminiBrain = () => {
       systemInstruction += "\nIMPORTANT: Do not give the answer directly. Guide the user with questions.";
     }
 
+    // Use the dedicated agent model (gemini-2.0-flash-exp) for robust tool support
     return ai.chats.create({
-      model: GEMINI_CONFIG.models.pro,
+      model: GEMINI_CONFIG.models.agent, 
       config: {
         systemInstruction: systemInstruction,
         tools: getTools(),
-        temperature: 0.2, // Low temp for more deterministic tool use
+        temperature: 0.2, 
       }
     });
   };
 
   const sendMessage = async (text: string) => {
     if (!process.env.API_KEY) {
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ API Key is missing. Please configure process.env.API_KEY." }]);
+      setMessages(prev => [...prev, { role: 'model', content: "⚠️ API Key is missing. Please check your .env file." }]);
       return;
     }
 
-    // Re-init if null (happens on config change)
     if (!chatSessionRef.current) {
       chatSessionRef.current = initializeSession();
     }
 
-    // 1. User Input Trace
     setTraces([]); 
     setActiveNode('user');
     setMessages(prev => [...prev, { role: 'user', content: text }]);
@@ -157,15 +157,15 @@ export const useGeminiBrain = () => {
     setTimeout(() => setActiveNode('agent'), 500);
 
     try {
-      // 2. Agent Reasoning
       const startTime = Date.now();
       
+      // Initial Request
       let response = await chatSessionRef.current.sendMessage({ message: text });
       
       addTrace({ 
         name: 'Agent Reasoning', 
         type: 'reasoning', 
-        content: `Planning (Persona: ${config.persona.substring(0, 20)}...)`,
+        content: `Planning...`,
         latency: Date.now() - startTime,
         tokens: 20
       });
@@ -174,13 +174,9 @@ export const useGeminiBrain = () => {
       let functionCalls = response.functionCalls;
       let stepCount = 0;
       
-      // Loop for Function Calls
       while (functionCalls && functionCalls.length > 0) {
         stepCount++;
-        if (stepCount > config.maxSteps) {
-           addTrace({ name: 'Safety', type: 'reasoning', content: 'Max steps reached. Halting.' });
-           break;
-        }
+        if (stepCount > config.maxSteps) break;
 
         const call = functionCalls[0];
         const toolStart = Date.now();
@@ -193,157 +189,140 @@ export const useGeminiBrain = () => {
         });
 
         let toolResult = {};
+        let fatalErrorOccurred = false;
 
-        // --- 1. RETRIEVE CHUNKS (Strategy Applied) ---
+        // --- 1. RETRIEVE CHUNKS ---
         if (call.name === 'retrieve_chunks') {
           setActiveNode('retriever');
           setActiveNode('vector_db');
           await new Promise(r => setTimeout(r, 600)); 
 
           const query = (call.args as any).query;
-          
-          // Apply Configured Strategy
           const results = searchKnowledgeBase(query, config.topK, config.retrievalStrategy);
           
           toolResult = { 
-            results: results.length > 0 ? results : "No relevant local knowledge found. Consider searching web." 
+            results: results.length > 0 ? results : "No relevant local knowledge found." 
           };
           
           addTrace({ 
-            name: `Vector DB (${config.retrievalStrategy})`, 
+            name: `Vector DB`, 
             type: 'tool_result', 
-            content: results.length > 0 ? `Found ${results.length} chunks` : 'Miss - Database Empty', 
+            content: results.length > 0 ? `Found ${results.length} chunks` : 'Miss', 
             latency: Date.now() - toolStart,
             metadata: toolResult
           });
         } 
         
-        // --- 2. SEARCH WEB (VIA GOOGLE GROUNDING PROXY) ---
+        // --- 2. SEARCH WEB ---
         else if (call.name === 'search_web') {
-            if (!config.toolsEnabled.webSearch) {
-                toolResult = { error: "Web Search tool is disabled by administrator configuration." };
-            } else {
-                setActiveNode('retriever');
-                const query = (call.args as any).query;
+            setActiveNode('retriever');
+            const query = (call.args as any).query;
+            
+            try {
+                addTrace({ name: 'Google Search', type: 'tool_execution', content: `Query: ${query}` });
                 
-                try {
-                    addTrace({ name: 'Searching Web', type: 'tool_execution', content: `Query: ${query}` });
-                    
-                    const searchClient = getGeminiClient();
-                    const searchResponse = await searchClient.models.generateContent({
-                        model: 'gemini-3-flash-preview',
-                        contents: query,
-                        config: {
-                            tools: [{ googleSearch: {} }]
-                        }
-                    });
+                // Use a standard search-capable model for the tool execution itself if needed,
+                // but usually we just call the API. Here we simulate search via the model's grounding tool
+                // or just use the model to generate a search summary.
+                const searchClient = getGeminiClient();
+                const searchResponse = await searchClient.models.generateContent({
+                    model: 'gemini-3-flash-preview',
+                    contents: query,
+                    config: { tools: [{ googleSearch: {} }] }
+                });
 
-                    const searchSummary = searchResponse.text || "No relevant results found.";
-                    const sources = searchResponse.candidates?.[0]?.groundingMetadata?.groundingChunks
-                        ?.map((c: any) => c.web)
-                        .filter((w: any) => w)
-                        .map((w: any) => ({ title: w.title, url: w.uri })) || [];
-                    
-                    toolResult = { 
-                        result: searchSummary,
-                        sources: sources.slice(0, 5) 
-                    };
-                    
-                    addTrace({
-                        name: 'Search Results',
-                        type: 'tool_result',
-                        content: `Found ${sources.length} sources via Google`,
-                        latency: Date.now() - toolStart,
-                        metadata: toolResult
-                    });
-                } catch (err: any) {
-                    toolResult = { error: err.message };
-                    addTrace({ name: 'Search Error', type: 'tool_result', content: err.message });
+                const searchSummary = searchResponse.text || "No relevant results found.";
+                const sources = searchResponse.candidates?.[0]?.groundingMetadata?.groundingChunks
+                    ?.map((c: any) => c.web)
+                    .filter((w: any) => w)
+                    .map((w: any) => ({ title: w.title, url: w.uri })) || [];
+                
+                toolResult = { result: searchSummary, sources: sources.slice(0, 5) };
+                
+                addTrace({
+                    name: 'Search Results',
+                    type: 'tool_result',
+                    content: `Found ${sources.length} sources`,
+                    latency: Date.now() - toolStart
+                });
+            } catch (err: any) {
+                // CRITICAL: If Search fails due to key, STOP.
+                if (isFatalError(err)) {
+                    fatalErrorOccurred = true;
+                    throw err; // Re-throw to main catch block
                 }
+                toolResult = { error: err.message };
+                addTrace({ name: 'Search Failed', type: 'tool_result', content: err.message });
             }
         }
 
-        // --- 3. CRAWL AND LEARN (FIRECRAWL) ---
+        // --- 3. CRAWL AND LEARN ---
         else if (call.name === 'crawl_and_learn') {
-           if (!config.toolsEnabled.deepResearch) {
-                toolResult = { error: "Deep Research tool is disabled in configuration." };
-           } else {
-               setActiveNode('summarizer'); 
-               const url = (call.args as any).url;
-               const tag = (call.args as any).tag || 'General';
-               
-               try {
-                 addTrace({ name: 'Firecrawl', type: 'tool_execution', content: `Crawling ${url}...` });
-                 
-                 const scrapedData = await crawlUrl(url);
-                 
-                 const newChunk = addKnowledge({
-                   lesson: "External Web Knowledge",
-                   title: scrapedData.title,
-                   content: scrapedData.content.substring(0, 2000), 
-                   context: scrapedData.description || "Ingested from Web",
-                   parentDoc: `Source: ${url}`,
-                   type: 'web_knowledge',
-                   tags: ['Web', tag],
-                   sourceUrl: url
-                 });
+           setActiveNode('summarizer'); 
+           const url = (call.args as any).url;
+           
+           try {
+             addTrace({ name: 'Firecrawl', type: 'tool_execution', content: `Crawling ${url}...` });
+             const scrapedData = await crawlUrl(url);
+             const newChunk = addKnowledge({
+               lesson: "External Web Knowledge",
+               title: scrapedData.title,
+               content: scrapedData.content.substring(0, 2000), 
+               context: "Ingested from Web",
+               parentDoc: `Source: ${url}`,
+               type: 'web_knowledge',
+               tags: ['Web'],
+               sourceUrl: url
+             });
 
-                 toolResult = { status: "success", message: "Content crawled and added to Knowledge Base.", title: newChunk.title };
-                 
-                 addTrace({
-                   name: 'Ingestion Complete',
-                   type: 'tool_result',
-                   content: `Learned: ${newChunk.title}`,
-                   latency: Date.now() - toolStart
-                 });
+             toolResult = { status: "success", title: newChunk.title };
+             addTrace({ name: 'Ingestion Complete', type: 'tool_result', content: `Learned: ${newChunk.title}` });
 
-               } catch (err: any) {
-                 toolResult = { status: "error", message: err.message };
-                 addTrace({ name: 'Firecrawl Error', type: 'tool_result', content: err.message });
-               }
+           } catch (err: any) {
+             toolResult = { status: "error", message: err.message };
+             addTrace({ name: 'Firecrawl Error', type: 'tool_result', content: err.message });
            }
         }
 
-        // Return to Agent
-        setActiveNode('agent');
-        
-        response = await chatSessionRef.current.sendMessage({
-          message: [{
-            functionResponse: {
-              name: call.name,
-              response: { result: toolResult }
+        // Return to Agent (Only if no fatal error)
+        if (!fatalErrorOccurred) {
+            setActiveNode('agent');
+            try {
+                response = await chatSessionRef.current.sendMessage({
+                  message: [{
+                    functionResponse: {
+                      name: call.name,
+                      response: { result: toolResult }
+                    }
+                  }]
+                });
+                functionCalls = response.functionCalls;
+            } catch (sendErr: any) {
+                if (isFatalError(sendErr)) throw sendErr;
+                // If standard generation error, break loop
+                break;
             }
-          }]
-        });
-        
-        functionCalls = response.functionCalls;
+        }
       }
 
       // 4. Final Output
       setActiveNode('observability');
       const modelText = response.text;
       setMessages(prev => [...prev, { role: 'model', content: modelText }]);
-      addTrace({ 
-        name: 'Final Response', 
-        type: 'output', 
-        content: modelText,
-        tokens: 150
-      });
-
+      addTrace({ name: 'Final Response', type: 'output', content: modelText });
       setTimeout(() => setActiveNode(null), 2000); 
 
     } catch (error: any) {
       console.error("Agentic Loop Error:", error);
       let errorMessage = error.message || JSON.stringify(error);
       
-      // Specifically catch the "leaked key" error
-      if (errorMessage.includes("leaked") || errorMessage.includes("403")) {
-          errorMessage = "API Key Error: Your API key has been flagged as leaked by Google. Please generate a new API key in Google AI Studio and update your .env file.";
-      } else if (errorMessage.includes("PERMISSION_DENIED")) {
-          errorMessage = "Permission Denied: Please check your API key.";
+      if (isFatalError(error)) {
+          errorMessage = "🛑 API KEY EXPIRED or INVALID. Google has likely revoked your key because it was exposed (e.g., committed to GitHub). Please generate a NEW key, update .env, and RESTART your terminal.";
+          // Clear session to force re-init next time
+          chatSessionRef.current = null;
       }
 
-      setMessages(prev => [...prev, { role: 'model', content: "⚠️ Error: " + errorMessage }]);
+      setMessages(prev => [...prev, { role: 'model', content: errorMessage }]);
       setActiveNode(null);
     }
   };
