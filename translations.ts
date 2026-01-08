@@ -44,50 +44,50 @@ export const translations = {
       title_prefix: 'AI First Course ——',
       title_highlight: "Building Your SuperEgo's",
       title_suffix: 'Second Brain',
-      sub_headline: "Don't just Code, Orchestrate.",
-      description: 'In the AI First era, success belongs to those who build a "Second Brain". Whether through our **Courses** for individuals or **Consulting** for enterprises, we help you evolve from executing to orchestrating.',
+      sub_headline: "Don't just Code. Build a Probabilistic & Generative Mind.",
+      description: 'In the age of AI, biological intuition ("Fast Thinking") is not enough. We help you build a **Digital System 2** ("Slow Thinking") to master Bayesian probability, agent simulation, and high-dimensional decision making.',
       cta_primary: 'Explore the Galaxy',
       cta_secondary: 'Enterprise Services',
     },
     philosophy: {
-      title: 'Core Philosophy: Evolution of a "New Species"',
-      subtitle: 'This course does not teach you how to become a more perfect "cog", but how to become the "control center" of the machine.',
+      title: 'Philosophy 2.0: The Rise of System 2',
+      subtitle: 'We are moving from "Seeking Certainty" to "Embracing Probability".',
       pillars: [
         {
-          title: '01 Cognitive Foundation: From "Skill-Based" to "System-Based"',
-          content: 'Old Concept: Learn all skills yourself. New Concept: On the eve of AGI, core competitiveness is "Building Systems" and "Asking Questions".',
-          quote: '"Human defines the \'Why\', AI solves the \'How\'."'
+          title: '01 The Probabilistic Worldview',
+          content: 'Traditional education seeks "Standard Answers" (Certainty). Real life is about "Updating Beliefs". We teach Bayesian thinking: scientifically updating your worldview with new evidence.',
+          quote: '"Probability is the logic of science."'
         },
         {
-          title: '02 Asset Building: Biological Brain and Second Brain',
-          content: 'Solution: Acknowledge the limits of the human brain. Build an "External Brain" for memory and execution.',
-          quote: 'Become your unique digital twin.'
+          title: '02 Digital System 2',
+          content: 'Your biological brain is full of biases (System 1). Your SuperEgo is the external "System 2" responsible for rational calculation, game theory, and checking your intuition.',
+          quote: '"Think slow, with silicon."'
         },
         {
-          title: '03 Identity Shift: From "Craftsman" to "Director"',
-          content: 'Reframing: Refuse to be a "Code Worker". New roles: Commander and Director. Define Target, Set Boundaries, Review Results.',
-          quote: 'Orchestrate rather than execute.'
+          title: '03 Generative Simulation',
+          content: 'Static equations are dead. We use LLM Agents with memory and persona to simulate complex social dynamics. Test your decisions in a virtual society before the real world.',
+          quote: '"Simulation is the new theory."'
         },
         {
-          title: '04 Workflow Revolution: One Person as a Company',
-          content: 'Methodology: Build an AI team (PM, Dev, Tester). You are the CEO of your digital legion.',
-          quote: 'Scale your impact infinitely.'
+          title: '04 The Identity Shift',
+          content: 'You are no longer the executor or the craftsman. You are the Architect of this probabilistic machine. You define the payoffs; the AI runs the game.',
+          quote: '"Orchestrate, do not execute."'
         }
       ],
       practice_label: 'Practice:',
-      summary: 'In short: We teach you to use AI, build your own external brain, and orchestrate a virtual team of AIs.',
+      summary: 'In short: We teach you to build a "Slow Thinking" digital twin that navigates uncertainty for you.',
     },
     galaxy: {
       title: 'The Galaxy Model',
-      description: 'Not a linear ladder, but a system. A central "SuperEgo" core orbited by six specialized planets.',
+      description: 'A closed-loop system. From Bayesian Logic (Left Brain) to Aesthetic Perception (Right Brain), orbiting the SuperEgo Core.',
       module: 'Module',
       explore_planet: 'Explore Planet',
       core_title: 'The Core: The Second Brain',
-      core_desc: 'Central infrastructure connecting Art, Sports, Data, and Trading.',
+      core_desc: 'Central infrastructure connecting Art, Sports, Data, and Quant.',
     },
     cta: {
-      title: 'Ready to Architect Your Second Brain?',
-      description: 'Join the cohort of future SuperEgo architects.',
+      title: 'Ready to Architect Your SuperEgo?',
+      description: 'Join the cohort of future system thinkers.',
       button: 'Join Waitlist',
     },
     footer: {
@@ -177,50 +177,50 @@ export const translations = {
       title_prefix: 'AI First Course ——',
       title_highlight: '构建你的“超我”',
       title_suffix: '第二外脑',
-      sub_headline: 'Engineering Your Second Brain —— 发挥超我的能力，成为超级个体',
-      description: '在 AI First 时代，成功属于那些构建了“第二外脑”的人。通过 **Decoding AI** 架构，我们致力于帮助你从“执行者”进化为“系统指挥官”。',
+      sub_headline: 'Build Your Probabilistic & Generative Second Brain',
+      description: '人类大脑不仅有“快思考”（直觉），更需要一个 **“慢思考”（系统2）** 的数字替身。我们教你用 **贝叶斯** 更新认知，用 **LLM Agent** 仿真推演未来。',
       cta_primary: '探索星系',
       cta_secondary: '企业服务',
     },
     philosophy: {
-      title: '核心理念：AI 时代的“新物种”进化论',
-      subtitle: '本课程不教你如何成为一颗更完美的“螺丝钉”，而是教你如何成为一台机器的“控制中枢”。',
+      title: '课程哲学 2.0：系统 2 的觉醒',
+      subtitle: '从“寻找确定性”到“拥抱概率”，填补传统教育的思维空白。',
       pillars: [
         {
-          title: '01 认知基石：从“技能本位”到“系统本位”',
-          content: '旧观念：必须自己学会所有技能。新理念：在 AGI 前夜，核心竞争力是“构建系统”和“提出问题”。',
-          quote: '"Human defines the \'Why\', AI solves the \'How\'."'
+          title: '01 概率世界观 (Probabilistic)',
+          content: '中国学生擅长解“有标准答案”的题。但现实世界充满不确定性。我们尊崇贝叶斯主义：永远根据新信息更新信念，而不是寻找绝对真理。',
+          quote: '“直觉通常是错的，概率才是解药。”'
         },
         {
-          title: '02 资产构建：生物脑与第二大脑的分工',
-          content: '解决方案：承认人类大脑的局限性，构建“外挂大脑”。生物脑负责直觉审判，AI 第二大脑负责记忆执行。',
-          quote: '沉淀私人知识库，成为你独一无二的数字分身。'
+          title: '02 数字系统 2 (Digital System 2)',
+          content: '引用卡尼曼理论：肉体大脑充满偏见（系统1）。SuperEgo 是你的外挂系统2（慢思考），负责理性计算、博弈推演和概率评估。',
+          quote: '“让 AI 成为你的理性审查官。”'
         },
         {
-          title: '03 Identity Shift: 从“工匠”到“总导演”',
-          content: '角色重塑：拒绝做重复造轮子的“代码工人”。新职责：指挥官和总导演。定义目标，设定边界，审查结果。',
-          quote: '定义目标，设定边界，审查结果。'
+          title: '03 生成式仿真 (Generative Sim)',
+          content: '传统的数学仿真是死的。LLM Simulation 是活的。我们构建拥有记忆与性格的 AI Agent，在虚拟社会中模拟博弈，低成本试错。',
+          quote: '“社会科学的粒子加速器。”'
         },
         {
-          title: '04 Workflow Revolution: 一人即一家公司',
-          content: '方法论：不靠全能 AI，靠“分工”。像组建公司一样组建 AI 团队（产品经理、程序员、测试员）。',
-          quote: '你不再是孤独的开发者，你是这支“数字军团”的 CEO。'
+          title: '04 身份跃迁 (The Shift)',
+          content: '你不再是做题家或执行者。你是这套概率机器的构建者与总导演。你定义 Payoff Matrix（支付矩阵），AI 负责寻找纳什均衡。',
+          quote: '“编排思维，而非执行指令。”'
         }
       ],
       practice_label: '核心：',
-      summary: '一句话总结：我们教你利用 AI，构建一个只属于你的外挂大脑，指挥 AI 组成的虚拟团队。',
+      summary: '一句话总结：我们教你构建一个“慢思考”的数字替身，用仿真和概率来对抗世界的不确定性。',
     },
     galaxy: {
       title: '星系模型',
-      description: '这不再是线性的阶梯，而是一个系统。一个核心“超我”恒星，被六颗专业行星环绕。',
+      description: '这不再是线性的阶梯，而是一个系统。从左脑的逻辑仿真到右脑的艺术感知，围绕核心 SuperEgo 运转。',
       module: '模块',
       explore_planet: '探索星球',
       core_title: '核心恒星：第二大脑',
-      core_desc: '中央基础设施连接艺术、运动、数据和量化交易。',
+      core_desc: '连接概率、仿真、艺术与数据的中央神经中枢。',
     },
     cta: {
-      title: '准备好构建你的第二大脑了吗？',
-      description: '加入未来“超我”架构师的行列。',
+      title: '准备好构建你的 SuperEgo 了吗？',
+      description: '加入未来“系统 2”架构师的行列。',
       button: '加入候补名单',
     },
     footer: {

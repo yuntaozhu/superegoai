@@ -13,286 +13,263 @@ const ArtPlanet: React.FC = () => {
   const content = getContent(language);
   const course = content.courses.find(c => c.id === 'art')!;
 
+  const fiveDimensions = [
+    { label: 'Visual', question: '视网膜看到了什么？' },
+    { label: 'Historical', question: '那个时代发生了什么大事件？' },
+    { label: 'Economic', question: '谁在为艺术买单？' },
+    { label: 'Philosophical', question: '如何定义真实与自我？' },
+    { label: 'Mathematical', question: '底层逻辑方程是什么？' }
+  ];
+
   const acts = [
     {
       id: '01',
-      title: '第一幕：光的革命与东方回响',
-      subtitle: '从客观观察到主观感受',
-      artists: '莫奈 & 北斋',
-      works: '《印象·日出》、《神奈川冲浪里》',
-      philosophy: '当照相机能完美“复制”现实，绘画的新使命是什么？',
-      dialogue: '训练 AI 融合印象派与浮世绘风格。',
-      math: ['光的插值 (Lerp)', '动态黄金螺旋'],
-      mission: '手动编写 curveVertex() 精确绘制黄金螺旋，并让粒子沿其轨迹运动。',
+      title: '第一幕：光的革命与观察变迁',
+      period: '19世纪末 (19th Late)',
+      theme: '工业文明如何重塑视觉？从客观记录到主观感知。',
+      content: [
+        {
+          artist: '莫奈 (Monet)',
+          work: '《印象·日出》/《圣拉扎尔火车站》',
+          insight: '经济：管状颜料工业化。历史：蒸汽机改变时空观。哲学：现象学萌芽（我感知到的光）。',
+          math: ['插值算法 (Lerp)', '布朗运动 (Brownian Motion)'],
+          task: '编写粒子系统模拟蒸汽扩散；利用 lerpColor() 随鼠标改变色温（清晨至正午）。'
+        },
+        {
+          artist: '修拉 (Seurat)',
+          work: '《大碗岛的星期天下午》',
+          insight: '经济：工业化大生产标准化思维。哲学：实证主义与理性秩序。',
+          math: ['离散化 (Discretization)', '网格平均值 (Grid Average)'],
+          task: '编写嵌套循环，将上传照片“像素化”为无数圆点，重现工业时代的理性美。'
+        }
+      ],
       gradient: 'from-blue-400 to-orange-400',
-      icon: '🌊',
-      glow: 'rgba(59, 130, 246, 0.3)'
+      icon: '🌅'
     },
     {
       id: '02',
-      title: '第二幕：点彩派的理性实验室',
-      subtitle: '科学方法构建秩序感',
-      artists: '乔治·修拉',
-      works: '《大碗岛的星期日下午》',
-      philosophy: '点彩画派的“秩序感”是对混乱工业社会的逃避还是理想化重构？',
-      dialogue: '命令 AI 用“点”思考，捕捉有序的宁静。',
-      math: ['离散化与像素化', '网格平均色值计算'],
-      mission: '编写嵌套 for 循环，将任意图片分割为网格，计算平均色值并用圆点重绘。',
-      gradient: 'from-green-400 to-yellow-400',
-      icon: '🔳',
-      glow: 'rgba(34, 197, 94, 0.3)'
+      title: '第二幕：时空的破碎与潜意识',
+      period: '20世纪初 (20th Early)',
+      theme: '相对论与精神分析如何粉碎了旧世界的绝对真理？',
+      content: [
+        {
+          artist: '梵高 (Van Gogh)',
+          work: '《星夜》',
+          insight: '社会：现代性加速带来的异化。心理：精神分析投射。',
+          math: ['向量场 (Vector Field)', '柏林噪声 (Perlin Noise)'],
+          task: '利用 Perlin Noise 构建不可见流动场，驱动粒子描绘“流动的星空”。'
+        },
+        {
+          artist: '毕加索 (Picasso)',
+          work: '《亚维农的少女》',
+          insight: '历史：殖民贸易带来非洲面具。科学：相对论（四维时空展开）。',
+          math: ['矩阵变换 (Matrix)', '纹理映射 (Texture Mapping)'],
+          task: '定义 Fragment 类，将人像分割并允许在 3D 空间中独立旋转重组。'
+        }
+      ],
+      gradient: 'from-indigo-500 to-purple-600',
+      icon: '🌌'
     },
     {
       id: '03',
-      title: '第三幕：情感的旋涡与风场',
-      subtitle: '主观真实高于客观现实',
-      artists: '文森特·梵高',
-      works: '《星夜》',
-      philosophy: '描绘的是真实的夜空，还是内心的“宇宙”？',
-      dialogue: '让 AI 表达情感，使用厚涂与颤动能量。',
-      math: ['向量场 (Vector Field)', '柏林噪声 (Perlin Noise)'],
-      mission: '利用 noise() 构建不可见向量场，释放粒子随“风场”流动。',
-      gradient: 'from-blue-600 to-purple-600',
-      icon: '✨',
-      glow: 'rgba(139, 92, 246, 0.3)'
+      title: '第三幕：理性的乌托邦与梦境',
+      period: '两次世界大战之间 (Interwar)',
+      theme: '在动荡中寻找秩序（理性）或逃避现实（超现实）。',
+      content: [
+        {
+          artist: '蒙德里安 (Mondrian)',
+          work: '《构图》',
+          insight: '历史：战后废墟重建秩序。哲学：新柏拉图主义（终极真理）。',
+          math: ['递归 (Recursion)', '二叉树分割 (Binary Tree)'],
+          task: '编写递归函数随机分割矩形，设定阈值并填充三原色，生成绝对平衡网格。'
+        },
+        {
+          artist: '达利 (Dali)',
+          work: '《记忆的永恒》',
+          insight: '心理：弗洛伊德潜意识。物理：爱因斯坦相对论（时间软化）。',
+          math: ['拓扑形变 (Topology)', '正弦波映射 (Sine Mapping)'],
+          task: '应用 sin() 函数对时钟 Y 轴坐标进行非线性映射，实现“融化”效果。'
+        }
+      ],
+      gradient: 'from-red-500 to-yellow-500',
+      icon: '🕰️'
     },
     {
       id: '04',
-      title: '第四幕：几何结构的“因式分解”',
-      subtitle: '绘画自身的秩序与逻辑',
-      artists: '保罗·塞尚',
-      works: '《圣维克多山》',
-      philosophy: '“艺术是与自然平行的和谐”，意味着模仿还是创造“第二自然”？',
-      dialogue: '用几何眼光看世界，解构为几何平面。',
-      math: ['泰森多边形 (Voronoi)', '三角剖分 (Delaunay)'],
-      mission: '引入 d3-delaunay库，编写着色算法根据块面朝向应用冷暖色调。',
-      gradient: 'from-orange-500 to-red-600',
-      icon: '📐',
-      glow: 'rgba(239, 68, 68, 0.3)'
+      title: '第四幕：行动、观念与算法',
+      period: '二战后至今 (Post-WWII)',
+      theme: '从关注“作品”转向关注“过程”与“观念”。',
+      content: [
+        {
+          artist: '波洛克 (Pollock)',
+          work: '《第一号》',
+          insight: '政治：冷战自由价值观输出。哲学：行动绘画（过程即艺术）。',
+          math: ['混沌理论 (Chaos)', '分形维数 (Fractal)'],
+          task: '引入物理引擎 (Matter.js) 编写滴画模拟器，验证分形特征。'
+        },
+        {
+          artist: '沃霍尔 (Warhol)',
+          work: '《金宝汤罐头》',
+          insight: '经济：消费主义与量产。哲学：拟像理论（没有原本，只有复制）。',
+          math: ['数组 (Arrays)', '颜色量化 (Quantization)'],
+          task: '编写算法进行“色调分离”，生成 3x3 九宫格波普肖像。'
+        }
+      ],
+      gradient: 'from-pink-500 to-rose-600',
+      icon: '🥫'
     }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.1 }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 40, filter: 'blur(10px)' },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      filter: 'blur(0px)',
-      transition: { duration: 0.8, ease: "easeOut" }
-    }
-  };
-
-  const scanLineVariants = {
-    animate: {
-      top: ['0%', '100%', '0%'],
-      transition: { duration: 5, repeat: Infinity, ease: 'linear' }
-    }
-  };
-
   return (
     <PlanetLayout course={course}>
-      {/* Intro Section */}
-      <section className="mt-12 md:mt-24 mb-32 md:mb-48 px-4 md:px-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24 items-center">
+      {/* 1. Intro Section */}
+      <section className="mt-8 md:mt-20 mb-16 md:mb-32 px-4 md:px-0">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
           <m.div 
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            variants={containerVariants}
-            className="space-y-10 text-center lg:text-left"
+            className="space-y-8 text-center lg:text-left"
           >
-            <m.div variants={itemVariants} className="flex items-center justify-center lg:justify-start gap-6">
-              <span className="h-px w-20 bg-gradient-to-r from-purple-500 to-transparent"></span>
-              <span className="text-purple-400 font-mono text-xs uppercase tracking-[0.5em] font-black">Neural Art Pipeline</span>
-            </m.div>
+            <div className="flex items-center justify-center lg:justify-start gap-4">
+              <span className="h-0.5 w-12 bg-purple-500"></span>
+              <span className="text-purple-400 font-mono text-xs uppercase tracking-[0.4em] font-black">SuperEgo_Insight_Engine</span>
+            </div>
             
-            <m.h2 variants={itemVariants} className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-[1.1]">
-              训练“超我”的 <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400 animate-gradient-x">
-                审美与抽象能力
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-tight">
+              计算艺术史：<br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400">
+                成为智能时代的思想总导演
               </span>
-            </m.h2>
+            </h2>
             
-            <m.p variants={itemVariants} className="text-base md:text-xl text-gray-400 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
-              AI 不再是简单的画图工具，而是将 <span className="text-white font-semibold">“艺术文脉”</span> 转化为 <span className="text-white font-semibold">“数学算力”</span> 的翻译官。
-            </m.p>
+            <p className="text-base md:text-lg text-gray-400 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
+              我们不培养单纯的“画师”或“码农”，而是培养能够穿透表象看本质的 <span className="text-white font-bold">“洞察者”</span>。你必须把感性的艺术风格“降维”成数学公式，指挥 AI 完成创作。
+            </p>
           </m.div>
 
+          {/* 5-Dimension Model Card */}
           <m.div 
-            initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
-            whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 1.2 }}
-            className="grid grid-cols-2 gap-4 md:gap-8 perspective-1000"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-brand-surface/60 border border-white/10 rounded-[32px] p-8 md:p-10 backdrop-blur-xl relative overflow-hidden shadow-2xl"
           >
-            {[{ label: 'Style Fusion', val: 'Active', icon: '🎨' }, { label: 'Historical Logic', val: 'Deep', icon: '🏛️' }].map((stat, i) => (
-              <div key={i} className="bg-brand-surface/60 border border-white/10 rounded-[32px] p-6 md:p-10 backdrop-blur-2xl relative overflow-hidden group shadow-2xl">
-                <div className="absolute -right-4 -bottom-4 text-3xl opacity-5 group-hover:opacity-10 transition-opacity">{stat.icon}</div>
-                <div className="text-[9px] font-mono text-gray-500 uppercase mb-4 tracking-widest">{stat.label}</div>
-                <div className="text-xl md:text-3xl font-black text-white">{stat.val}</div>
-              </div>
-            ))}
+            <div className="absolute top-0 right-0 p-6 opacity-10 text-6xl">👁️</div>
+            <h3 className="text-xl font-black text-white mb-6 uppercase tracking-widest">五维洞察模型</h3>
+            <div className="space-y-4">
+              {fiveDimensions.map((dim, i) => (
+                <div key={i} className="flex items-center gap-4 group">
+                  <div className="w-8 h-8 rounded-full bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-xs font-mono text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                    {i + 1}
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-gray-300 uppercase tracking-wider">{dim.label}</div>
+                    <div className="text-[10px] text-gray-500 group-hover:text-gray-400 transition-colors">{dim.question}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </m.div>
         </div>
       </section>
 
-      {/* Acts Timeline */}
-      <section className="py-20 md:py-40 px-4 md:px-0">
-        <div className="space-y-32 md:space-y-80 relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-purple-500/30 via-white/5 to-transparent hidden lg:block -translate-x-1/2" />
-
+      {/* 2. The 4 Acts Timeline */}
+      <section className="py-20 md:py-32 px-4 md:px-0 relative">
+        <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-white/10 hidden md:block" />
+        
+        <div className="space-y-24 md:space-y-40">
           {acts.map((act, idx) => (
-            <div 
-              key={act.id}
-              className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 md:gap-32 items-center relative`}
-            >
-              <m.div 
-                className="flex-1 space-y-8 md:space-y-16 z-10 w-full"
-                initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 1, ease: "easeOut" }}
-              >
-                <div className="flex items-center justify-center lg:justify-start gap-8">
-                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-[32px] bg-gradient-to-br ${act.gradient} flex items-center justify-center text-3xl md:text-4xl shadow-2xl border border-white/20`}>
-                    {act.icon}
-                  </div>
-                  <div className="space-y-1">
-                    <div className="font-mono text-xs text-purple-500 font-black tracking-[0.5em] uppercase">Phase_Node_0{act.id}</div>
-                    <div className="text-[9px] text-gray-600 font-mono uppercase tracking-widest">Quantum State: Synchronized</div>
-                  </div>
+            <div key={act.id} className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-8 md:gap-20 relative`}>
+              
+              {/* Timeline Marker (Desktop) */}
+              <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-0 flex-col items-center">
+                <div className={`w-12 h-12 rounded-full bg-brand-dark border-4 border-brand-surface flex items-center justify-center text-xl z-10 shadow-[0_0_20px_rgba(168,85,247,0.5)]`}>
+                  {act.icon}
                 </div>
-                
-                <h3 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none text-center lg:text-left">
-                  {act.title}
-                </h3>
-                
-                <div className="bg-brand-surface/40 border border-white/10 rounded-[48px] md:rounded-[80px] p-8 md:p-16 space-y-12 backdrop-blur-3xl relative overflow-hidden group shadow-2xl">
-                   <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full blur-[120px] pointer-events-none opacity-60 transition-opacity" style={{ background: act.glow }} />
-                   
-                   <div className="space-y-6">
-                     <div className="text-[9px] font-mono text-gray-500 uppercase tracking-[0.6em] mb-4">Aesthetic_Input_Log</div>
-                     <p className="text-gray-100 text-xl md:text-3xl leading-snug italic font-extralight">"{act.dialogue}"</p>
-                   </div>
-                   
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10 pt-12 border-t border-white/5">
-                      <div className="space-y-6">
-                        <div className="text-[10px] font-mono text-purple-500 uppercase font-black tracking-widest flex items-center gap-2">
-                           <span className="w-1 h-1 rounded-full bg-purple-500" />
-                           Logic Modules
+                <div className="h-full w-px bg-gradient-to-b from-purple-500/50 to-transparent" />
+              </div>
+
+              {/* Content Block */}
+              <m.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex-1"
+              >
+                <div className={`flex flex-col ${idx % 2 === 0 ? 'md:items-end md:text-right' : 'md:items-start md:text-left'} mb-8`}>
+                  <span className="text-purple-500 font-mono text-xs uppercase tracking-widest font-bold mb-2">{act.period}</span>
+                  <h3 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none mb-4">{act.title}</h3>
+                  <p className="text-gray-400 text-sm md:text-base font-light max-w-md italic border-l-2 md:border-l-0 md:border-r-2 border-purple-500/30 pl-4 md:pl-0 md:pr-4">
+                    "{act.theme}"
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {act.content.map((item, i) => (
+                    <div key={i} className="bg-brand-surface/40 border border-white/10 rounded-[24px] p-6 hover:border-purple-500/30 transition-all duration-300 relative overflow-hidden group">
+                      <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${act.gradient}`} />
+                      
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h4 className="text-white font-bold text-lg">{item.artist}</h4>
+                          <span className="text-xs text-gray-500 italic">{item.work}</span>
                         </div>
-                        <div className="flex flex-wrap gap-3">
-                          {act.math.map(m_math => (
-                            <span key={m_math} className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-2xl text-[11px] md:text-sm text-gray-300 font-medium">
-                              {m_math}
+                        <div className="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-2 py-1 rounded">Case {i+1}</div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="text-xs text-gray-300 leading-relaxed">
+                          <strong className="text-purple-400">五维洞察：</strong> {item.insight}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {item.math.map((m, k) => (
+                            <span key={k} className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-gray-400 font-mono">
+                              {m}
                             </span>
                           ))}
                         </div>
-                      </div>
-                      <div className="space-y-6">
-                        <div className="text-[10px] font-mono text-purple-500 uppercase font-black tracking-widest flex items-center gap-2">
-                           <span className="w-1 h-1 rounded-full bg-purple-500" />
-                           Master Reference
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-white font-black text-lg md:text-xl tracking-tight uppercase">{act.artists}</div>
-                          <div className="text-[11px] md:text-sm text-gray-500 font-light italic leading-relaxed">{act.works}</div>
+                        <div className="pt-4 border-t border-white/5">
+                          <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            AI 总导演任务
+                          </div>
+                          <p className="text-xs text-white font-medium">{item.task}</p>
                         </div>
                       </div>
-                   </div>
+                    </div>
+                  ))}
                 </div>
               </m.div>
 
-              <m.div 
-                className="flex-1 w-full z-10"
-                initial={{ opacity: 0, scale: 0.85, rotate: idx % 2 === 0 ? 8 : -8 }}
-                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-              >
-                <div className="relative aspect-square md:aspect-[4/5] rounded-[60px] md:rounded-[100px] overflow-hidden group border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] bg-[#050505]">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${act.gradient} opacity-10 group-hover:opacity-25 transition-opacity duration-1000`} />
-                  
-                  <div className="absolute inset-0 p-12 flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                       <div className="font-mono text-[9px] text-white/40 space-y-2">
-                          <div>[AUTH] SuperEgo_Creative_Node</div>
-                          <div>[STATUS] RENDER_PIPELINE_STABLE</div>
-                       </div>
-                       <div className="text-white/60 text-2xl font-mono">{act.id}</div>
-                    </div>
-
-                    <div className="relative h-full flex items-center justify-center">
-                       <m.div 
-                         animate={{ scale: [1, 1.15, 1], rotate: [0, 10, -10, 0] }}
-                         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                         className="text-7xl md:text-9xl drop-shadow-[0_0_60px_rgba(255,255,255,0.15)] grayscale group-hover:grayscale-0 transition-all duration-1000"
-                       >
-                         {act.icon}
-                       </m.div>
-                       <m.div variants={scanLineVariants} animate="animate" className="absolute left-0 right-0 h-[1.5px] bg-white/80 shadow-[0_0_20px_rgba(255,255,255,0.5)] z-20" />
-                    </div>
-
-                    <div className="flex justify-between items-end opacity-30 font-mono text-[9px] text-white">
-                       <span>FPS: 60.0</span>
-                       <span>SECURE_COMPUTE</span>
-                    </div>
-                  </div>
-
-                  <m.div 
-                    initial={{ y: 80, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.5, duration: 1 }}
-                    className="absolute bottom-8 left-8 right-8 p-8 md:p-10 bg-white/[0.03] backdrop-blur-3xl rounded-[40px] border border-white/10 border-t-white/20 shadow-2xl"
-                  >
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
-                      <div className="text-[10px] font-mono text-purple-400 uppercase font-black tracking-[0.5em]">Mission_Directive</div>
-                    </div>
-                    <p className="text-white font-black leading-snug text-base md:text-xl tracking-tight">{act.mission}</p>
-                  </m.div>
-                </div>
-              </m.div>
+              {/* Empty Spacer for alternating layout */}
+              <div className="flex-1 hidden md:block" />
             </div>
           ))}
         </div>
       </section>
 
-      {/* Philosophy Callout */}
-      <section className="mt-24 md:mt-56 mb-24 md:mb-56 text-center px-4 md:px-0">
+      {/* 3. Feynman Method Callout */}
+      <section className="mt-20 md:mt-40 mb-20 md:mb-40 px-4 md:px-0 text-center">
         <m.div 
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-7xl mx-auto p-12 md:p-32 bg-gradient-to-br from-purple-950/30 to-brand-dark border border-purple-500/10 rounded-[64px] md:rounded-[120px] backdrop-blur-3xl relative overflow-hidden group shadow-2xl"
+          className="max-w-4xl mx-auto p-10 md:p-20 bg-gradient-to-b from-purple-900/20 to-brand-dark border border-purple-500/20 rounded-[48px] relative overflow-hidden"
         >
-          <div className="relative z-10 space-y-12">
-            <h3 className="text-2xl md:text-5xl font-black text-white uppercase tracking-tighter">费曼学习法与艺术抽象</h3>
-            <p className="text-gray-400 text-lg md:text-3xl leading-relaxed font-extralight max-w-5xl mx-auto italic">
-              "我们不仅仅是在模拟艺术，我们是在 <span className="text-white font-normal">解构审美</span>。通过将流派的核心抽象为代码，你真正理解了什么是‘风格’。"
+          <div className="relative z-10 space-y-8">
+            <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter">费曼导演法 (The Feynman Director)</h3>
+            <p className="text-gray-300 text-lg leading-relaxed font-light">
+              "你必须把你的五维洞察，翻译成 AI 能听懂的 Prompt。你必须把感性的艺术风格，‘降维’成数学公式。你是导演，AI 是你的摄像师和特效师。"
             </p>
+            <div className="inline-flex gap-4">
+              <span className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-xs text-purple-300 uppercase tracking-widest">以教促学</span>
+              <span className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-xs text-purple-300 uppercase tracking-widest">数学抽象</span>
+              <span className="px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-xs text-purple-300 uppercase tracking-widest">人机协同</span>
+            </div>
           </div>
         </m.div>
       </section>
-
-      <style>{`
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient-x 15s ease infinite;
-        }
-        .perspective-1000 { perspective: 1000px; }
-      `}</style>
     </PlanetLayout>
   );
 };

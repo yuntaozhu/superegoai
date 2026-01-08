@@ -9,10 +9,10 @@ interface ContentData {
 
 const CONTENT_ZH: ContentData = {
   philosophyPillars: [
-    { title: '能力平权', concept: '认知公平', practice: '构建 Exobrain 抹平经验差距' },
-    { title: '资产构建', concept: '数字分身', practice: 'FTI 架构数据闭环' },
-    { title: '身份转变', concept: '总导演', practice: '编排而非执行' },
-    { title: '工作流革命', concept: '一人公司', practice: '多智能体协同' }
+    { title: '概率世界观', concept: 'Bayesian', practice: '告别标准答案，用贝叶斯更新认知' },
+    { title: '数字系统 2', concept: 'System 2', practice: '构建理性的外挂慢思考大脑' },
+    { title: '生成式仿真', concept: 'Simulation', practice: '用 LLM Agent 模拟社会博弈' },
+    { title: '身份跃迁', concept: 'Orchestrator', practice: '从执行者进化为概率机器的指挥官' }
   ],
   blogPosts: [],
   courses: [
@@ -126,46 +126,54 @@ const CONTENT_ZH: ContentData = {
     },
     {
       id: "art",
-      title: "深度研究：AI 赋能的洞察力",
-      shortTitle: "五官：感知",
+      title: "SuperEgo 洞察引擎：计算艺术史",
+      shortTitle: "五官：洞察引擎",
       organ: "THE SENSES",
-      organRole: "Input / Insight",
-      tagline: "全方位的信息传感器",
-      description: "训练审美与抽象能力。AI 不只是画图工具，而是将历史文脉转化为数学逻辑的翻译官。",
-      takeaway: "超越提示词咒语，亲手编写人类美学底层的数学代码。",
+      organRole: "Insight / Perception",
+      tagline: "跨学科思维训练 —— 成为智能时代的思想总导演",
+      description: "本课程不培养单纯的“画师”或“码农”，而是培养穿透表象看本质的“洞察者”。通过“五维洞察模型”与“费曼导演法”，将艺术史、经济学与代码融合。",
+      takeaway: "你必须把感性的艺术风格，“降维”成数学公式。你是导演，AI 是你的摄像师和特效师。",
       icon: "🎨",
       color: "from-violet-500 to-purple-900", 
-      target: "审美与感知模块",
-      format: "项目制学习",
-      duration: "8 周",
-      outcome: "掌握AI辅助审美，重现历史流派，完成个人数字艺术画廊。",
+      target: "渴望全息洞察力的未来思想家",
+      format: "五维洞察 + 创意编程",
+      duration: "四幕十六景",
+      outcome: "建立“五维洞察模型”，掌握将人文历史转化为数学逻辑与 AI Prompt 的核心能力。",
       philosophyMap: {
-        title: "费曼学习法实现",
-        points: ["以教促学", "回顾与反思", "简化与内化"]
+        title: "费曼导演法 (Feynman Director)",
+        points: ["以教促学：把洞察翻译给 AI", "数学抽象：寻找底层方程", "人机协同：总导演思维"]
       },
       syllabus: [
         {
-          title: "模块 1：光的物理与数字重构",
-          goal: "理解光，然后用代码创造光。",
+          title: "第一幕：光的革命与观察变迁",
+          goal: "工业文明如何重塑视觉？从客观记录到主观感知。",
           content: [
-            { title: "色彩空间与算法", description: "深入理解 RGB vs HSL，编写 Shader 实现印象派光影效果。" },
-            { title: "光线追踪入门", description: "理解渲染管线，用代码模拟光子行为，创造真实感视觉。" }
+            { title: "莫奈与工业蒸汽", description: "五维洞察：管状颜料与中产崛起。数学：插值算法 (Lerp) 与布朗运动模拟光与雾。" },
+            { title: "修拉的理性网格", description: "五维洞察：工业标准化的投影。数学：离散化与像素网格平均值算法。" }
           ]
         },
         {
-          title: "模块 2：风格迁移与美学计算",
-          goal: "解构艺术流派的数学本质。",
+          title: "第二幕：时空破碎与潜意识",
+          goal: "相对论与精神分析如何粉碎绝对真理？",
           content: [
-            { title: "神经风格迁移", description: "深入 CNN 中间层，提取内容与风格特征，实现任意风格的融合。" },
-            { title: "生成式几何", description: "利用 Voronoi 与 Delaunay 算法重现立体主义结构。" }
+            { title: "梵高的流体动力学", description: "五维洞察：异化与存在主义。数学：向量场 (Vector Field) 与柏林噪声模拟星空湍流。" },
+            { title: "毕加索的四维展开", description: "五维洞察：非洲面具与相对论。数学：矩阵变换与多视角纹理映射。" }
           ]
         },
         {
-          title: "模块 3：情感计算与生成",
-          goal: "让机器理解并表达情绪。",
+          title: "第三幕：理性乌托邦与梦境",
+          goal: "在动荡中寻找秩序或逃避现实。",
           content: [
-            { title: "CLIP 模型微调", description: "建立文本描述与视觉美学的高维映射，精准控制生成调性。" },
-            { title: "情感映射", description: "将音乐/诗歌的情感向量映射到视觉生成参数，实现通感创作。" }
+            { title: "蒙德里安的递归", description: "五维洞察：战后秩序重建。数学：递归函数与二叉树分割生成绝对平衡。" },
+            { title: "达利的拓扑形变", description: "五维洞察：弗洛伊德梦境解析。数学：正弦波非线性映射实现时钟融化。" }
+          ]
+        },
+        {
+          title: "第四幕：行动、观念与算法",
+          goal: "从“作品”转向“过程”与“观念”。",
+          content: [
+            { title: "波洛克的混沌分形", description: "五维洞察：冷战自由输出与行动绘画。数学：混沌理论与分形维数验证。" },
+            { title: "沃霍尔的量化阵列", description: "五维洞察：消费主义与拟像。数学：数组循环与颜色量化 (Quantization)。" }
           ]
         }
       ]
@@ -403,27 +411,35 @@ const CONTENT_EN: ContentData = {
     } else if (course.id === 'art') {
       englishSyllabus = [
         {
-          title: "Module 1: Physics of Light & Digital Reconstruction",
-          goal: "Understand light, then code light.",
+          title: "Act 1: The Revolution of Light",
+          goal: "From objective recording to subjective perception.",
           content: [
-            { title: "Color Spaces & Algorithms", description: "Deep dive into RGB vs HSL, write Shaders for Impressionist lighting." },
-            { title: "Ray Tracing Intro", description: "Understand rendering pipelines and simulate photon behavior via code." }
+            { title: "Monet & Steam", description: "Insight: Industrial rise. Math: Interpolation & Brownian motion." },
+            { title: "Seurat's Logic", description: "Insight: Standardization. Math: Discretization & Grid averaging." }
           ]
         },
         {
-          title: "Module 2: Style Transfer & Computational Aesthetics",
-          goal: "Deconstruct the math of art styles.",
+          title: "Act 2: Shattered Spacetime",
+          goal: "How relativity and psychoanalysis broke absolute truth.",
           content: [
-            { title: "Neural Style Transfer", description: "Extract content and style features from CNN layers for style fusion." },
-            { title: "Generative Geometry", description: "Reproduce Cubist structures using Voronoi and Delaunay algorithms." }
+            { title: "Van Gogh's Flow", description: "Insight: Alienation. Math: Vector Fields & Perlin Noise." },
+            { title: "Picasso's 4th Dim", description: "Insight: Relativity. Math: Matrix Transforms & Texture Mapping." }
           ]
         },
         {
-          title: "Module 3: Affective Computing & Generation",
-          goal: "Make machines understand and express emotion.",
+          title: "Act 3: Rational Utopia & Dreams",
+          goal: "Finding order or escaping reality in chaos.",
           content: [
-            { title: "CLIP Fine-tuning", description: "Map text descriptions to high-dimensional visual aesthetics." },
-            { title: "Emotion Mapping", description: "Map emotional vectors from music/poetry to visual generation parameters." }
+            { title: "Mondrian's Recursion", description: "Insight: Reconstruction. Math: Recursive functions & Binary trees." },
+            { title: "Dali's Topology", description: "Insight: Dream logic. Math: Sine wave non-linear mapping." }
+          ]
+        },
+        {
+          title: "Act 4: Action & Algorithms",
+          goal: "From 'Work' to 'Process' and 'Concept'.",
+          content: [
+            { title: "Pollock's Chaos", description: "Insight: Cold War freedom. Math: Chaos Theory & Fractals." },
+            { title: "Warhol's Array", description: "Insight: Consumerism. Math: Array Loops & Quantization." }
           ]
         }
       ];
@@ -523,12 +539,14 @@ const CONTENT_EN: ContentData = {
       title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : 
              (course.id === 'quant' ? "AI Quant: The Evolving Decision Machine" : 
              (course.id === 'sports' ? "AI Sports: Physical Perception" : 
-             (course.id === 'digital-twin' ? "SuperEgo: AI Native Model Thinking" : course.shortTitle.split('：')[1]))),
+             (course.id === 'digital-twin' ? "SuperEgo: AI Native Model Thinking" : 
+             (course.id === 'art' ? "SuperEgo Insight Engine: Computational Art History" : course.shortTitle.split('：')[1])))),
       description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : 
-                   (course.id === 'digital-twin' ? "Humans have 'Fast Thinking' (Intuition). You need to build a 'Slow Thinking' (System 2) digital double. Update cognition with Bayesian logic and simulate the future with LLM Agents." : course.description),
+                   (course.id === 'digital-twin' ? "Humans have 'Fast Thinking' (Intuition). You need to build a 'Slow Thinking' (System 2) digital double. Update cognition with Bayesian logic and simulate the future with LLM Agents." : 
+                   (course.id === 'art' ? "We don't train painters; we train 'Insight Directors'. Using the '5-Dimension Insight Model', you'll fuse art history, economics, and code." : course.description)),
       takeaway: course.id === 'data' ? "Stop forgetting. Start orchestrating your intelligence legacy." :
                 course.id === 'digital-twin' ? "From seeking certainty to embracing probability. Use AI simulation as your microscope for thinking." :
-                course.id === 'art' ? "Transcend prompt magic. Code the mathematical foundation of human aesthetics." :
+                course.id === 'art' ? "You must 'reduce' art to math. You are the Director; AI is your Camera and VFX crew." :
                 course.id === 'sports' ? "Bridge the gap between digital vision and physical mastery." :
                 course.id === 'solopreneur' ? "Don't just code. Orchestrate an AI army and build a 'Company of One'." :
                 course.id === 'quant' ? "Turn 'Evolution' into an asset. Build a hedge fund that learns while you sleep." : course.takeaway,
@@ -538,7 +556,9 @@ const CONTENT_EN: ContentData = {
             ? "Develop a personalized AI coach providing real-time feedback on form, technique, posture correction, and rep counting." 
             : (course.id === 'digital-twin'
                 ? "Master Bayesian Inference & LLM-Agent Simulation to build a 'SuperEgo Oracle' for decision making."
-                : course.outcome)),
+                : (course.id === 'art' 
+                    ? "Build a '5-Dimension Insight Model' and master converting history into math logic and AI prompts." 
+                    : course.outcome))),
       syllabus: englishSyllabus
     };
   })

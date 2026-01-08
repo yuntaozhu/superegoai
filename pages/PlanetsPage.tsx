@@ -41,11 +41,11 @@ const getAnatomyData = (language: 'zh' | 'en'): AnatomyNode[] => {
     {
       id: 'senses',
       organ: isZh ? 'The Senses (五官)' : 'The Senses',
-      name: isZh ? '深度研究 —— 输入与洞察' : 'Deep Research — Input & Insight',
-      metaphor: isZh ? '跨学科的感知与深度洞察。' : 'Interdisciplinary perception and deep insight.',
-      target: isZh ? '渴望提升感知颗粒度的研究者。' : 'Researchers seeking higher perception granularity.',
-      method: '4 Weeks | Crawler Agents | Multi-source Verification',
-      outcome: isZh ? '打破学科壁垒，利用AI融合艺术、数学、历史与哲学，形成独到见解。' : 'Break barriers. Fuse art, math, history & philosophy for unique insights.',
+      name: isZh ? '洞察引擎 —— 计算艺术史' : 'Insight Engine — Computational Art History',
+      metaphor: isZh ? '从视网膜到算法。用数学、历史与经济解构审美。' : 'From retina to algorithm. Deconstruct beauty with math, history, and economics.',
+      target: isZh ? '渴望获得“全息洞察力”的未来思想家。' : 'Future thinkers seeking holographic insight.',
+      method: '4 Weeks | 5-Dim Insight | Feynman Director Method',
+      outcome: isZh ? '训练出一种能穿透表象看本质的洞察力。把艺术史“降维”为数学公式与代码。' : 'Train a holographic insight capable of penetrating phenomena to see the essence.',
       link: '/course/art',
       color: '#8A2BE2',
       icon: '👁️'
