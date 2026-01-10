@@ -15,7 +15,7 @@ export const useProgressStore = create<ProgressState>()(
     (set, get) => ({
       completedItems: {},
       
-      toggleItem: (courseId, moduleIndex, itemIndex) => {
+      toggleItem: (courseId: string, moduleIndex: number, itemIndex: number) => {
         const key = `${courseId}:${moduleIndex}:${itemIndex}`;
         set((state) => ({
           completedItems: {
@@ -25,15 +25,15 @@ export const useProgressStore = create<ProgressState>()(
         }));
       },
 
-      getCourseProgress: (course) => {
-        const { completedItems } = get();
+      getCourseProgress: (course: Course) => {
+        const state = get();
         let totalItems = 0;
         let completedCount = 0;
 
         course.syllabus.forEach((module, mIdx) => {
           module.content.forEach((_, iIdx) => {
             totalItems++;
-            if (completedItems[`${course.id}:${mIdx}:${iIdx}`]) {
+            if (state.completedItems[`${course.id}:${mIdx}:${iIdx}`]) {
               completedCount++;
             }
           });
