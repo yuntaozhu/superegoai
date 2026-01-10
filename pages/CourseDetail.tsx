@@ -1,11 +1,15 @@
+
 import React, { useEffect } from 'react';
 import { getContent } from '../constants';
 import { useLanguage, useParams, Navigate, Link } from '../context/LanguageContext';
+import { useProgressStore } from '../lib/store/progressStore';
+import { CheckCircle2, Circle, Trophy } from 'lucide-react';
 
 const CourseDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { language, t } = useLanguage();
   const content = getContent(language);
+  const { completedItems, toggleItem, getCourseProgress } = useProgressStore();
   
   const course = content.courses.find(c => c.id === id);
 
@@ -16,6 +20,8 @@ const CourseDetail: React.FC = () => {
   if (!course) {
     return <Navigate to="/" replace />;
   }
+
+  const progress = getCourseProgress(course);
 
   return (
     <div className="min-h-screen bg-brand-dark pt-16">
@@ -31,14 +37,30 @@ const CourseDetail: React.FC = () => {
           <p className="text-xl md:text-2xl text-white/90 font-light mb-8 max-w-3xl mx-auto">
             {course.tagline}
           </p>
-          <div className="flex justify-center gap-2 text-sm font-mono text-white/70 bg-black/20 inline-block px-4 py-2 rounded-full mx-auto backdrop-blur-sm">
-             <span>{t('galaxy.module')}: {course.id.toUpperCase()}</span>
-             <span>|</span>
-             <span>STATUS: ACTIVE</span>
+          
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex justify-center gap-2 text-sm font-mono text-white/70 bg-black/20 px-4 py-2 rounded-full backdrop-blur-sm">
+               <span>{t('galaxy.module')}: {course.id.toUpperCase()}</span>
+               <span>|</span>
+               <span>STATUS: ACTIVE</span>
+            </div>
+
+            {/* Progress Bar in Header */}
+            <div className="w-full max-w-md space-y-2">
+              <div className="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest">
+                <span>Mission Progress</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+                <div 
+                  className={`h-full bg-white transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(255,255,255,0.5)]`}
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
           </div>
         </div>
         
-        {/* Background Noise simulation */}
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
       </div>
 
@@ -52,8 +74,9 @@ const CourseDetail: React.FC = () => {
               <p className="text-gray-300 leading-relaxed mb-6">
                 {course.description}
               </p>
-              <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors">
-                {t('course.enroll')}
+              <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2">
+                {progress === 100 ? <Trophy className="w-5 h-5" /> : null}
+                {progress === 100 ? 'Mission Complete' : t('course.enroll')}
               </button>
             </div>
 
@@ -80,8 +103,8 @@ const CourseDetail: React.FC = () => {
             </h2>
             
             <div className="space-y-6">
-              {course.syllabus.map((module, idx) => (
-                <div key={idx} className="bg-brand-surface border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all">
+              {course.syllabus.map((module, mIdx) => (
+                <div key={mIdx} className="bg-brand-surface border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all">
                   <div className="bg-white/5 px-6 py-4 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-2">
                     <h3 className="text-lg font-bold text-white">
                       {module.title}
@@ -94,15 +117,32 @@ const CourseDetail: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <ul className="space-y-6">
-                      {module.content.map((item, i) => (
-                        <li key={i} className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                          <div className="min-w-[4px] min-h-[4px] w-1.5 h-1.5 rounded-full bg-gray-500 mt-2.5"></div>
-                          <div>
-                            <h4 className="text-base font-semibold text-gray-200">{item.title}</h4>
-                            <p className="text-sm text-gray-400 mt-1">{item.description}</p>
-                          </div>
-                        </li>
-                      ))}
+                      {module.content.map((item, iIdx) => {
+                        const isCompleted = completedItems[`${course.id}:${mIdx}:${iIdx}`];
+                        return (
+                          <li 
+                            key={iIdx} 
+                            onClick={() => toggleItem(course.id, mIdx, iIdx)}
+                            className="flex items-start gap-4 p-4 rounded-xl hover:bg-white/5 cursor-pointer transition-colors group"
+                          >
+                            <div className="mt-1 transition-transform group-hover:scale-110">
+                              {isCompleted ? (
+                                <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                              ) : (
+                                <Circle className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className={`text-base font-semibold transition-colors ${isCompleted ? 'text-emerald-400/80 line-through' : 'text-gray-200'}`}>
+                                {item.title}
+                              </h4>
+                              <p className={`text-sm mt-1 transition-colors ${isCompleted ? 'text-gray-600' : 'text-gray-400'}`}>
+                                {item.description}
+                              </p>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>

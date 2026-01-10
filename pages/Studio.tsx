@@ -172,7 +172,7 @@ const Studio: React.FC = () => {
       const ai = getGeminiClient();
       const response = await ai.models.generateContent({
         model: GEMINI_CONFIG.models.pro,
-        contents: `你是一名提示词工程专家。请根据 Prompt Engineering Guide 原则，将以下原始 Prompt 优化为具备角色 (Role)、背景 (Context)、任务 (Task)、限制 (Constraints) 和输出示例 (Examples) 的结构化格式。仅输出优化后的提示词内容。\n\n原始 Prompt: "${prompt}"`,
+        contents: `You are an expert prompt engineer. Please optimize the following prompt according to the dair-ai Prompt Engineering Guide principles. Use the structure: Role, Context (Provide clear context about the task environment and background), Task, Constraints, and Examples. Output ONLY the optimized prompt.\n\nOriginal Prompt: "${prompt}"`,
         config: { thinkingConfig: { thinkingBudget: GEMINI_CONFIG.thinkingBudget.default } }
       });
       setPrompt(response.text || '');

@@ -3,28 +3,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
-  Tooltip, BarChart, Bar, Cell, PieChart, Pie, Legend, LineChart, Line 
+  Tooltip, BarChart, Bar, Cell, PieChart, Pie, Legend
 } from 'recharts';
 import { useLanguage } from '../context/LanguageContext';
 import { Brain, Zap, Target, BookOpen, Activity, ChevronRight, BarChart3 } from 'lucide-react';
+import { useProgressStore } from '../lib/store/progressStore';
+import { getContent } from '../constants';
 
 const m = motion as any;
-
-// Mock Data for 12-Week Longitudinal Engagement
-const cohortEngagementData = [
-  { week: 'W01', users: 850, retention: 100 },
-  { week: 'W02', users: 820, retention: 98 },
-  { week: 'W03', users: 790, retention: 96 },
-  { week: 'W04', users: 810, retention: 94 },
-  { week: 'W05', users: 760, retention: 90 },
-  { week: 'W06', users: 745, retention: 89 },
-  { week: 'W07', users: 730, retention: 88 },
-  { week: 'W08', users: 755, retention: 91 },
-  { week: 'W09', users: 720, retention: 86 },
-  { week: 'W10', users: 710, retention: 85 },
-  { week: 'W11', users: 715, retention: 85 },
-  { week: 'W12', users: 725, retention: 87 },
-];
 
 const neuralSyncData = [
   { day: 'Mon', syncs: 12, quality: 85 },
@@ -34,15 +20,6 @@ const neuralSyncData = [
   { day: 'Fri', syncs: 30, quality: 95 },
   { day: 'Sat', syncs: 25, quality: 90 },
   { day: 'Sun', syncs: 28, quality: 94 },
-];
-
-const planetProgress = [
-  { name: 'Art', progress: 45, color: '#8A2BE2' },
-  { name: 'Sports', progress: 70, color: '#FF4500' },
-  { name: 'Data', progress: 95, color: '#FFD700' },
-  { name: 'Quant', progress: 30, color: '#10B981' },
-  { name: 'Code', progress: 60, color: '#00FFFF' },
-  { name: 'Research', progress: 85, color: '#00BFFF' },
 ];
 
 const cognitiveDistribution = [
@@ -58,7 +35,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="bg-brand-surface/95 backdrop-blur-md border border-white/10 p-3 rounded-xl shadow-2xl">
         <p className="text-[10px] font-black text-gray-500 uppercase mb-1">{label}</p>
         <p className="text-sm font-bold text-white">
-          {payload[0].name}: <span className="text-blue-400">{payload[0].value}</span>
+          {payload[0].name}: <span className="text-blue-400">{payload[0].value}{payload[0].name === 'Progress' ? '%' : ''}</span>
         </p>
       </div>
     );
@@ -68,6 +45,22 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 const Dashboard: React.FC = () => {
   const { t, language } = useLanguage();
+  const { getCourseProgress, completedItems } = useProgressStore();
+  const content = getContent(language);
+  
+  const planetProgressData = content.courses.map(course => ({
+    name: course.shortTitle.includes('：') ? course.shortTitle.split('：')[1] : course.shortTitle,
+    progress: getCourseProgress(course),
+    color: course.color.includes('blue') ? '#3b82f6' : 
+           course.color.includes('purple') ? '#8b5cf6' : 
+           course.color.includes('emerald') ? '#10b981' : 
+           course.color.includes('rose') ? '#ef4444' : 
+           course.color.includes('amber') ? '#f59e0b' : '#3b82f6'
+  }));
+
+  const totalCompleted = Object.values(completedItems).filter(Boolean).length;
+  const totalSteps = content.courses.reduce((acc, c) => acc + c.syllabus.reduce((mAcc, m) => mAcc + m.content.length, 0), 0);
+  const overallProgress = Math.round((totalCompleted / totalSteps) * 100);
 
   return (
     <div className="min-h-screen bg-brand-dark pt-32 pb-20 px-4 sm:px-6 lg:px-8">
@@ -94,10 +87,9 @@ const Dashboard: React.FC = () => {
             
             <div className="flex gap-4">
               <div className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl backdrop-blur-xl">
-                <div className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Status</div>
-                <div className="text-emerald-500 font-mono text-xs flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  ORCHESTRATING
+                <div className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Overall Mastery</div>
+                <div className="text-blue-400 font-mono text-xl flex items-center gap-2">
+                  {overallProgress}%
                 </div>
               </div>
             </div>
@@ -107,10 +99,10 @@ const Dashboard: React.FC = () => {
         {/* Top Quick Metrics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[
-            { label: t('dashboard.metrics.brain_syncs'), val: '1,284', icon: Brain, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
-            { label: t('dashboard.metrics.active_hours'), val: '42.5h', icon: Zap, color: 'text-blue-500', bg: 'bg-blue-500/10' },
-            { label: t('dashboard.metrics.knowledge_nodes'), val: '89', icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-500/10' },
-            { label: t('dashboard.metrics.orchestration_level'), val: 'Lvl 04', icon: Target, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+            { label: t('dashboard.metrics.brain_syncs'), val: totalCompleted.toString(), icon: Brain, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
+            { label: t('dashboard.metrics.active_hours'), val: `${(totalCompleted * 0.5).toFixed(1)}h`, icon: Zap, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+            { label: t('dashboard.metrics.knowledge_nodes'), val: totalSteps.toString(), icon: BookOpen, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+            { label: t('dashboard.metrics.orchestration_level'), val: `Lvl 0${Math.floor(overallProgress / 20) + 1}`, icon: Target, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
           ].map((item, i) => (
             <m.div 
               key={i}
@@ -220,58 +212,6 @@ const Dashboard: React.FC = () => {
           </m.div>
         </div>
 
-        {/* Longitudinal Trajectory - 12 Week Cohort Progress */}
-        <m.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/5 border border-white/10 p-8 rounded-[40px] backdrop-blur-2xl mb-8"
-        >
-          <h3 className="text-xl font-black text-white uppercase tracking-tight mb-8 flex items-center gap-3">
-            <BarChart3 className="w-5 h-5 text-blue-400" />
-            12-Week Cohort Engagement Trajectory
-          </h3>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={cohortEngagementData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
-                <XAxis 
-                  dataKey="week" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 900 }} 
-                />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 900 }} 
-                />
-                <Tooltip 
-                  cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }} 
-                  content={<CustomTooltip />} 
-                />
-                <Bar 
-                  dataKey="users" 
-                  name="Active Syncers"
-                  radius={[4, 4, 0, 0]}
-                  animationDuration={1500}
-                >
-                  {cohortEngagementData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={index > 8 ? '#3b82f6' : '#1e293b'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-6 flex items-center justify-between text-[10px] font-mono text-gray-500">
-             <span className="flex items-center gap-2">
-               <div className="w-2 h-2 rounded bg-[#1e293b]" /> Foundation Phases (W01-W08)
-             </span>
-             <span className="flex items-center gap-2">
-               <div className="w-2 h-2 rounded bg-[#3b82f6]" /> Orchestration Mastery (W09-W12)
-             </span>
-          </div>
-        </m.div>
-
         {/* Planet Mastery Snapshot */}
         <m.div 
           initial={{ opacity: 0, y: 20 }}
@@ -280,12 +220,13 @@ const Dashboard: React.FC = () => {
         >
           <h3 className="text-xl font-black text-white uppercase tracking-tight mb-8 flex items-center gap-3">
             <Target className="w-5 h-5 text-emerald-500" />
-            Planet Progress Snapshot
+            {t('dashboard.progress_title')}
           </h3>
-          <div className="h-[200px] w-full">
+          <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart layout="vertical" data={planetProgress} margin={{ left: 40 }}>
-                <XAxis type="number" hide />
+              <BarChart layout="vertical" data={planetProgressData} margin={{ left: 60, right: 40 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} horizontal={false} stroke="rgba(255,255,255,0.03)" />
+                <XAxis type="number" domain={[0, 100]} hide />
                 <YAxis 
                   type="category" 
                   dataKey="name" 
@@ -293,13 +234,14 @@ const Dashboard: React.FC = () => {
                   tickLine={false} 
                   tick={{ fill: '#fff', fontSize: 12, fontWeight: 900 }} 
                 />
-                <Tooltip cursor={{ fill: 'transparent' }} content={<CustomTooltip />} />
+                <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} content={<CustomTooltip />} />
                 <Bar 
                   dataKey="progress" 
+                  name="Progress"
                   radius={[0, 10, 10, 0]}
-                  barSize={12}
+                  barSize={24}
                 >
-                  {planetProgress.map((entry, index) => (
+                  {planetProgressData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Bar>

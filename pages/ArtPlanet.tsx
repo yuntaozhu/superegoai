@@ -32,6 +32,7 @@ const ArtPlanet: React.FC = () => {
           artist: '莫奈 (Monet)',
           work: '《印象·日出》/《圣拉扎尔火车站》',
           insight: '经济：管状颜料工业化。历史：蒸汽机改变时空观。哲学：现象学萌芽（我感知到的光）。',
+          promptStrategy: '强调“视觉感知”而非“物体细节”。描述工业蒸汽与自然光线的交织。(Key: Hazy, Atmospheric, Industrial steam)',
           math: ['插值算法 (Lerp)', '布朗运动 (Brownian Motion)'],
           task: '编写粒子系统模拟蒸汽扩散；利用 lerpColor() 随鼠标改变色温（清晨至正午）。'
         },
@@ -39,6 +40,7 @@ const ArtPlanet: React.FC = () => {
           artist: '修拉 (Seurat)',
           work: '《大碗岛的星期天下午》',
           insight: '经济：工业化大生产标准化思维。哲学：实证主义与理性秩序。',
+          promptStrategy: '命令 AI 像印刷机一样思考。用“点”作为最小单位，构建静态秩序。(Key: Pointillism, optical mixing, distinct dots)',
           math: ['离散化 (Discretization)', '网格平均值 (Grid Average)'],
           task: '编写嵌套循环，将上传照片“像素化”为无数圆点，重现工业时代的理性美。'
         }
@@ -56,6 +58,7 @@ const ArtPlanet: React.FC = () => {
           artist: '梵高 (Van Gogh)',
           work: '《星夜》',
           insight: '社会：现代性加速带来的异化。心理：精神分析投射。',
+          promptStrategy: '注入强烈的动能与情感。描述扭曲的线条，将焦虑外化为宇宙湍流。(Key: Impasto, swirling energy, turbulence)',
           math: ['向量场 (Vector Field)', '柏林噪声 (Perlin Noise)'],
           task: '利用 Perlin Noise 构建不可见流动场，驱动粒子描绘“流动的星空”。'
         },
@@ -63,6 +66,7 @@ const ArtPlanet: React.FC = () => {
           artist: '毕加索 (Picasso)',
           work: '《亚维农的少女》',
           insight: '历史：殖民贸易带来非洲面具。科学：相对论（四维时空展开）。',
+          promptStrategy: '多视角并置。指示 AI 同时画出正面和侧面，碎片化重组。(Key: Multiple viewpoints, fragmentation, 4th dimension)',
           math: ['矩阵变换 (Matrix)', '纹理映射 (Texture Mapping)'],
           task: '定义 Fragment 类，将人像分割并允许在 3D 空间中独立旋转重组。'
         }
@@ -80,6 +84,7 @@ const ArtPlanet: React.FC = () => {
           artist: '蒙德里安 (Mondrian)',
           work: '《构图》',
           insight: '历史：战后废墟重建秩序。哲学：新柏拉图主义（终极真理）。',
+          promptStrategy: '极简主义指令。限制 AI 仅使用红黄蓝三原色和黑白线。(Key: Universal harmony, primary colors, strict grid)',
           math: ['递归 (Recursion)', '二叉树分割 (Binary Tree)'],
           task: '编写递归函数随机分割矩形，设定阈值并填充三原色，生成绝对平衡网格。'
         },
@@ -87,6 +92,7 @@ const ArtPlanet: React.FC = () => {
           artist: '达利 (Dali)',
           work: '《记忆的永恒》',
           insight: '心理：弗洛伊德潜意识。物理：爱因斯坦相对论（时间软化）。',
+          promptStrategy: '逻辑悖论。描述物理法则失效的场景（硬的变软），写实描绘荒诞。(Key: Melting clocks, dream logic, hyper-realistic)',
           math: ['拓扑形变 (Topology)', '正弦波映射 (Sine Mapping)'],
           task: '应用 sin() 函数对时钟 Y 轴坐标进行非线性映射，实现“融化”效果。'
         }
@@ -104,6 +110,7 @@ const ArtPlanet: React.FC = () => {
           artist: '波洛克 (Pollock)',
           work: '《第一号》',
           insight: '政治：冷战自由价值观输出。哲学：行动绘画（过程即艺术）。',
+          promptStrategy: '描述过程而非结果。描述混乱、能量、滴洒的动作。(Key: Action painting, controlled chaos, drip technique)',
           math: ['混沌理论 (Chaos)', '分形维数 (Fractal)'],
           task: '引入物理引擎 (Matter.js) 编写滴画模拟器，验证分形特征。'
         },
@@ -111,6 +118,7 @@ const ArtPlanet: React.FC = () => {
           artist: '沃霍尔 (Warhol)',
           work: '《金宝汤罐头》',
           insight: '经济：消费主义与量产。哲学：拟像理论（没有原本，只有复制）。',
+          promptStrategy: '复制与重复。描述超市货架般的排列，消除个性。(Key: Pop art, mass production, repetition)',
           math: ['数组 (Arrays)', '颜色量化 (Quantization)'],
           task: '编写算法进行“色调分离”，生成 3x3 九宫格波普肖像。'
         }
@@ -220,19 +228,32 @@ const ArtPlanet: React.FC = () => {
 
                       <div className="space-y-4">
                         <div className="text-xs text-gray-300 leading-relaxed">
-                          <strong className="text-purple-400">五维洞察：</strong> {item.insight}
+                          <strong className="text-purple-400 block mb-1">五维洞察 (Why)：</strong> 
+                          {item.insight}
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        
+                        {/* New Prompt Strategy Section */}
+                        <div className="p-3 bg-purple-500/5 border border-purple-500/10 rounded-xl">
+                           <strong className="text-purple-300 text-xs block mb-1 flex items-center gap-2">
+                             <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></span>
+                             AI Prompt 策略 (How to Say)
+                           </strong>
+                           <p className="text-[11px] text-gray-300 leading-relaxed font-mono">
+                             {item.promptStrategy}
+                           </p>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 pt-2">
                           {item.math.map((m, k) => (
                             <span key={k} className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] text-gray-400 font-mono">
                               {m}
                             </span>
                           ))}
                         </div>
-                        <div className="pt-4 border-t border-white/5">
+                        <div className="pt-2 border-t border-white/5">
                           <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1 flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                            AI 总导演任务
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            AI 总导演任务 (How to Do)
                           </div>
                           <p className="text-xs text-white font-medium">{item.task}</p>
                         </div>

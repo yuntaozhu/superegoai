@@ -1,18 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import PlanetLayout from '../components/PlanetLayout';
 import { getContent } from '../constants';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, 
-  ResponsiveContainer, Area, ComposedChart, Cell 
+  ResponsiveContainer, Area, ComposedChart 
 } from 'recharts';
-import { Activity, Target, Zap, CheckCircle, Circle } from 'lucide-react';
+import { Activity, Target, Zap, CheckCircle2, Circle } from 'lucide-react';
+import { useProgressStore } from '../lib/store/progressStore';
 
 const m = motion as any;
 
-// Mock Data for 12-Week Sports AI Trajectory
+// Analytics data for the 12-Week Sports AI Trajectory chart
 const sportsProgressData = [
   { week: 'W01', skill: 10, complexity: 5, label: 'CV Setup' },
   { week: 'W02', skill: 18, complexity: 12, label: 'Pixel Logic' },
@@ -53,82 +54,39 @@ const SportsPlanet: React.FC = () => {
   const content = getContent(language);
   const course = content.courses.find(c => c.id === 'sports')!;
   
-  const [completedModules, setCompletedModules] = useState<string[]>([]);
+  const { completedItems, toggleItem, getCourseProgress } = useProgressStore();
 
-  useEffect(() => {
-    const saved = localStorage.getItem('sports_progress');
-    if (saved) {
-      try {
-        setCompletedModules(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to parse progress', e);
-      }
-    }
-  }, []);
+  const progressPercent = getCourseProgress(course);
 
-  const toggleModule = (id: string) => {
-    setCompletedModules(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      const newArray = Array.from(newSet);
-      localStorage.setItem('sports_progress', JSON.stringify(newArray));
-      return newArray;
-    });
+  const modules = useMemo(() => {
+    // Map the global syllabus to the visual module structure of SportsPlanet
+    // To maintain aesthetic, we group the 4 syllabus modules into the UI layout
+    return course.syllabus.map((m_item, mIdx) => ({
+      ...m_item,
+      id: `M${mIdx + 1}`,
+      idx: mIdx,
+      gradient: mIdx % 2 === 0 ? 'from-orange-500 to-red-500' : 'from-red-500 to-pink-600',
+      icon: mIdx === 0 ? '👁️' : mIdx === 1 ? '📊' : mIdx === 2 ? '⚖️' : '🚀'
+    }));
+  }, [course.syllabus]);
+
+  const isModuleComplete = (moduleIdx: number) => {
+    const module = course.syllabus[moduleIdx];
+    return module.content.every((_, itemIdx) => completedItems[`${course.id}:${moduleIdx}:${itemIdx}`]);
   };
 
-  const modules = [
-    {
-      id: 'M1',
-      title: '模块一：AI 视觉启蒙与编程基础',
-      period: '1 - 8 周',
-      goal: '理解 CV 原理，掌握 Python 与核心视觉库，实现姿态分析。',
-      tech: ['Python', 'OpenCV', 'MediaPipe Pose', 'YOLO v8'],
-      steps: [
-        { title: '编程环境入门', desc: '学习变量、循环与函数，拍摄个人运动静态照。' },
-        { title: 'OpenCV 图像处理', desc: '在图片上绘制点、线、矩形，手动标记关节。' },
-        { title: 'MediaPipe 姿态估计', desc: '提取 33 个身体关键点坐标 (x, y, z, visibility)。' }
-      ],
-      outcome: '静态姿态分析器 (Static Pose Analyzer)',
-      gradient: 'from-orange-500 to-red-500',
-      icon: '👁️'
-    },
-    {
-      id: 'M2',
-      title: '模块二：AI 应用开发与数据分析',
-      period: '9 - 16 周',
-      goal: '提取运动指标并生成可视化报告，支持自动计数。',
-      tech: ['视频流处理', '三角函数', '状态机逻辑', 'Matplotlib'],
-      steps: [
-        { title: '视频实时分析', desc: '逐帧读取视频文件，实现动态姿态追踪。' },
-        { title: '指标量化：角度计算', desc: '利用向量与三角函数计算膝/肘关节夹角性能指标。' },
-        { title: '自动计数引擎 (Rep Counting)', desc: '设计状态机判断动作起始、顶点与结束，精准统计训练次数。' }
-      ],
-      outcome: '智能计数记录器 (Auto Rep Tracker)',
-      gradient: 'from-red-500 to-pink-600',
-      icon: '📊'
-    },
-    {
-      id: 'M3',
-      title: '模块三：智能反馈系统构建',
-      period: '17 - 24 周',
-      goal: '构建闭环纠正性反馈系统，实时指导动作细节。',
-      tech: ['运动解剖学', '逻辑引擎', 'Streamlit', 'RAG'],
-      steps: [
-        { title: '实时姿态校正 (Posture Correction)', desc: '分析常见损伤风险，如深蹲时“膝内扣”，提供即时视觉警告。' },
-        { title: '专家级反馈建议', desc: '根据动作轨迹偏差，利用大模型生成个性化的纠错指令与改进计划。' },
-        { title: 'UI 设计与整合', desc: '使用 Streamlit 打造拥有 GUI 界面的一体化应用终端。' }
-      ],
-      outcome: '最终项目：AI 私人教练 V1.0 (含姿态校正与自动计数)',
-      gradient: 'from-indigo-600 to-blue-600',
-      icon: '💪'
-    }
-  ];
-
-  const progressPercent = Math.round((completedModules.length / modules.length) * 100);
+  const toggleWholeModule = (moduleIdx: number) => {
+    const module = course.syllabus[moduleIdx];
+    const currentlyComplete = isModuleComplete(moduleIdx);
+    
+    // Set all items in the module to the opposite of the current module completion state
+    module.content.forEach((_, itemIdx) => {
+      const isItemComplete = !!completedItems[`${course.id}:${moduleIdx}:${itemIdx}`];
+      if (isItemComplete === currentlyComplete) {
+        toggleItem(course.id, moduleIdx, itemIdx);
+      }
+    });
+  };
 
   return (
     <PlanetLayout course={course}>
@@ -150,7 +108,7 @@ const SportsPlanet: React.FC = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-600">双重探测器</span>
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-gray-400 leading-relaxed font-light max-w-2xl mx-auto lg:mx-0">
-              构建一个真正的 <span className="text-white font-bold">“AI 私人教练”</span>。支持 <span className="text-blue-400 font-bold">姿态校正 (Posture Correction)</span> 与 <span className="text-emerald-400 font-bold">自动计数 (Rep Counting)</span>，将人体关节转化为数学矢量，在现实世界中提供即时反馈。
+              构建一个真正的 <span className="text-white font-bold">“AI 私人教练”</span>。支持 <span className="text-blue-400 font-bold">姿态校正</span> 与 <span className="text-emerald-400 font-bold">自动计数</span>，将人体关节转化为数学矢量，在现实世界中提供即时反馈。
             </p>
           </m.div>
 
@@ -170,6 +128,10 @@ const SportsPlanet: React.FC = () => {
                    <line x1="35" y1="75" x2="50" y2="45" stroke="currentColor" strokeWidth="0.75" />
                    <line x1="65" y1="75" x2="50" y2="45" stroke="currentColor" strokeWidth="0.75" />
                 </svg>
+                {/* Dynamic Progress Indicator overlay on the graphic */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                   <div className="text-[40px] font-black text-white/5">{progressPercent}%</div>
+                </div>
              </div>
           </m.div>
         </div>
@@ -253,8 +215,8 @@ const SportsPlanet: React.FC = () => {
              {[
                { label: 'Avg Accuracy', val: '94.2%', icon: Target },
                { label: 'Neural Hours', val: '128h', icon: Zap },
-               { label: 'Progress', val: `${progressPercent}%`, icon: Activity },
-               { label: 'Complexity', val: 'Lv 09', icon: Activity }
+               { label: 'Mastery', val: `${progressPercent}%`, icon: Activity },
+               { label: 'Sync Status', val: 'Lvl 09', icon: Activity }
              ].map((stat, i) => (
                <div key={i}>
                   <div className="text-[8px] font-black text-gray-600 uppercase tracking-widest mb-1 flex items-center gap-1.5">
@@ -267,73 +229,96 @@ const SportsPlanet: React.FC = () => {
         </div>
       </m.section>
 
-      {/* Module Timeline - Optimized Grid */}
+      {/* Module Timeline - Integrated with centralized Store */}
       <section className="py-8 md:py-20 px-1 md:px-0">
         <div className="space-y-8 md:space-y-24">
-          {modules.map((module_item, idx) => (
-            <m.div 
-              key={module_item.id}
-              initial="hidden"
-              whileInView="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-              }}
-              viewport={{ once: true, margin: "-50px" }}
-              className={`group relative bg-white/5 border rounded-[32px] md:rounded-[48px] overflow-hidden backdrop-blur-xl transition-all duration-300 ${
-                completedModules.includes(module_item.id) 
-                  ? 'border-green-500/30 bg-green-500/5' 
-                  : 'border-white/10 hover:border-orange-500/30'
-              }`}
-            >
-              <div className={`absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b ${module_item.gradient}`} />
-              <div className="p-6 sm:p-10 md:p-16 flex flex-col lg:flex-row gap-6 md:gap-12">
-                 <div className="lg:w-1/3 space-y-3 md:space-y-6">
-                    <m.span className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full font-mono text-[9px] md:text-xs text-orange-400 font-bold uppercase tracking-widest">{module_item.period}</m.span>
-                    <m.h3 className="text-xl sm:text-2xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">{module_item.title}</m.h3>
-                    <m.p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed font-light">{module_item.goal}</m.p>
-                    
-                    <button
-                      onClick={() => toggleModule(module_item.id)}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all ${
-                        completedModules.includes(module_item.id)
-                          ? 'bg-green-500 text-white border-green-500 hover:bg-green-600'
-                          : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/30 hover:text-white'
-                      }`}
-                    >
-                      {completedModules.includes(module_item.id) ? (
-                        <>
-                          <CheckCircle className="w-4 h-4" />
-                          Completed
-                        </>
-                      ) : (
-                        <>
-                          <Circle className="w-4 h-4" />
-                          Mark Complete
-                        </>
-                      )}
-                    </button>
-                 </div>
+          {modules.map((module_item) => {
+            const isFinished = isModuleComplete(module_item.idx);
+            return (
+              <m.div 
+                key={module_item.id}
+                initial="hidden"
+                whileInView="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+                }}
+                viewport={{ once: true, margin: "-50px" }}
+                className={`group relative bg-white/5 border rounded-[32px] md:rounded-[48px] overflow-hidden backdrop-blur-xl transition-all duration-300 ${
+                  isFinished 
+                    ? 'border-green-500/30 bg-green-500/5 shadow-[0_0_40px_rgba(34,197,94,0.1)]' 
+                    : 'border-white/10 hover:border-orange-500/30'
+                }`}
+              >
+                <div className={`absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b ${module_item.gradient}`} />
+                <div className="p-6 sm:p-10 md:p-16 flex flex-col lg:flex-row gap-6 md:gap-12">
+                   <div className="lg:w-1/3 space-y-3 md:space-y-6">
+                      <m.span className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full font-mono text-[9px] md:text-xs text-orange-400 font-bold uppercase tracking-widest">
+                        {module_item.id} // MISSION NODE
+                      </m.span>
+                      <m.h3 className="text-xl sm:text-2xl md:text-2xl font-black text-white uppercase tracking-tighter leading-tight">{module_item.title}</m.h3>
+                      <m.p className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed font-light">{module_item.goal}</m.p>
+                      
+                      <button
+                        onClick={() => toggleWholeModule(module_item.idx)}
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest border transition-all ${
+                          isFinished
+                            ? 'bg-green-600 text-white border-green-500 hover:bg-green-700 shadow-lg shadow-green-900/40'
+                            : 'bg-white/10 text-white border-white/10 hover:border-orange-500 hover:bg-orange-500 shadow-xl'
+                        }`}
+                      >
+                        {isFinished ? (
+                          <>
+                            <CheckCircle2 className="w-4 h-4" />
+                            Module Locked
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-4 h-4 fill-current" />
+                            Sync Full Module
+                          </>
+                        )}
+                      </button>
+                   </div>
 
-                 <div className="lg:w-2/3 flex flex-col gap-5 md:gap-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                       {module_item.steps.map((step, i) => (
-                         <m.div 
-                           key={i} 
-                           className="p-5 bg-black/30 rounded-2xl border border-white/5 hover:border-white/10 transition-colors"
-                         >
-                            <h4 className="text-white font-bold text-xs sm:text-sm mb-1 flex items-center gap-2">
-                               <span className="w-1.5 h-1.5 rounded-full bg-orange-500/40" />
-                               {step.title}
-                            </h4>
-                            <p className="text-gray-500 text-[10px] sm:text-xs leading-relaxed font-light">{step.desc}</p>
-                         </m.div>
-                       ))}
-                    </div>
-                 </div>
-              </div>
-            </m.div>
-          ))}
+                   <div className="lg:w-2/3 flex flex-col gap-5 md:gap-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                         {module_item.content.map((item, iIdx) => {
+                           const isItemComplete = !!completedItems[`${course.id}:${module_item.idx}:${iIdx}`];
+                           return (
+                             <m.button 
+                               key={iIdx} 
+                               onClick={() => toggleItem(course.id, module_item.idx, iIdx)}
+                               className={`p-5 text-left rounded-2xl border transition-all relative overflow-hidden group/item ${
+                                 isItemComplete 
+                                   ? 'bg-green-500/10 border-green-500/40 text-green-100' 
+                                   : 'bg-black/30 border-white/5 hover:border-white/20'
+                               }`}
+                             >
+                                <div className="flex justify-between items-start mb-2">
+                                  <h4 className={`font-bold text-xs sm:text-sm flex items-center gap-2 ${isItemComplete ? 'text-green-400' : 'text-white'}`}>
+                                     {isItemComplete ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4 text-gray-600" />}
+                                     {item.title}
+                                  </h4>
+                                  <span className="text-[8px] font-mono text-gray-700">NODE_0{iIdx + 1}</span>
+                                </div>
+                                <p className={`text-[10px] sm:text-xs leading-relaxed font-light ${isItemComplete ? 'text-green-200/50 line-through' : 'text-gray-500'}`}>
+                                  {item.description}
+                                </p>
+                                {isItemComplete && (
+                                   <div className="absolute bottom-0 right-0 p-2 opacity-10">
+                                      <Zap className="w-12 h-12 text-green-500" />
+                                   </div>
+                                )}
+                             </m.button>
+                           );
+                         })}
+                      </div>
+                   </div>
+                </div>
+              </m.div>
+            );
+          })}
         </div>
       </section>
 
