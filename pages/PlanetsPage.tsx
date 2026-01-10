@@ -55,11 +55,11 @@ const getAnatomyData = (language: 'zh' | 'en'): AnatomyNode[] => {
     {
       id: 'sports',
       organ: isZh ? 'The Body (躯干)' : 'The Body',
-      name: isZh ? '体能觉醒 —— 感知与健康' : 'Physical Awakening — Perception & Health',
-      metaphor: isZh ? '从身体到心灵的数字化链接。' : 'The digital link from body to mind.',
-      target: isZh ? '寻求身心平衡的生物黑客。' : 'Bio-hackers seeking mind-body balance.',
-      method: '8 Weeks | Computer Vision | Bio-feedback',
-      outcome: isZh ? '通过AI辅助与身体对话，实现身心释放与健康管理，连接物理与数字世界。' : 'Dialogue with your body via AI. Achieve release and manage health.',
+      name: isZh ? '主权身心 —— 生物能学与感知' : 'Sovereign Body — Bioenergetics & Perception',
+      metaphor: isZh ? '从身体到心灵的数字化链接，通过 Zone 2 训练增加大脑的续航电量。' : 'The digital link from body to mind. Boosting cognitive battery via Zone 2 training.',
+      target: isZh ? '追求极致专注力与身心平衡的超级个体。' : 'Super individuals seeking peak focus and mind-body equilibrium.',
+      method: '12 Weeks | Computer Vision | Bio-feedback',
+      outcome: isZh ? '构建私有 AI 健康助理，通过具身认知提升抗压解题能力，连接物理与数字世界。' : 'Build a private AI health assistant. Enhance stress resilience through embodied cognition.',
       link: '/course/sports',
       color: '#FF4500',
       icon: '🏃'

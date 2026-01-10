@@ -79,7 +79,7 @@ export const translations = {
     },
     galaxy: {
       title: 'The Galaxy Model',
-      description: 'A closed-loop system. From Bayesian Logic (Left Brain) to Aesthetic Perception (Right Brain), orbiting the SuperEgo Core.',
+      description: 'A closed-loop system merging Bio-Wetware (Body) and Digital Hardware (AI), orbiting the SuperEgo Core.',
       module: 'Module',
       explore_planet: 'Explore Planet',
       core_title: 'The Core: The Second Brain',
@@ -212,7 +212,7 @@ export const translations = {
     },
     galaxy: {
       title: '星系模型',
-      description: '这不再是线性的阶梯，而是一个系统。从左脑的逻辑仿真到右脑的艺术感知，围绕核心 SuperEgo 运转。',
+      description: '一个融合了“生物湿件（身体）”与“数字硬件（AI）”的闭环系统，围绕 SuperEgo 核心运转。',
       module: '模块',
       explore_planet: '探索星球',
       core_title: '核心恒星：第二大脑',

@@ -77,7 +77,7 @@ const CONTENT_ZH: ContentData = {
       organ: "THE LOGIC",
       organRole: "Reasoning / Simulation",
       tagline: "构建你的概率型与生成式第二大脑",
-      description: "人类大脑有“快思考”（直觉），你需要构建一个“慢思考”（系统2）的数字替身。用贝叶斯更新认知，用 LLM Agent 仿真推演未来。",
+      description: "人类大脑有“快思考”（直觉），你需要构建一个“慢思考”（系统2）的数字替身。用贝叶斯更新认知，用 LLM Agent 仿真推推未来。",
       takeaway: "从寻找确定性到拥抱概率。用 AI 仿真作为你的思维显微镜。",
       icon: "🧬",
       color: "from-blue-500 to-indigo-700", 
@@ -180,54 +180,70 @@ const CONTENT_ZH: ContentData = {
     },
     {
       id: "sports",
-      title: "体能觉醒：AI 物理感知",
-      shortTitle: "躯干：感知",
+      title: "主权身心：AI 物理感知",
+      shortTitle: "躯干：感知与健康",
       organ: "THE BODY",
-      organRole: "Perception / Health",
-      tagline: "视觉与物理的探测器",
-      description: "构建一个“AI 私人教练”，在现实世界中分析并纠正动作，将人体关节转化为数学矢量。",
-      takeaway: "打破数字视觉与物理掌控的边界，让 AI 成为你身体的 GPS。",
+      organRole: "Bioenergetics / Cybernetics",
+      tagline: "主权身心 (The Sovereign Body & Mind) —— AI驱动的生物能学与认知进化系统",
+      description: "将“生物湿件”与“数字硬件”融合。通过 AI 视觉分析姿态，利用 Zone 2 训练提升大脑“续航电量”，通过控制论闭环消除感知偏差。",
+      takeaway: "掌控算法，掌握身体，夺回对注意力和决策力的绝对主权。",
       icon: "🏃",
       color: "from-rose-500 to-red-700", 
-      target: "物理执行模块",
-      format: "软硬件结合",
-      duration: "8 周",
-      outcome: "开发专属的AI动作纠正教练，支持姿态实时校准与自动计数。",
+      target: "追求极致精力的超级个体与未来领袖",
+      format: "具身认知 + AI 视觉分析",
+      duration: "12 周生物增强协议",
+      outcome: "构建私有 AI 健康助理，掌握基于生物能学的身体管理，实现认知与体能的双重进化。",
       philosophyMap: {
-        title: "物理 AI",
-        points: ["边缘部署", "生物力学建模", "人机回环"]
+        title: "主权身心三大支柱",
+        points: ["生物能学 (线粒体即认知动力)", "控制论外脑 (数据消除偏差)", "具身认知 (修身即修心)"]
       },
       syllabus: [
         {
-          title: "模块 1：体育 AI 视觉基础",
-          goal: "理解 AI 如何“看见”动作。",
+          title: "模块 1：数字之眼 —— 视觉编程与骨骼映射",
+          goal: "建立本体感觉的数字观察者。",
           content: [
-            { title: "骨骼关键点提取", description: "利用 MediaPipe 追踪人体 33 个核心关节，获取实时三维坐标。" },
-            { title: "实时视频流处理", description: "掌握高帧率环境下的摄像头数据采集与前处理技术。" }
+            { title: "骨骼关键点提取", description: "利用 MediaPipe 绘制全身 33 个点，通过视觉反馈校准大脑对肢体位置的感知。" },
+            { title: "几何解构", description: "编写“角度计算器”，利用三角函数实时计算关节角度，分析运动中的力矩与力臂。" }
           ]
         },
         {
-          title: "模块 2：动力学分析与生物力学",
-          goal: "将身体运动转化为数学矢量。",
+          title: "模块 2：我的 AI 教练 —— 专项技能算法化",
+          goal: "将模糊感觉转化为清晰逻辑语言。",
           content: [
-            { title: "关节角度计算", description: "使用三角函数评估动作标准度，如深蹲时的膝关节夹角。" },
-            { title: "运动轨迹映射", description: "可视化肢体在空间中的移动路径，识别动作的一致性。" }
+            { title: "动作裁判系统", description: "通过 if-else 逻辑定义标准动作准则，实现基于规则的实时纠错提示。" },
+            { title: "动态目标追踪", description: "结合 YOLO 识别高速运动物体，训练在动态环境下的“视觉-运动整合”能力。" }
           ]
         },
         {
-          title: "模块 3：智能反馈系统构建",
-          goal: "构建实时人机交互逻辑。",
+          title: "模块 3：有氧基座 —— 专注力底座",
+          goal: "通过线粒体生物发生提升大脑续航。",
           content: [
-            { title: "姿态实时校正", description: "开发算法识别动作错误并提供即时预警（如圆背、膝盖内扣）。" },
-            { title: "自动计数引擎", description: "利用状态机精准识别运动阶段并统计有效次数。" }
+            { title: "Zone 2 净化监控", description: "接入穿戴设备数据，监控有氧解耦，确保大脑血流灌注并清除代谢废物。" },
+            { title: "呼吸节律分析", description: "通过波形可视化调节迷走神经，在压力环境下利用呼吸稳住认知心态。" }
           ]
         },
         {
-          title: "模块 4：专属 AI 教练 application 部署",
-          goal: "交付一个具备实战价值的完整应用。",
+          title: "模块 4：高压锅 —— 抗压与逆商",
+          goal: "在极限状态下强行调用理性大脑。",
           content: [
-            { title: "多模态交互反馈", description: "实现针对用户的视觉渲染与语音实时纠错提醒。" },
-            { title: "数据主权与训练历史", description: "将运动表现接入个人“第二大脑”，实现长期的数字化进步追踪。" }
+            { title: "力竭预测模型", description: "使用 LSTM 分析动作速度衰减，预测体力崩溃点，训练抗疲劳专注力。" },
+            { title: "压力下决策测试", description: "在心率 170+ 的绝境状态下，通过 AI 终端瞬间完成逻辑题，训练执行功能。" }
+          ]
+        },
+        {
+          title: "模块 5：神经火花 —— 灵感与直觉",
+          goal: "提升神经信号从视网膜到皮层的传输速度。",
+          content: [
+            { title: "视觉潜伏期测试", description: "编写毫秒级延迟测量工具，评估神经反应速度，优化认知切换灵活性。" },
+            { title: "功率爆发监测", description: "计算 P=F*v 寻找个人功率峰值，将爆发性意图转化为物理现实。" }
+          ]
+        },
+        {
+          title: "模块 6：系统还原 —— 整合与发布",
+          goal: "建立终身进化的主权系统。",
+          content: [
+            { title: "流动与静止评分", description: "利用 AI 检测动作流畅度 (Flow)，诱导 Alpha 脑波进入深度心流状态。" },
+            { title: "外脑资产交付", description: "汇总所有训练数据至第二大脑，发布个人专属的 AI 传承智能体。" }
           ]
         }
       ]
@@ -500,35 +516,51 @@ const CONTENT_EN: ContentData = {
     } else if (course.id === 'sports') {
       englishSyllabus = [
         {
-          title: "Module 1: AI Vision Foundations for Sports",
-          goal: "Understand how AI 'sees' and tracks human movement.",
+          title: "Act 1: The Digital Eye",
+          goal: "Establish digital proprioception via skeleton mapping.",
           content: [
-            { title: "Skeletal Keypoint Extraction", description: "Use MediaPipe to track 33 core body joints with real-time 3D coordinates." },
-            { title: "Real-time Video Processing", description: "Master high-FPS camera data acquisition and preprocessing techniques." }
+            { title: "Keypoint Extraction", description: "Use MediaPipe to map 33 core points, calibrating visual feedback." },
+            { title: "Kinetic Geometry", description: "Build an AI angle-calculator using trigonometry to analyze joint torque." }
           ]
         },
         {
-          title: "Module 2: Kinetic Analysis & Biomechanics",
-          goal: "Translate physical movement into mathematical vectors.",
+          title: "Act 2: My AI Coach",
+          goal: "Transform sensory motion into structured algorithmic logic.",
           content: [
-            { title: "Joint Angle Calculation", description: "Use trigonometry to evaluate form accuracy, such as knee angles during squats." },
-            { title: "Trajectory Mapping", description: "Visualize movement paths in space to identify form consistency." }
+            { title: "Judgment Logic", description: "Define 'Good Form' via if-else thresholds for real-time corrective alerts." },
+            { title: "Object Tracking", description: "Integrate YOLO for high-speed tracking, syncing vision and motor skills." }
           ]
         },
         {
-          title: "Module 3: Intelligent Feedback Systems",
-          goal: "Build real-time human-AI interaction logic.",
+          title: "Act 3: Aerobic Foundation",
+          goal: "Fuel cognitive longevity through mitochondrial biogenesis.",
           content: [
-            { title: "Real-time Posture Correction", description: "Develop algorithms to detect form errors like rounded backs or knee valgus." },
-            { title: "Auto-Rep Counting Engine", description: "Use state machines to identify exercise phases and accurately count repetitions." }
+            { title: "Zone 2 Purification", description: "Track VO2 and heart-rate decoupling to ensure metabolic cognitive focus." },
+            { title: "Respiratory Flow", description: "Visualize vagus nerve activation via thoracic expansion mapping." }
           ]
         },
         {
-          title: "Module 4: Personal AI Coach Deployment",
-          goal: "Deploy a fully functional, value-driven application.",
+          title: "Act 4: The Pressure Cooker",
+          goal: "Force rational thinking during peak fight-or-flight states.",
           content: [
-            { title: "Multi-modal Interaction", description: "Implement real-time visual rendering and voice-over corrective feedback." },
-            { title: "Digital Sovereignty & History", description: "Connect performance data to your 'Second Brain' for long-term progress tracking." }
+            { title: "Fatigue Prediction", description: "Use LSTM models to predict kinetic failure points before they happen." },
+            { title: "Decision Under Fire", description: "Solve STEM logic puzzles at 170+ BPM to train prefrontal execution." }
+          ]
+        },
+        {
+          title: "Act 5: Neural Spark",
+          goal: "Optimize synaptic latency between retina and motor cortex.",
+          content: [
+            { title: "Latency Benchmarking", description: "Build millisecond-level reaction tests to evaluate neural throughput." },
+            { title: "Power Intent", description: "Monitor P=F*v peak power, translating explosive intent into physical reality." }
+          ]
+        },
+        {
+          title: "Act 6: System Restore",
+          goal: "Integrate kinetic mastery into your intelligence legacy.",
+          content: [
+            { title: "Flow 連貫性 Scoring", description: "Detect action continuity to induce Alpha-wave deep focus states." },
+            { title: "Legacy Agent Delivery", description: "Consolidate kinetic data into your Second Brain for long-term health governance." }
           ]
         }
       ];
@@ -538,22 +570,23 @@ const CONTENT_EN: ContentData = {
       ...course,
       title: course.id === 'data' ? "AI SuperEgo: Engineering Your Second Brain" : 
              (course.id === 'quant' ? "AI Quant: The Evolving Decision Machine" : 
-             (course.id === 'sports' ? "AI Sports: Physical Perception" : 
+             (course.id === 'sports' ? "Sovereign Body: Kinetic Perception" : 
              (course.id === 'digital-twin' ? "SuperEgo: AI Native Model Thinking" : 
              (course.id === 'art' ? "SuperEgo Insight Engine: Computational Art History" : course.shortTitle.split('：')[1])))),
       description: course.id === 'quant' ? "Build an automated research pipeline driven by Gemini 3. From paper analysis to profitable deployment." : 
                    (course.id === 'digital-twin' ? "Humans have 'Fast Thinking' (Intuition). You need to build a 'Slow Thinking' (System 2) digital double. Update cognition with Bayesian logic and simulate the future with LLM Agents." : 
-                   (course.id === 'art' ? "We don't train painters; we train 'Insight Directors'. Using the '5-Dimension Insight Model', you'll fuse art history, economics, and code." : course.description)),
+                   (course.id === 'sports' ? "Merge 'biological wetware' with 'digital hardware'. Use AI vision to analyze posture and Zone 2 training to boost cognitive battery life." :
+                   (course.id === 'art' ? "We don't train painters; we train 'Insight Directors'. Using the '5-Dimension Insight Model', you'll fuse art history, economics, and code." : course.description))),
       takeaway: course.id === 'data' ? "Stop forgetting. Start orchestrating your intelligence legacy." :
                 course.id === 'digital-twin' ? "From seeking certainty to embracing probability. Use AI simulation as your microscope for thinking." :
                 course.id === 'art' ? "You must 'reduce' art to math. You are the Director; AI is your Camera and VFX crew." :
-                course.id === 'sports' ? "Bridge the gap between digital vision and physical mastery." :
+                course.id === 'sports' ? "Master the algorithm, master your body, reclaim your sovereignty over attention." :
                 course.id === 'solopreneur' ? "Don't just code. Orchestrate an AI army and build a 'Company of One'." :
                 course.id === 'quant' ? "Turn 'Evolution' into an asset. Build a hedge fund that learns while you sleep." : course.takeaway,
       outcome: course.id === 'quant' 
         ? "A fully autonomous AI Hedge Fund factory with self-evolution capabilities." 
         : (course.id === 'sports' 
-            ? "Develop a personalized AI coach providing real-time feedback on form, technique, posture correction, and rep counting." 
+            ? "A private AI Health Assistant and a sovereign kinetic system for elite cognitive performance." 
             : (course.id === 'digital-twin'
                 ? "Master Bayesian Inference & LLM-Agent Simulation to build a 'SuperEgo Oracle' for decision making."
                 : (course.id === 'art' 
